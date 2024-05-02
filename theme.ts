@@ -2,18 +2,18 @@ import { createTheme } from "@shopify/restyle";
 
 const palette = {
 	light: {
-		text: "#305050",
-		background: "#ffffff",
-		primary: "#89cfeb",
-		secondary: "#a590e9",
-		accent: "#ad5ce0",
+		text: "#f0f0f0",
+		background: "#f3fcfc",
+		primary: "#007f80",
+		secondary: "#ffbf00",
+		accent: "#ffa600",
 	},
 	dark: {
-		text: "#afcfcf",
-		background: "#000000",
-		primary: "#145a76",
-		secondary: "#2b166f",
-		accent: "#701fa3",
+		text: "#eefbfc",
+		background: "#030c0c",
+		primary: "#80ffff",
+		secondary: "#ffbf00",
+		accent: "#ffa600",
 	},
 };
 
@@ -52,6 +52,18 @@ export const theme = createTheme({
 			lineHeight: 24,
 		},
 		defaults: {},
+	},
+	buttonVariants: {
+		filled: {
+			backgroundColor: "primary",
+			color: "mainText",
+		},
+		outline: {
+			backgroundColor: "mainBackground",
+			color: "lightPrimary",
+			borderColor: "primary",
+			borderWidth: 1,
+		},
 	},
 });
 
