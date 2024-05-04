@@ -1,10 +1,10 @@
 import { StyleSheet, View, Button } from "react-native";
-import { useTheme } from "@/components/ThemeContext";
+import { useDarkLightTheme } from "@/components/ThemeContext";
 import { createBox, createText } from "@shopify/restyle";
 import { Theme } from "@/theme";
 
 export default function TabTwoScreen() {
-	const { darkMode, setDarkMode } = useTheme();
+	const { darkMode, setDarkMode } = useDarkLightTheme();
 	const Text = createText<Theme>();
 	const Box = createBox<Theme>();
 	return (

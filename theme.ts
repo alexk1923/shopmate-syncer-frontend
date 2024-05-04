@@ -2,27 +2,27 @@ import { createTheme } from "@shopify/restyle";
 
 const palette = {
 	light: {
-		text: "#f0f0f0",
 		background: "#f3fcfc",
-		primary: "#007f80",
-		secondary: "#ffbf00",
-		accent: "#ffa600",
+		primary: "#008dda",
+		secondary: "#ace2e1",
+		accent: "#41c9e2",
 	},
 	dark: {
-		text: "#eefbfc",
 		background: "#030c0c",
-		primary: "#80ffff",
-		secondary: "#ffbf00",
-		accent: "#ffa600",
+		primary: "#3a31d8",
+		secondary: "#08044f",
+		accent: "#0600c2",
 	},
+
+	lightText: "#eae9fc",
+	darkText: "#050316",
 };
 
 export const theme = createTheme({
 	colors: {
 		mainBackground: palette.light.background,
-		mainText: palette.light.text,
-		lightText: palette.light.text,
-		darkText: palette.light.text,
+		lightText: palette.lightText,
+		darkText: palette.darkText,
 
 		primary: palette.light.primary,
 		lightPrimary: palette.light.primary,
@@ -56,12 +56,12 @@ export const theme = createTheme({
 	buttonVariants: {
 		filled: {
 			backgroundColor: "primary",
-			color: "mainText",
+			color: "lightText",
 		},
 		outline: {
 			backgroundColor: "mainBackground",
-			color: "lightPrimary",
-			borderColor: "primary",
+			color: "secondary",
+			borderColor: "secondary",
 			borderWidth: 1,
 		},
 	},
@@ -74,9 +74,9 @@ export const darkTheme: Theme = {
 	colors: {
 		...theme.colors,
 		mainBackground: palette.dark.background,
-		mainText: palette.dark.text,
-		lightText: palette.dark.text,
-		darkText: palette.dark.text,
+
+		lightText: palette.lightText,
+		darkText: palette.darkText,
 
 		primary: palette.dark.primary,
 		lightPrimary: palette.dark.primary,

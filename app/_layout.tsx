@@ -6,7 +6,10 @@ import { useEffect } from "react";
 
 import { ThemeProvider } from "@shopify/restyle";
 import { darkTheme, theme } from "@/theme";
-import { DarkLightThemeProvider, useTheme } from "@/components/ThemeContext";
+import {
+	DarkLightThemeProvider,
+	useDarkLightTheme,
+} from "@/components/ThemeContext";
 import { Text } from "react-native";
 
 export {
@@ -51,7 +54,7 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-	const { darkMode } = useTheme();
+	const { darkMode } = useDarkLightTheme();
 
 	return (
 		<ThemeProvider theme={darkMode ? darkTheme : theme}>

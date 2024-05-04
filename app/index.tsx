@@ -1,44 +1,51 @@
 // index.tsx
 import AppButton from "@/components/AppButton";
+import RestyleBox from "@/components/RestyleBox";
+import { useDarkLightTheme } from "@/components/ThemeContext";
 import { Theme, theme } from "@/theme";
 import { createBox, createText } from "@shopify/restyle";
 import { router } from "expo-router";
-import { Button, Image, StyleSheet, Text, View } from "react-native";
+import { Button, Image, StyleSheet } from "react-native";
 const Index = () => {
-	const Text = createText<Theme>();
-	const Box = createBox<Theme>();
+	const RestyleText = createText<Theme>();
+	const { darkMode } = useDarkLightTheme();
 
 	return (
-		<Box style={styles.c1} gap='m'>
-			<Box style={styles.c2} gap='m' margin='xl' marginBottom='s'>
+		<RestyleBox style={styles.c1} gap='m' backgroundColor='mainBackground'>
+			<RestyleBox style={styles.c2} gap='m' margin='xl' marginBottom='s'>
 				<Image
 					style={styles.logo}
-					source={require("@/assets/images/logo-teal.png")}
+					source={
+						darkMode
+							? require("@/assets/images/logo-teal.png")
+							: require("@/assets/images/logo-teal.png")
+					}
 				/>
 				<AppButton
 					title='LOGIN'
 					onPress={() => {
-						router.navigate("/(tabs)/landing");
+						router.navigate("/login");
 					}}
 					variant={"filled"}
 				></AppButton>
 				<AppButton
 					title='REGISTER'
-					onPress={() => console.log("REGISTER")}
 					variant={"outline"}
+					onPress={() => {
+						router.navigate("/register");
+					}}
 				></AppButton>
 
-				<Text variant='body' textAlign='center'>
+				<RestyleText variant='body' color='darkText' textAlign='center'>
 					Shopmate Syncer
-				</Text>
-			</Box>
-		</Box>
+				</RestyleText>
+			</RestyleBox>
+		</RestyleBox>
 	);
 };
 
 const styles = StyleSheet.create({
 	c1: {
-		backgroundColor: "mainBackground",
 		width: "100%",
 		height: "100%",
 		display: "flex",
@@ -50,7 +57,7 @@ const styles = StyleSheet.create({
 	},
 
 	logo: {
-		width: 200,
+		width: "100%",
 		height: 200,
 		alignSelf: "center",
 		objectFit: "contain",

@@ -1,5 +1,11 @@
 import { Theme, theme } from "@/theme";
-import { TouchableOpacity, StyleSheet, View, ViewStyle } from "react-native";
+import {
+	TouchableOpacity,
+	StyleSheet,
+	View,
+	ViewStyle,
+	Pressable,
+} from "react-native";
 import {
 	BackgroundColorProps,
 	ColorProps,
@@ -42,7 +48,7 @@ type Props = {
 
 const ButtonContainer = createRestyleComponent<ButtonProps, Theme>(
 	[buttonVariant],
-	TouchableOpacity
+	Pressable
 );
 
 const AppButton = ({ onPress, title, variant }: Props) => {
@@ -56,7 +62,7 @@ const AppButton = ({ onPress, title, variant }: Props) => {
 		>
 			<Text
 				style={[styles.appButtonText]}
-				color={variant === "filled" ? "mainText" : "primary"}
+				color={variant === "filled" ? "lightText" : "primary"}
 			>
 				{title}
 			</Text>
@@ -68,9 +74,8 @@ const styles = StyleSheet.create({
 	// ...
 	appButtonContainer: {
 		elevation: 8,
-		borderRadius: 10,
-		paddingVertical: 10,
-		paddingHorizontal: 12,
+		borderRadius: 30,
+		paddingVertical: theme.spacing.m,
 	},
 	appButtonText: {
 		fontSize: 18,

@@ -23,4 +23,4 @@ export const DarkLightThemeProvider = ({
 };
 
 // Create a custom hook for accessing the theme
-export const useTheme = () => useContext(ThemeContext);
+export const useDarkLightTheme = () => useContext(ThemeContext);
