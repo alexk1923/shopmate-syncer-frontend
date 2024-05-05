@@ -44,8 +44,8 @@ const login = () => {
 	}, []);
 
 	return (
-		<RestyleBox backgroundColor='mainBackground' gap='m' style={styles.c1}>
-			<RestyleBox style={styles.c2} backgroundColor='primary'>
+		<RestyleBox backgroundColor='primary' style={styles.c1}>
+			<RestyleBox style={styles.c2}>
 				<Image
 					style={styles.logo}
 					source={
@@ -55,7 +55,12 @@ const login = () => {
 					}
 				/>
 			</RestyleBox>
-			<RestyleBox style={styles.c3} margin='xl' gap='m'>
+			<RestyleBox
+				style={styles.c3}
+				backgroundColor='mainBackground'
+				paddingHorizontal='xl'
+				gap='m'
+			>
 				{!isKeyboardVisible && (
 					<>
 						<RestyleText variant='header' style={styles.text}>
@@ -69,7 +74,11 @@ const login = () => {
 				)}
 
 				<View style={styles.searchSection}>
-					<TextInput placeholder='Username' style={styles.input}></TextInput>
+					<TextInput
+						placeholder='Username'
+						style={styles.input}
+						autoComplete='username'
+					></TextInput>
 					<FontAwesome6
 						name='user-large'
 						size={24}
@@ -78,7 +87,12 @@ const login = () => {
 					/>
 				</View>
 				<View style={styles.searchSection}>
-					<TextInput placeholder='Password' style={styles.input}></TextInput>
+					<TextInput
+						placeholder='Password'
+						style={styles.input}
+						autoComplete='password'
+						secureTextEntry={!showPassword}
+					></TextInput>
 					<Pressable
 						onPress={() => {
 							console.log(showPassword);
@@ -117,6 +131,8 @@ const login = () => {
 const styles = StyleSheet.create({
 	test: {
 		backgroundColor: "green",
+		borderColor: "red",
+		borderWidth: 5,
 	},
 
 	c1: {
@@ -124,8 +140,6 @@ const styles = StyleSheet.create({
 		height: "100%",
 	},
 	c2: {
-		borderBottomLeftRadius: 50,
-		borderBottomRightRadius: 50,
 		display: "flex",
 		justifyContent: "center",
 		flex: 1,
@@ -134,6 +148,9 @@ const styles = StyleSheet.create({
 		flex: 3,
 		display: "flex",
 		justifyContent: "center",
+
+		borderTopLeftRadius: 45,
+		borderTopRightRadius: 45,
 	},
 	logo: {
 		width: "100%",
