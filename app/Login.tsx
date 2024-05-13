@@ -15,12 +15,11 @@ import AppButton from "@/components/AppButton";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { theme } from "@/theme";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
-const register = () => {
+const Login = () => {
 	const { darkMode } = useDarkLightTheme();
 	const [showPassword, setShowPassword] = useState(false);
-	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -58,27 +57,30 @@ const register = () => {
 			</RestyleBox>
 			<RestyleBox
 				style={styles.c3}
+				backgroundColor='mainBackground'
 				paddingHorizontal='xl'
 				gap='m'
-				backgroundColor='mainBackground'
 			>
-				<RestyleText variant='header' style={styles.text}>
-					Create new account
-				</RestyleText>
+				{!isKeyboardVisible && (
+					<>
+						<RestyleText variant='header' style={styles.text}>
+							Let's get started!
+						</RestyleText>
+						<RestyleText variant='body' style={styles.text}>
+							Login to start improve your shopping experience and collaboration
+							with your mate
+						</RestyleText>
+					</>
+				)}
 
 				<View style={styles.searchSection}>
-					<TextInput placeholder='Username' style={styles.input}></TextInput>
+					<TextInput
+						placeholder='Username'
+						style={styles.input}
+						autoComplete='username'
+					></TextInput>
 					<FontAwesome6
 						name='user-large'
-						size={24}
-						color='black'
-						style={styles.searchIcon}
-					/>
-				</View>
-				<View style={styles.searchSection}>
-					<TextInput placeholder='Email' style={styles.input}></TextInput>
-					<FontAwesome6
-						name='envelope'
 						size={24}
 						color='black'
 						style={styles.searchIcon}
@@ -88,10 +90,12 @@ const register = () => {
 					<TextInput
 						placeholder='Password'
 						style={styles.input}
+						autoComplete='password'
 						secureTextEntry={!showPassword}
-					/>
+					></TextInput>
 					<Pressable
 						onPress={() => {
+							console.log(showPassword);
 							setShowPassword((prevPassword) => !prevPassword);
 						}}
 					>
@@ -103,39 +107,21 @@ const register = () => {
 						/>
 					</Pressable>
 				</View>
-				<View style={styles.searchSection}>
-					<TextInput
-						placeholder='Confirm password'
-						style={styles.input}
-						secureTextEntry={!showConfirmPassword}
-					/>
-					<Pressable
-						onPress={() => {
-							setShowConfirmPassword((prevPassword) => !prevPassword);
-						}}
-					>
-						<FontAwesome6
-							name={showPassword ? "eye" : "eye-slash"}
-							size={24}
-							color='black'
-							style={styles.searchIcon}
-						/>
-					</Pressable>
-				</View>
-
+				<RestyleBox style={styles.checkboxContainer}>
+					<RestyleText color='secondary'>Forgot password</RestyleText>
+				</RestyleBox>
 				<AppButton
 					variant='filled'
-					title='Register'
+					title='Login'
 					onPress={() => {
 						console.log("TODO FETCH LOGIN");
+						router.navigate("/introduction");
 					}}
 				></AppButton>
 				<RestyleText textAlign='center'>
-					Already have an account?{" "}
-					<Link href='/login'>
-						<RestyleText color='secondary' marginLeft='m'>
-							Sign in
-						</RestyleText>
+					No account yet? Register{" "}
+					<Link href='/Register'>
+						<RestyleText color='secondary'>here</RestyleText>
 					</Link>
 				</RestyleText>
 			</RestyleBox>
@@ -207,4 +193,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default register;
+export default Login;

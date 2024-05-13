@@ -58,7 +58,6 @@ function RootLayoutNav() {
 
 	return (
 		<ThemeProvider theme={darkMode ? darkTheme : theme}>
-			<Text>Home page</Text>
 			<Stack>
 				<Stack.Screen
 					name='index'

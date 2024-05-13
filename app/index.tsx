@@ -2,6 +2,7 @@
 import AppButton from "@/components/AppButton";
 import RestyleBox from "@/components/RestyleBox";
 import { useDarkLightTheme } from "@/components/ThemeContext";
+import Wrapper from "@/components/Wrapper";
 import { Theme, theme } from "@/theme";
 import { createBox, createText } from "@shopify/restyle";
 import { router } from "expo-router";
@@ -11,7 +12,7 @@ const Index = () => {
 	const { darkMode } = useDarkLightTheme();
 
 	return (
-		<RestyleBox style={styles.c1} gap='m' backgroundColor='mainBackground'>
+		<Wrapper style={{ justifyContent: "flex-end" }}>
 			<RestyleBox style={styles.c2} gap='m' margin='xl' marginBottom='s'>
 				<Image
 					style={styles.logo}
@@ -24,23 +25,25 @@ const Index = () => {
 				<AppButton
 					title='LOGIN'
 					onPress={() => {
-						router.navigate("/login");
+						router.navigate("/Login");
 					}}
 					variant={"filled"}
+					fullWidth
 				></AppButton>
 				<AppButton
 					title='REGISTER'
 					variant={"outline"}
 					onPress={() => {
-						router.navigate("/register");
+						router.navigate("/Register");
 					}}
+					fullWidth
 				></AppButton>
 
-				<RestyleText variant='body' color='darkText' textAlign='center'>
+				<RestyleText variant='buttonMedium' color='darkText' textAlign='center'>
 					Shopmate Syncer
 				</RestyleText>
 			</RestyleBox>
-		</RestyleBox>
+		</Wrapper>
 	);
 };
 

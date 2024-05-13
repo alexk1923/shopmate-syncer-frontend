@@ -51,6 +51,16 @@ export const theme = createTheme({
 			fontSize: 16,
 			lineHeight: 24,
 		},
+
+		buttonSmall: {
+			fontSize: 16,
+			lineHeight: 24,
+		},
+		buttonMedium: {
+			fontSize: 18,
+			lineHeight: 27,
+		},
+
 		defaults: {},
 	},
 	buttonVariants: {

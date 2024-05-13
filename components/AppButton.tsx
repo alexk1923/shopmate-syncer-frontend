@@ -1,41 +1,17 @@
 import { Theme, theme } from "@/theme";
+import { StyleSheet, ViewStyle, Pressable } from "react-native";
 import {
-	TouchableOpacity,
-	StyleSheet,
-	View,
-	ViewStyle,
-	Pressable,
-} from "react-native";
-import {
-	BackgroundColorProps,
-	ColorProps,
 	VariantProps,
-	backgroundColor,
-	color,
-	composeRestyleFunctions,
-	createBox,
 	createRestyleComponent,
-	createText,
 	createVariant,
-	spacing,
-	useRestyle,
 } from "@shopify/restyle";
-import React, { useEffect } from "react";
-import { Link, useNavigation } from "expo-router";
+import React from "react";
+import RestyleText from "./RestyleText";
 
-type RestyleProps = BackgroundColorProps<Theme> & ColorProps<Theme>;
-
-const restyleFunctions = composeRestyleFunctions<Theme, RestyleProps>([
-	color,
-	backgroundColor,
-]);
-
-const Box = createBox<Theme>();
 const buttonVariant = createVariant({ themeKey: "buttonVariants" });
 
 type ButtonProps = VariantProps<Theme, "buttonVariants"> & {
 	onPress: () => void;
-	variant: "filled" | "outline";
 	children: React.ReactNode;
 	style?: ViewStyle;
 };
@@ -44,6 +20,7 @@ type Props = {
 	title: string;
 	onPress: () => void;
 	variant: "filled" | "outline";
+	fullWidth?: boolean;
 };
 
 const ButtonContainer = createRestyleComponent<ButtonProps, Theme>(
@@ -51,21 +28,26 @@ const ButtonContainer = createRestyleComponent<ButtonProps, Theme>(
 	Pressable
 );
 
-const AppButton = ({ onPress, title, variant }: Props) => {
-	const Text = createText<Theme>();
-
+const AppButton = ({ onPress, title, variant, fullWidth }: Props) => {
 	return (
 		<ButtonContainer
 			variant={variant}
 			onPress={onPress}
-			style={styles.appButtonContainer}
+			style={
+				fullWidth
+					? { ...styles.appButtonContainer, width: "100%" }
+					: styles.appButtonContainer
+			}
 		>
-			<Text
-				style={[styles.appButtonText]}
+			<RestyleText
 				color={variant === "filled" ? "lightText" : "primary"}
+				textAlign='center'
+				fontWeight='bold'
+				textTransform='uppercase'
+				variant='buttonSmall'
 			>
 				{title}
-			</Text>
+			</RestyleText>
 		</ButtonContainer>
 	);
 };
@@ -74,14 +56,10 @@ const styles = StyleSheet.create({
 	// ...
 	appButtonContainer: {
 		elevation: 8,
-		borderRadius: 30,
+		borderRadius: 15,
 		paddingVertical: theme.spacing.m,
-	},
-	appButtonText: {
-		fontSize: 18,
-		fontWeight: "bold",
+		paddingHorizontal: theme.spacing.xl,
 		alignSelf: "center",
-		textTransform: "uppercase",
 	},
 });
 
