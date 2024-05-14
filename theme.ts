@@ -47,6 +47,12 @@ export const theme = createTheme({
 			fontWeight: "bold",
 			fontSize: 34,
 		},
+
+		subheader: {
+			fontSize: 24,
+			fontWeight: "bold",
+		},
+
 		body: {
 			fontSize: 16,
 			lineHeight: 24,

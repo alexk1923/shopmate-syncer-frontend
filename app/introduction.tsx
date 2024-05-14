@@ -21,6 +21,7 @@ import AppButton from "@/components/AppButton";
 import RestyleText from "@/components/RestyleText";
 import RestyleBox from "@/components/RestyleBox";
 import { theme } from "@/theme";
+import { router } from "expo-router";
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
@@ -81,7 +82,12 @@ export default function PaginationDotsExample() {
 					}}
 				>
 					<AppButton title='Join house' variant='outline' onPress={() => {}} />
-					<RestyleText variant='body' textAlign='center' color='primary'>
+					<RestyleText
+						variant='body'
+						textAlign='center'
+						color='primary'
+						onPress={() => router.navigate("/HomePage")}
+					>
 						Skip
 					</RestyleText>
 				</RestyleBox>

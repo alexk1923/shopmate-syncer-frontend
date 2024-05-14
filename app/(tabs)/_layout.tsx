@@ -50,7 +50,7 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name='landing'
+				name='HomePage'
 				options={{
 					title: "Landing tab",
 					tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,

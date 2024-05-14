@@ -1,5 +1,5 @@
 import { Theme, theme } from "@/theme";
-import { StyleSheet, ViewStyle, Pressable } from "react-native";
+import { StyleSheet, ViewStyle, Pressable, StyleProp } from "react-native";
 import {
 	VariantProps,
 	createRestyleComponent,
@@ -21,6 +21,7 @@ type Props = {
 	onPress: () => void;
 	variant: "filled" | "outline";
 	fullWidth?: boolean;
+	style?: StyleProp<ViewStyle>;
 };
 
 const ButtonContainer = createRestyleComponent<ButtonProps, Theme>(
@@ -28,16 +29,12 @@ const ButtonContainer = createRestyleComponent<ButtonProps, Theme>(
 	Pressable
 );
 
-const AppButton = ({ onPress, title, variant, fullWidth }: Props) => {
+const AppButton = ({ onPress, title, variant, fullWidth, style }: Props) => {
 	return (
 		<ButtonContainer
 			variant={variant}
 			onPress={onPress}
-			style={
-				fullWidth
-					? { ...styles.appButtonContainer, width: "100%" }
-					: styles.appButtonContainer
-			}
+			style={{ ...styles.appButtonContainer, ...StyleSheet.flatten(style) }}
 		>
 			<RestyleText
 				color={variant === "filled" ? "lightText" : "primary"}

@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 		height: "100%",
 		display: "flex",
 		justifyContent: "flex-end",
-		padding: theme.spacing.xl,
+		padding: theme.spacing.l,
 		gap: theme.spacing.m,
 		backgroundColor: "mainBackground",
 	},
