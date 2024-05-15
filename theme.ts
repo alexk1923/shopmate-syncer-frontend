@@ -2,8 +2,10 @@ import { createTheme } from "@shopify/restyle";
 
 const palette = {
 	light: {
-		background: "#f3fcfc",
+		background: "#ffffff",
+		lightPrimary: "#0098eb",
 		primary: "#008dda",
+		darkPrimary: "#026da8",
 		secondary: "#ace2e1",
 		accent: "#41c9e2",
 	},
@@ -25,12 +27,12 @@ export const theme = createTheme({
 		darkText: palette.darkText,
 
 		primary: palette.light.primary,
-		lightPrimary: palette.light.primary,
-		darkPrimary: palette.light.primary,
+		lightPrimary: palette.light.lightPrimary,
+		darkPrimary: palette.light.darkPrimary,
 
-		secondary: palette.light.primary,
-		lightSecondary: palette.light.primary,
-		darkSecondary: palette.light.primary,
+		secondary: palette.light.secondary,
+		lightSecondary: palette.light.secondary,
+		darkSecondary: palette.light.secondary,
 
 		accent: palette.light.accent,
 		lightAccent: palette.light.accent,

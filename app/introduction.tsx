@@ -86,7 +86,7 @@ export default function PaginationDotsExample() {
 						variant='body'
 						textAlign='center'
 						color='primary'
-						onPress={() => router.navigate("/HomePage")}
+						onPress={() => router.navigate("/(tabs)/HomePage")}
 					>
 						Skip
 					</RestyleText>
