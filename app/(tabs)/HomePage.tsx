@@ -11,6 +11,8 @@ import CalendarComponent from "../CalendarComponent";
 import PieChartComponent from "@/components/PieChartComponent";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toggle from "react-native-toggle-element";
+import ProductExpiryItem from "@/components/ProductExpiryItem";
+import HorizontalCard from "@/components/HorizontalCard";
 
 export default function HomePage(this: any) {
 	const barData = [
@@ -22,8 +24,6 @@ export default function HomePage(this: any) {
 		{ value: 256, label: "S" },
 		{ value: 300, label: "S" },
 	];
-
-	const [autoGenerate, setAutoGenerate] = useState(false);
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
@@ -44,7 +44,7 @@ export default function HomePage(this: any) {
 					</RestyleBox>
 					<MaterialIcons
 						name='notifications'
-						size={24}
+						size={32}
 						color={theme.colors.primary}
 					/>
 				</RestyleBox>
@@ -53,7 +53,7 @@ export default function HomePage(this: any) {
 					<RestyleBox style={styles.scheduleContainer}>
 						<RestyleText variant='body'>
 							Next shopping:{" "}
-							<RestyleText variant='body' color='primary'>
+							<RestyleText variant='body' color='primary' fontWeight='bold'>
 								2 days
 							</RestyleText>
 						</RestyleText>
@@ -65,42 +65,30 @@ export default function HomePage(this: any) {
 						/>
 					</RestyleBox>
 				</RestyleBox>
+
 				<RestyleBox gap='m'>
 					<PieChartComponent />
-					<RestyleBox
-						backgroundColor='mainBackground'
-						style={styles.autoGenerateContainer}
-					>
-						<RestyleBox style={styles.autoGenerateTextContainer}>
-							<RestyleText color='primary' fontWeight='bold'>
-								Auto-generate
-							</RestyleText>
-							<RestyleText>
-								Choose to use a custom shopping list or let the app generate it
-								from preferences
-							</RestyleText>
-						</RestyleBox>
-
-						<RestyleBox>
-							<Toggle
-								value={autoGenerate}
-								onPress={() => setAutoGenerate(!autoGenerate)}
-								thumbButton={{
-									width: 30,
-									height: 30,
-									radius: 30,
-									activeBackgroundColor: theme.colors.darkPrimary,
-									inActiveBackgroundColor: "#ababab",
-								}}
-								trackBar={{
-									width: 50,
-									height: 20,
-									activeBackgroundColor: theme.colors.lightPrimary,
-									inActiveBackgroundColor: "#cecece",
-								}}
-							/>
-						</RestyleBox>
-					</RestyleBox>
+					<HorizontalCard title='Expiring soon ⌛'>
+						<ProductExpiryItem
+							product={{
+								name: "Iaurt cu piersici",
+								expiryDate: new Date("2024-05-18"),
+								quantity: 2,
+								image: null,
+								tags: ["dairy", "drinks"],
+							}}
+						/>
+						<ProductExpiryItem
+							product={{
+								name: "Banane",
+								expiryDate: new Date("2024-06-18"),
+								quantity: 1,
+								image:
+									"https://images.immediate.co.uk/production/volatile/sites/30/2017/01/Bunch-of-bananas-67e91d5.jpg?quality=90&resize=440,400",
+								tags: ["fruits_vegetables"],
+							}}
+						/>
+					</HorizontalCard>
 				</RestyleBox>
 			</Wrapper>
 		</GestureHandlerRootView>
@@ -147,16 +135,9 @@ const styles = StyleSheet.create({
 		paddingHorizontal: theme.spacing.s,
 	},
 
-	autoGenerateContainer: {
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
+	foodExpiryContainer: {
 		padding: theme.spacing.s,
 		borderRadius: 15,
-	},
-
-	autoGenerateTextContainer: {
-		display: "flex",
-		flex: 1,
+		justifyContent: "center",
 	},
 });

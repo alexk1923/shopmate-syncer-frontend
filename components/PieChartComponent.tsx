@@ -1,118 +1,81 @@
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 import RestyleBox from "./RestyleBox";
 import { theme } from "@/theme";
+import FoodTag from "./FoodTag";
+import { FOOD_TAG_INFO } from "@/constants/FoodTagsInfo";
+import RestyleText from "./RestyleText";
+import HorizontalCard from "./HorizontalCard";
+import { FoodTagKey } from "@/constants/types";
+import { useEffect, useRef, useState } from "react";
+import React from "react";
+import PieChartLegend from "./PieChartLegend";
 
 const PieChartComponent = () => {
+	const [selectedItem, setSelectedItem] = useState<(typeof pieData)[0]>(
+		{} as (typeof pieData)[0]
+	);
+
 	const pieData = [
 		{
-			value: 47,
-			color: "#009FFF",
-			gradientCenterColor: "#006DFF",
-			focused: true,
+			value: 60,
+			color: FOOD_TAG_INFO.dairy.color,
+			// gradientCenterColor: "#006DFF",
+			name: FOOD_TAG_INFO.dairy.name,
+			text: "60%",
+			// focused: true,
 		},
-		{ value: 40, color: "#93FCF8", gradientCenterColor: "#3BE9DE" },
-		{ value: 16, color: "#BDB2FA", gradientCenterColor: "#8F80F3" },
-		{ value: 3, color: "#FFA5BA", gradientCenterColor: "#FF7F97" },
+		{
+			value: 15,
+			color: FOOD_TAG_INFO.meat.color,
+			// gradientCenterColor: "#094d48",
+			name: FOOD_TAG_INFO.meat.name,
+			text: "15%",
+		},
+		{
+			value: 20,
+			color: FOOD_TAG_INFO.snacks.color,
+			// gradientCenterColor: "#8F80F3",
+			name: FOOD_TAG_INFO.snacks.name,
+			text: "20%",
+		},
+		{
+			value: 5,
+			color: FOOD_TAG_INFO.sweets.color,
+			// gradientCenterColor: "#FF7F97",
+			name: FOOD_TAG_INFO.sweets.name,
+			text: "5%",
+		},
 	];
 
-	const renderDot = (color: string) => {
-		return (
-			<View
-				style={{
-					height: 10,
-					width: 10,
-					borderRadius: 5,
-					backgroundColor: color,
-					marginRight: 10,
-				}}
-			/>
-		);
-	};
-
-	const renderLegendComponent = () => {
-		return (
-			<>
-				<View
-					style={{
-						justifyContent: "center",
-						marginBottom: 10,
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							width: 120,
-							// marginRight: 20,
-						}}
-					>
-						{renderDot("#006DFF")}
-						<Text style={{ color: theme.colors.primary }}>Excellent: 47%</Text>
-					</View>
-					<View
-						style={{ flexDirection: "row", alignItems: "center", width: 120 }}
-					>
-						{renderDot("#8F80F3")}
-						<Text style={{ color: theme.colors.primary }}>Okay: 16%</Text>
-					</View>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							width: 120,
-							// marginRight: 20,
-						}}
-					>
-						{renderDot("#3BE9DE")}
-						<Text style={{ color: theme.colors.primary }}>Good: 40%</Text>
-					</View>
-					<View
-						style={{ flexDirection: "row", alignItems: "center", width: 120 }}
-					>
-						{renderDot("#FF7F97")}
-						<Text style={{ color: theme.colors.primary }}>Poor: 3%</Text>
-					</View>
-				</View>
-				<View style={{ flexDirection: "row", justifyContent: "center" }}></View>
-			</>
-		);
-	};
+	const MemoizedPieChart = React.memo(PieChart);
 
 	return (
-		<RestyleBox
-			backgroundColor='mainBackground'
-			borderRadius={15}
-			justifyContent='center'
-			alignItems='center'
-			flexDirection='row'
-			gap='m'
-		>
-			<PieChart
-				data={pieData}
-				donut
-				showGradient
-				sectionAutoFocus
-				radius={90}
-				innerRadius={60}
-				focusOnPress
-				innerCircleColor={"#232B5D"}
-				centerLabelComponent={() => {
-					return (
-						<View style={{ justifyContent: "center", alignItems: "center" }}>
-							<Text
-								style={{ fontSize: 22, color: "white", fontWeight: "bold" }}
-							>
-								47%
-							</Text>
-							<Text style={{ fontSize: 14, color: "white" }}>Excellent</Text>
-						</View>
-					);
-				}}
-			/>
+		<HorizontalCard title='Last 30 days'>
+			<RestyleBox flexDirection='row' gap='m' justifyContent='center'>
+				<MemoizedPieChart
+					data={pieData}
+					// donut
+					textColor='white'
+					textSize={16}
+					focusOnPress
+					showValuesAsLabels
+					textBackgroundRadius={26}
+					fontWeight='bold'
+					strokeWidth={2}
+					strokeColor={theme.colors.primary}
+					onPress={(item: (typeof pieData)[0], index: number) => {
+						console.log(item);
+						item = item;
+					}}
+					showText
+					radius={60}
+					sectionAutoFocus
+				/>
 
-			{renderLegendComponent()}
-		</RestyleBox>
+				<PieChartLegend pieData={pieData} selectedItem={selectedItem} />
+			</RestyleBox>
+		</HorizontalCard>
 	);
 };
 
