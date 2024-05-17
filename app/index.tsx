@@ -1,14 +1,13 @@
 // index.tsx
 import AppButton from "@/components/AppButton";
 import RestyleBox from "@/components/RestyleBox";
+import RestyleText from "@/components/RestyleText";
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import Wrapper from "@/components/Wrapper";
-import { Theme, theme } from "@/theme";
-import { createBox, createText } from "@shopify/restyle";
+
 import { router } from "expo-router";
-import { Button, Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 const Index = () => {
-	const RestyleText = createText<Theme>();
 	const { darkMode } = useDarkLightTheme();
 
 	return (

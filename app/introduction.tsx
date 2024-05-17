@@ -6,16 +6,13 @@ import {
 	Animated,
 	Dimensions,
 } from "react-native";
-import PagerView, {
-	PagerViewOnPageScrollEventData,
-} from "react-native-pager-view";
+// import PagerView from "react-native-pager-view";
 
 import { SlidingDot } from "react-native-animated-pagination-dots";
 import IntroScreen from "./IntroScreen";
 import IntroOneSvg from "@/assets/images/IntroOneSvg";
 import IntroSecondSvg from "@/assets/images/IntroSecondSvg";
 import IntroThirdSvg from "@/assets/images/IntroThirdSvg";
-import IntroScreenFinal from "./IntroScreenFinal";
 import IntroFourthSvg from "@/assets/images/IntroFourthSvg";
 import AppButton from "@/components/AppButton";
 import RestyleText from "@/components/RestyleText";
@@ -23,11 +20,11 @@ import RestyleBox from "@/components/RestyleBox";
 import { theme } from "@/theme";
 import { router } from "expo-router";
 
-const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
+// const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
 export default function PaginationDotsExample() {
 	const width = Dimensions.get("window").width;
-	const ref = React.useRef<PagerView>(null);
+	// const ref = React.useRef<PagerView>(null);
 	const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
 	const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
 
@@ -106,33 +103,33 @@ export default function PaginationDotsExample() {
 		outputRange: [0, (data.length + 1) * width],
 	});
 
-	const onPageScroll = React.useMemo(
-		() =>
-			Animated.event<PagerViewOnPageScrollEventData>(
-				[
-					{
-						nativeEvent: {
-							offset: scrollOffsetAnimatedValue,
-							position: positionAnimatedValue,
-						},
-					},
-				],
-				{
-					useNativeDriver: false,
-				}
-			),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
-	);
+	// const onPageScroll = React.useMemo(
+	// 	() =>
+	// 		Animated.event<PagerViewOnPageScrollEventData>(
+	// 			[
+	// 				{
+	// 					nativeEvent: {
+	// 						offset: scrollOffsetAnimatedValue,
+	// 						position: positionAnimatedValue,
+	// 					},
+	// 				},
+	// 			],
+	// 			{
+	// 				useNativeDriver: false,
+	// 			}
+	// 		),
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// 	[]
+	// );
 
 	return (
 		<SafeAreaView testID='safe-area-view' style={styles.flex}>
-			<AnimatedPagerView
+			{/* <AnimatedPagerView
 				testID='pager-view'
 				initialPage={0}
 				ref={ref}
 				style={styles.PagerView}
-				onPageScroll={onPageScroll}
+				// onPageScroll={onPageScroll}
 			>
 				{data.map((d) => (
 					<IntroScreen
@@ -145,7 +142,7 @@ export default function PaginationDotsExample() {
 						}
 					/>
 				))}
-			</AnimatedPagerView>
+			</AnimatedPagerView> */}
 			<View style={styles.dotsContainer}>
 				<View style={styles.dotContainer}>
 					<SlidingDot

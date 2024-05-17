@@ -14,7 +14,7 @@ export default function TabTwoScreen() {
 			alignItems='center'
 			justifyContent='center'
 		>
-			<Text color='mainText'>Second tab</Text>
+			<Text color='primary'>Second tab</Text>
 			<Box style={styles.separator} />
 			<Button
 				onPress={() => setDarkMode(!darkMode)}

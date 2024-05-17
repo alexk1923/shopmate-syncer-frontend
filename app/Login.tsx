@@ -1,6 +1,5 @@
 import {
 	View,
-	Text,
 	StyleSheet,
 	Image,
 	TextInput,
@@ -14,7 +13,6 @@ import { useDarkLightTheme } from "@/components/ThemeContext";
 import AppButton from "@/components/AppButton";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { theme } from "@/theme";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Link, router } from "expo-router";
 
 const Login = () => {
