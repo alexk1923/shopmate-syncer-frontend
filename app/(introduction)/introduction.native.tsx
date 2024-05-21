@@ -1,15 +1,16 @@
-import React from "react";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import {
 	StyleSheet,
 	View,
 	SafeAreaView,
 	Animated,
 	Dimensions,
+	Platform,
 } from "react-native";
-// import PagerView from "react-native-pager-view";
 
 import { SlidingDot } from "react-native-animated-pagination-dots";
-import IntroScreen from "./IntroScreen";
+import IntroScreen from "../IntroScreen";
 import IntroOneSvg from "@/assets/images/IntroOneSvg";
 import IntroSecondSvg from "@/assets/images/IntroSecondSvg";
 import IntroThirdSvg from "@/assets/images/IntroThirdSvg";
@@ -19,12 +20,19 @@ import RestyleText from "@/components/RestyleText";
 import RestyleBox from "@/components/RestyleBox";
 import { theme } from "@/theme";
 import { router } from "expo-router";
+import PagerView, {
+	PagerViewOnPageScrollEventData,
+} from "react-native-pager-view";
 
-// const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
+// import PagerView, {
+// 	PagerViewOnPageScrollEventData,
+// } from "react-native-pager-view";
+
+const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
 export default function PaginationDotsExample() {
 	const width = Dimensions.get("window").width;
-	// const ref = React.useRef<PagerView>(null);
+	const ref = React.useRef<PagerView>(null);
 	const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
 	const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
 
@@ -103,52 +111,62 @@ export default function PaginationDotsExample() {
 		outputRange: [0, (data.length + 1) * width],
 	});
 
-	// const onPageScroll = React.useMemo(
-	// 	() =>
-	// 		Animated.event<PagerViewOnPageScrollEventData>(
-	// 			[
-	// 				{
-	// 					nativeEvent: {
-	// 						offset: scrollOffsetAnimatedValue,
-	// 						position: positionAnimatedValue,
-	// 					},
-	// 				},
-	// 			],
-	// 			{
-	// 				useNativeDriver: false,
-	// 			}
-	// 		),
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// 	[]
-	// );
+	const onPageScroll = React.useMemo(
+		() =>
+			Animated.event<PagerViewOnPageScrollEventData>(
+				[
+					{
+						nativeEvent: {
+							offset: scrollOffsetAnimatedValue,
+							position: positionAnimatedValue,
+						},
+					},
+				],
+				{
+					useNativeDriver: false,
+				}
+			),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[]
+	);
 
 	return (
 		<SafeAreaView testID='safe-area-view' style={styles.flex}>
-			{/* <AnimatedPagerView
-				testID='pager-view'
-				initialPage={0}
-				ref={ref}
-				style={styles.PagerView}
-				// onPageScroll={onPageScroll}
-			>
-				{data.map((d) => (
-					<IntroScreen
-						title={d.title}
-						key={d.key}
-						SvgComponent={d.SvgComponent}
-						description={d.description}
-						ExtraComponent={
-							d.ExtraComponent === undefined ? <></> : d.ExtraComponent()
-						}
-					/>
-				))}
-			</AnimatedPagerView> */}
+			{Platform.OS === "web" ? (
+				<RestyleBox>
+					<RestyleText>This is the web</RestyleText>
+				</RestyleBox>
+			) : (
+				// <></>
+				<PagerView
+					initialPage={0}
+					testID='pager-view'
+					ref={ref}
+					style={styles.PagerView}
+					onPageScroll={onPageScroll}
+				>
+					{data.map((d) => (
+						<IntroScreen
+							title={d.title}
+							key={d.key}
+							SvgComponent={d.SvgComponent}
+							description={d.description}
+							ExtraComponent={
+								d.ExtraComponent === undefined ? <></> : d.ExtraComponent()
+							}
+						/>
+					))}
+				</PagerView>
+			)}
+
 			<View style={styles.dotsContainer}>
 				<View style={styles.dotContainer}>
 					<SlidingDot
 						testID={"sliding-dot"}
 						marginHorizontal={3}
 						data={data}
+						dotStyle={{ backgroundColor: theme.colors.secondary }}
+						slidingIndicatorStyle={{ backgroundColor: theme.colors.primary }}
 						//@ts-ignore
 						scrollX={scrollX}
 						dotSize={12}

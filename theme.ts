@@ -2,18 +2,26 @@ import { createTheme } from "@shopify/restyle";
 
 const palette = {
 	light: {
-		background: "#ffffff",
+		background: "#f8f8f8",
+		cardBackground: "#ffffff",
 		lightPrimary: "#0098eb",
 		primary: "#008dda",
 		darkPrimary: "#026da8",
 		secondary: "#ace2e1",
 		accent: "#41c9e2",
+		text: "#333333",
+		oppositeText: "#f0f0f0",
+		error: "#bd0303",
 	},
 	dark: {
-		background: "#030c0c",
-		primary: "#3a31d8",
+		background: "#111111",
+		cardBackground: "#141b25",
+		primary: "#0098eb",
 		secondary: "#08044f",
 		accent: "#0600c2",
+		text: "#f0f0f0",
+		oppositeText: "#333333",
+		error: "#bd0303",
 	},
 
 	lightText: "#eae9fc",
@@ -23,8 +31,11 @@ const palette = {
 export const theme = createTheme({
 	colors: {
 		mainBackground: palette.light.background,
+		cardBackground: palette.light.cardBackground,
 		lightText: palette.lightText,
 		darkText: palette.darkText,
+		text: palette.light.text,
+		oppositeText: palette.light.oppositeText,
 
 		primary: palette.light.primary,
 		lightPrimary: palette.light.lightPrimary,
@@ -37,6 +48,7 @@ export const theme = createTheme({
 		accent: palette.light.accent,
 		lightAccent: palette.light.accent,
 		darkAccent: palette.light.accent,
+		error: palette.light.error,
 	},
 	spacing: {
 		s: 8,
@@ -92,9 +104,12 @@ export const darkTheme: Theme = {
 	colors: {
 		...theme.colors,
 		mainBackground: palette.dark.background,
+		cardBackground: palette.dark.cardBackground,
 
 		lightText: palette.lightText,
 		darkText: palette.darkText,
+		text: palette.dark.text,
+		oppositeText: palette.dark.oppositeText,
 
 		primary: palette.dark.primary,
 		lightPrimary: palette.dark.primary,
@@ -107,5 +122,6 @@ export const darkTheme: Theme = {
 		accent: palette.dark.accent,
 		lightAccent: palette.dark.accent,
 		darkAccent: palette.dark.accent,
+		error: palette.dark.error,
 	},
 };

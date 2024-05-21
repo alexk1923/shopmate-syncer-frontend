@@ -17,7 +17,7 @@ const Index = () => {
 					style={styles.logo}
 					source={
 						darkMode
-							? require("@/assets/images/logo-teal.png")
+							? require("@/assets/images/logo-white.png")
 							: require("@/assets/images/logo-teal.png")
 					}
 				/>
@@ -38,7 +38,7 @@ const Index = () => {
 					fullWidth
 				></AppButton>
 
-				<RestyleText variant='buttonMedium' color='darkText' textAlign='center'>
+				<RestyleText variant='buttonMedium' color='text' textAlign='center'>
 					Shopmate Syncer
 				</RestyleText>
 			</RestyleBox>

@@ -1,9 +1,10 @@
-import { StyleSheet, View, Button } from "react-native";
+import { View, Text, Button, StyleSheet } from "react-native";
+import React from "react";
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import { createBox, createText } from "@shopify/restyle";
+import { createText, createBox } from "@shopify/restyle";
 import { Theme } from "@/theme";
 
-export default function TabTwoScreen() {
+const ShoppingPage = () => {
 	const { darkMode, setDarkMode } = useDarkLightTheme();
 	const Text = createText<Theme>();
 	const Box = createBox<Theme>();
@@ -32,7 +33,7 @@ export default function TabTwoScreen() {
 			<Text>Dark mode is {darkMode.toString()}</Text>
 		</Box>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	container: {
@@ -52,3 +53,5 @@ const styles = StyleSheet.create({
 		width: "80%",
 	},
 });
+
+export default ShoppingPage;

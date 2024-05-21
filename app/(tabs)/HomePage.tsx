@@ -1,9 +1,22 @@
 import RestyleBox from "@/components/RestyleBox";
 import RestyleText from "@/components/RestyleText";
 import Wrapper from "@/components/Wrapper";
-import React, { useState } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Image, StyleSheet, View } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+	FontAwesome,
+	FontAwesome5,
+	FontAwesome6,
+	MaterialIcons,
+} from "@expo/vector-icons";
+import {
+	Animated,
+	Image,
+	Pressable,
+	StyleSheet,
+	Text,
+	View,
+	useWindowDimensions,
+} from "react-native";
 import { theme } from "@/theme";
 import AppButton from "@/components/AppButton";
 import { router } from "expo-router";
@@ -13,17 +26,103 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toggle from "react-native-toggle-element";
 import ProductExpiryItem from "@/components/ProductExpiryItem";
 import HorizontalCard from "@/components/HorizontalCard";
+import { useDarkLightTheme } from "@/components/ThemeContext";
+import { RowMap, SwipeListView } from "react-native-swipe-list-view";
+import SwipeableComponent from "@/components/SwipeableComponent";
+import { FoodTagKey, Product } from "@/constants/types";
+import SwipeListMenu from "@/components/SwipeListMenu";
 
 export default function HomePage(this: any) {
-	const barData = [
-		{ value: 250, label: "M" },
-		{ value: 500, label: "T", frontColor: "#177AD5" },
-		{ value: 745, label: "W", frontColor: "#177AD5" },
-		{ value: 320, label: "T" },
-		{ value: 600, label: "F", frontColor: "#177AD5" },
-		{ value: 256, label: "S" },
-		{ value: 300, label: "S" },
-	];
+	const { currentTheme } = useDarkLightTheme();
+	const { height, width } = useWindowDimensions();
+
+	const [expiryItems, setExpiryItems] = useState<(Product & { key: number })[]>(
+		[
+			{
+				id: 1,
+				key: 1,
+				name: "Iaurt cu piersici",
+				expiryDate: new Date("2024-05-18"),
+				quantity: 2,
+				image: null,
+				tags: ["dairy", "drinks"] as FoodTagKey[],
+			},
+			{
+				id: 2,
+				key: 2,
+				name: "Banane",
+				expiryDate: new Date("2024-06-18"),
+				quantity: 1,
+				image:
+					"https://images.immediate.co.uk/production/volatile/sites/30/2017/01/Bunch-of-bananas-67e91d5.jpg?quality=90&resize=440,400",
+				tags: ["fruits_vegetables"] as FoodTagKey[],
+			},
+		]
+	);
+
+	useEffect(() => {
+		const fetchedItems = [
+			{
+				id: 1,
+				key: 1,
+				name: "Iaurt cu piersici",
+				expiryDate: new Date("2024-05-18"),
+				quantity: 2,
+				image: null,
+				tags: ["dairy", "drinks"] as FoodTagKey[],
+			},
+			{
+				id: 2,
+				key: 2,
+				name: "Banane",
+				expiryDate: new Date("2024-06-18"),
+				quantity: 1,
+				image:
+					"https://images.immediate.co.uk/production/volatile/sites/30/2017/01/Bunch-of-bananas-67e91d5.jpg?quality=90&resize=440,400",
+				tags: ["fruits_vegetables"] as FoodTagKey[],
+			},
+		];
+		// const updatedItems = fetchedItems.map((item) => {
+		// 	return { ...item, key: item.id };
+		// });
+		// console.log(updatedItems);
+
+		// setExpiryItems(updatedItems);
+	}, []);
+
+	const closeRow = (
+		rowMap: { [x: string]: { closeRow: () => void } },
+		rowKey: string | number
+	) => {
+		if (rowMap[rowKey]) {
+			rowMap[rowKey].closeRow();
+		}
+	};
+
+	const deleteRow = (
+		rowMap: RowMap<Product & { key: number }>,
+		rowKey: string | number
+	) => {
+		closeRow(rowMap, rowKey);
+		console.log("DELETE ROW:");
+		console.log("rowKey=" + rowKey);
+
+		const newData = [...expiryItems];
+		const updatedData = newData.filter((item) => item.id !== rowKey);
+		console.log(updatedData);
+
+		setExpiryItems(updatedData);
+	};
+
+	const renderHiddenItem = (data: { item: { key: any } }, rowMap: any) => {
+		return (
+			<SwipeListMenu
+				data={data}
+				rowMap={rowMap}
+				onDelete={() => deleteRow(rowMap, data.item.key)}
+			/>
+		);
+	};
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
@@ -36,8 +135,8 @@ export default function HomePage(this: any) {
 							style={styles.profilePicture}
 						/>
 						<RestyleBox>
-							<RestyleText>Hello,</RestyleText>
-							<RestyleText variant='body' style={styles.userName}>
+							<RestyleText color='text'>Hello,</RestyleText>
+							<RestyleText variant='body' style={styles.userName} color='text'>
 								Firstname Lastname 👋
 							</RestyleText>
 						</RestyleBox>
@@ -45,13 +144,13 @@ export default function HomePage(this: any) {
 					<MaterialIcons
 						name='notifications'
 						size={32}
-						color={theme.colors.primary}
+						color={currentTheme.colors.primary}
 					/>
 				</RestyleBox>
 
 				<RestyleBox gap='m' style={{ display: "flex" }}>
 					<RestyleBox style={styles.scheduleContainer}>
-						<RestyleText variant='body'>
+						<RestyleText variant='body' color='text'>
 							Next shopping:{" "}
 							<RestyleText variant='body' color='primary' fontWeight='bold'>
 								2 days
@@ -68,27 +167,43 @@ export default function HomePage(this: any) {
 
 				<RestyleBox gap='m'>
 					<PieChartComponent />
-					<HorizontalCard title='Expiring soon ⌛'>
-						<ProductExpiryItem
-							product={{
-								name: "Iaurt cu piersici",
-								expiryDate: new Date("2024-05-18"),
-								quantity: 2,
-								image: null,
-								tags: ["dairy", "drinks"],
+
+					<RestyleBox
+						style={styles.expiryContainer}
+						backgroundColor='cardBackground'
+					>
+						<RestyleText
+							color='primary'
+							fontWeight='bold'
+							paddingHorizontal='m'
+						>
+							Expiring soon ⌛
+						</RestyleText>
+						<SwipeListView
+							data={expiryItems}
+							renderItem={(product) => (
+								<ProductExpiryItem
+									key={product.item.key}
+									// @ts-ignore
+									product={product.item}
+								/>
+							)}
+							renderHiddenItem={renderHiddenItem}
+							onRightAction={(row, rowMap) => {
+								// @ts-ignore
+								deleteRow(rowMap, row);
 							}}
-						/>
-						<ProductExpiryItem
-							product={{
-								name: "Banane",
-								expiryDate: new Date("2024-06-18"),
-								quantity: 1,
-								image:
-									"https://images.immediate.co.uk/production/volatile/sites/30/2017/01/Bunch-of-bananas-67e91d5.jpg?quality=90&resize=440,400",
-								tags: ["fruits_vegetables"],
+							onRightActionStatusChange={() => {
+								// empty method to trigger activation
 							}}
+							// restDisplacementThreshold={1}
+							restSpeedThreshold={100}
+							rightOpenValue={-100}
+							disableRightSwipe
+							rightActivationValue={-150}
+							rightActionValue={-400} // until where will the row extend (translate)
 						/>
-					</HorizontalCard>
+					</RestyleBox>
 				</RestyleBox>
 			</Wrapper>
 		</GestureHandlerRootView>
@@ -139,5 +254,32 @@ const styles = StyleSheet.create({
 		padding: theme.spacing.s,
 		borderRadius: 15,
 		justifyContent: "center",
+	},
+	rowFront: {
+		alignItems: "center",
+		backgroundColor: "#CCC",
+		borderBottomColor: "black",
+		borderBottomWidth: 1,
+		justifyContent: "center",
+		height: 50,
+	},
+
+	backRightBtn: {
+		alignItems: "center",
+		bottom: 0,
+		justifyContent: "center",
+		position: "absolute",
+		top: 0,
+		width: 75,
+	},
+	backRightBtnRight: {
+		backgroundColor: "red",
+		right: 0,
+	},
+	expiryContainer: {
+		paddingVertical: theme.spacing.m,
+		borderRadius: 15,
+		gap: theme.spacing.s,
+		elevation: 5,
 	},
 });

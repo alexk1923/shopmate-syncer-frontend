@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, Platform } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Calendar,
 	CalendarProvider,
@@ -7,21 +7,32 @@ import {
 	WeekCalendar,
 } from "react-native-calendars";
 import RestyleBox from "@/components/RestyleBox";
-import { backgroundColor } from "@shopify/restyle";
+import { ThemeProvider, backgroundColor } from "@shopify/restyle";
 import { theme } from "@/theme";
+import { useDarkLightTheme } from "@/components/ThemeContext";
 
 const CalendarComponent = () => {
+	const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+	const { currentTheme } = useDarkLightTheme();
+	const [triggerRerender, setTriggerRerender] = useState(false);
+
+	useEffect(() => {
+		console.log("Changed current theme");
+
+		setDate(new Date().toISOString().split("T")[0]);
+	}, [currentTheme]);
+
 	return (
-		<>
+		<ThemeProvider theme={currentTheme}>
 			<CalendarProvider
 				// date={ITEMS[1]?.title}
-				// onDateChanged={onDateChanged}
-				// onMonthChange={onMonthChange}
-				date={new Date().toISOString().split("T")[0]}
-				// showTodayButton={true}
-				style={styles.calendar}
+				date={date}
+				style={{
+					...styles.calendar,
+					borderColor: currentTheme.colors.text,
+				}}
 			>
-				<View style={{ flex: 1 }}>
+				<RestyleBox style={{ flex: 1 }}>
 					<WeekCalendar
 						hideArrows={false}
 						// hideDayNames
@@ -36,47 +47,48 @@ const CalendarComponent = () => {
 							"2024-05-17": {
 								// selected: true,
 								marked: true,
-								selectedColor: theme.colors.primary,
+								selectedColor: currentTheme.colors.primary,
 							},
 						}}
 						theme={{
 							// arrows
-							arrowColor: "black",
+							arrowColor: currentTheme.colors.text,
 							arrowStyle: { padding: 0 },
 							// month
-							monthTextColor: "black",
+							monthTextColor: currentTheme.colors.text,
 							textMonthFontWeight: "bold" as const,
 							// day names
-							textSectionTitleColor: "black",
+							textSectionTitleColor: currentTheme.colors.text,
 							textDayHeaderFontWeight: "normal" as const,
 							// dates
-							dayTextColor: theme.colors.darkText,
-							todayTextColor: theme.colors.primary,
+							dayTextColor: currentTheme.colors.text,
+							todayTextColor: currentTheme.colors.primary,
 							textDayFontWeight: "500" as const,
 							textDayStyle: { marginTop: Platform.OS === "android" ? 2 : 4 },
 							// selected date
-							selectedDayBackgroundColor: theme.colors.primary,
-							selectedDayTextColor: theme.colors.lightText,
+							selectedDayBackgroundColor: currentTheme.colors.primary,
+							selectedDayTextColor: currentTheme.colors.text,
 							// disabled date
-							textDisabledColor: theme.colors.lightText,
+							textDisabledColor: currentTheme.colors.text,
 							// dot (marked date)
-							dotColor: theme.colors.primary,
-							selectedDotColor: theme.colors.primary,
-							disabledDotColor: theme.colors.lightText,
+							dotColor: currentTheme.colors.primary,
+							selectedDotColor: currentTheme.colors.primary,
+							disabledDotColor: currentTheme.colors.text,
 							dotStyle: { marginTop: -2 },
-							backgroundColor: theme.colors.mainBackground,
-							calendarBackground: theme.colors.mainBackground,
+							// backgroundColor: "yellow",
+							calendarBackground: currentTheme.colors.mainBackground,
 						}}
 					/>
-				</View>
+				</RestyleBox>
 			</CalendarProvider>
-		</>
+		</ThemeProvider>
 	);
 };
 
 const styles = StyleSheet.create({
 	calendar: {
-		minHeight: 100,
+		minHeight: 80,
+		flex: 1,
 	},
 });
 

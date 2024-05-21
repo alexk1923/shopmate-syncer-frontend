@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const IntroScreenFinal = () => {
+const ChatPage = () => {
 	return (
 		<View>
-			<Text>IntroScreenFinal</Text>
+			<Text>ChatPage</Text>
 		</View>
 	);
 };
 
-export default IntroScreenFinal;
+export default ChatPage;

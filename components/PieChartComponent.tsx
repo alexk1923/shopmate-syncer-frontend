@@ -10,6 +10,7 @@ import { FoodTagKey } from "@/constants/types";
 import { useEffect, useRef, useState } from "react";
 import React from "react";
 import PieChartLegend from "./PieChartLegend";
+import { useDarkLightTheme } from "./ThemeContext";
 
 const PieChartComponent = () => {
 	const [selectedItem, setSelectedItem] = useState<(typeof pieData)[0]>(
@@ -50,20 +51,22 @@ const PieChartComponent = () => {
 
 	const MemoizedPieChart = React.memo(PieChart);
 
+	const { currentTheme } = useDarkLightTheme();
+
 	return (
 		<HorizontalCard title='Last 30 days'>
 			<RestyleBox flexDirection='row' gap='m' justifyContent='center'>
 				<MemoizedPieChart
 					data={pieData}
 					// donut
-					textColor='white'
+					textColor={currentTheme.colors.oppositeText}
 					textSize={16}
 					focusOnPress
 					showValuesAsLabels
 					textBackgroundRadius={26}
 					fontWeight='bold'
 					strokeWidth={2}
-					strokeColor={theme.colors.primary}
+					strokeColor={currentTheme.colors.primary}
 					onPress={(item: (typeof pieData)[0], index: number) => {
 						console.log(item);
 						item = item;

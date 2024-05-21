@@ -1,6 +1,7 @@
 import { FOOD_TAG_INFO } from "./FoodTagsInfo";
 
 export type Product = {
+	id: number;
 	name: string;
 	expiryDate: Date;
 	quantity: number;

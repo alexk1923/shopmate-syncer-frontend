@@ -3,6 +3,8 @@ import React from "react";
 import { FoodTagKey } from "@/constants/types";
 import { theme } from "@/theme";
 import FoodTag from "./FoodTag";
+import { useDarkLightTheme } from "./ThemeContext";
+import RestyleText from "./RestyleText";
 const renderDot = (color: string) => {
 	return (
 		<View
@@ -31,6 +33,8 @@ type PieChartLegendProps = {
 };
 
 const PieChartLegend = ({ pieData, selectedItem }: PieChartLegendProps) => {
+	const { currentTheme } = useDarkLightTheme();
+
 	return (
 		<View
 			style={{
@@ -48,7 +52,7 @@ const PieChartLegend = ({ pieData, selectedItem }: PieChartLegendProps) => {
 						alignItems: "center",
 						justifyContent: "space-between",
 						width: "100%",
-						borderBottomColor: "black",
+						borderBottomColor: currentTheme.colors.text,
 						borderBottomWidth: StyleSheet.hairlineWidth,
 						paddingBottom: 4,
 					}}
@@ -56,17 +60,17 @@ const PieChartLegend = ({ pieData, selectedItem }: PieChartLegendProps) => {
 				>
 					<View style={{ flexDirection: "row", flex: 1, gap: theme.spacing.m }}>
 						<FoodTag name={(p.name.toLowerCase() as FoodTagKey) ?? ""} />
-						<Text
+						<RestyleText
 							style={{
-								color: theme.colors.primary,
 								fontWeight:
 									selectedItem && selectedItem.name === p.name
 										? "bold"
 										: "normal",
 							}}
+							color='text'
 						>
 							{p.name}
-						</Text>
+						</RestyleText>
 					</View>
 					{renderDot(p.color)}
 				</View>

@@ -10,7 +10,7 @@ import {
 	DarkLightThemeProvider,
 	useDarkLightTheme,
 } from "@/components/ThemeContext";
-import { Text } from "react-native";
+import { Platform, Text } from "react-native";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -54,16 +54,32 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-	const { darkMode } = useDarkLightTheme();
+	const { currentTheme } = useDarkLightTheme();
 
 	return (
-		<ThemeProvider theme={darkMode ? darkTheme : theme}>
-			<Stack>
+		<ThemeProvider theme={currentTheme}>
+			<Stack
+				screenOptions={{
+					contentStyle: { backgroundColor: currentTheme.colors.mainBackground },
+					statusBarColor: currentTheme.colors.mainBackground,
+					headerTintColor: currentTheme.colors.mainBackground,
+					navigationBarColor: currentTheme.colors.mainBackground,
+				}}
+			>
 				<Stack.Screen
 					name='index'
-					options={{ headerShown: false, animation: "fade" }}
+					options={{
+						headerShown: false,
+						animation: "fade",
+					}}
 				/>
-				<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+				<Stack.Screen
+					name='(tabs)'
+					options={{
+						headerShown: false,
+						animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
+					}}
+				/>
 				<Stack.Screen name='modal' options={{ presentation: "modal" }} />
 			</Stack>
 		</ThemeProvider>

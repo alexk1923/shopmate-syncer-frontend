@@ -22,11 +22,11 @@ const ProductExpiryItem = (props: { product: Product }) => {
 		const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 		const today = new Date();
 
-		console.log(expiryDate);
-		console.log(today);
-
 		if (expiryDate < today) {
 			setExpiryColor(timeColors.darkRed);
+			setDiffDays(
+				-1 * (Math.round(Math.abs((+expiryDate - +new Date()) / oneDay)) + 1)
+			);
 			return;
 		}
 
@@ -52,7 +52,10 @@ const ProductExpiryItem = (props: { product: Product }) => {
 			style={{
 				flexDirection: "row",
 				justifyContent: "space-between",
+				// borderRadius: 15,
 			}}
+			backgroundColor='cardBackground'
+			paddingHorizontal='m'
 		>
 			<RestyleBox
 				style={{
@@ -70,23 +73,33 @@ const ProductExpiryItem = (props: { product: Product }) => {
 					style={styles.foodImage}
 				/>
 				<RestyleBox style={{ alignItems: "flex-start" }}>
-					<RestyleText variant='body' fontWeight='bold'>
-						{name}
+					<RestyleText
+						variant='body'
+						fontWeight='bold'
+						color={diffDays < 0 ? "error" : "text"}
+					>
+						{name} (x {quantity})
 					</RestyleText>
 					<RestyleBox flexDirection='row'>
 						{tags.map((tag) => (
-							<FoodTag name={tag} />
+							<FoodTag name={tag} key={tag} />
 						))}
 					</RestyleBox>
 				</RestyleBox>
 			</RestyleBox>
-			<RestyleBox>
-				<RestyleText fontWeight='bold' variant='body'>
-					Expiring
+			<RestyleBox alignItems='flex-end'>
+				<RestyleText
+					fontWeight='bold'
+					variant='body'
+					color={diffDays < 0 ? "error" : "text"}
+					style={diffDays < 0 ? { color: expiryColor } : {}}
+					textAlign='right'
+				>
+					{diffDays < 0 ? "Expired" : "Expiring"}
 				</RestyleText>
 				<RestyleBox>
 					<RestyleText style={{ color: expiryColor }}>
-						in {diffDays} days
+						{diffDays < 0 ? `${-1 * diffDays} days ago` : `in ${diffDays} days`}
 					</RestyleText>
 				</RestyleBox>
 			</RestyleBox>

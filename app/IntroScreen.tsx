@@ -14,10 +14,10 @@ const IntroScreen = (props: IntroScreenProps) => {
 	return (
 		<Wrapper style={{ justifyContent: "center" }}>
 			{props.SvgComponent}
-			<RestyleText variant='header' textAlign='center'>
+			<RestyleText variant='header' textAlign='center' color='text'>
 				{props.title}
 			</RestyleText>
-			<RestyleText variant='body' textAlign='center'>
+			<RestyleText variant='body' textAlign='center' color='text'>
 				{props.description}
 			</RestyleText>
 			{props.ExtraComponent}
@@ -26,13 +26,5 @@ const IntroScreen = (props: IntroScreenProps) => {
 		</Wrapper>
 	);
 };
-
-const styles = StyleSheet.create({
-	img: {
-		// width: 250,
-		height: "50%",
-		objectFit: "cover",
-	},
-});
 
 export default IntroScreen;

@@ -49,8 +49,8 @@ const Register = () => {
 					style={styles.logo}
 					source={
 						darkMode
-							? require("@/assets/images/logo-teal.png")
-							: require("@/assets/images/logo-white.png")
+							? require("@/assets/images/logo-white.png")
+							: require("@/assets/images/logo-teal.png")
 					}
 				/>
 			</RestyleBox>
@@ -60,7 +60,7 @@ const Register = () => {
 				gap='m'
 				backgroundColor='mainBackground'
 			>
-				<RestyleText variant='header' style={styles.text}>
+				<RestyleText variant='header' style={styles.text} color='text'>
 					Create new account
 				</RestyleText>
 
@@ -113,7 +113,7 @@ const Register = () => {
 						}}
 					>
 						<FontAwesome6
-							name={showPassword ? "eye" : "eye-slash"}
+							name={showConfirmPassword ? "eye" : "eye-slash"}
 							size={24}
 							color='black'
 							style={styles.searchIcon}
@@ -128,7 +128,7 @@ const Register = () => {
 						console.log("TODO FETCH LOGIN");
 					}}
 				></AppButton>
-				<RestyleText textAlign='center'>
+				<RestyleText textAlign='center' color='text'>
 					Already have an account?{" "}
 					<Link href='/Login'>
 						<RestyleText color='secondary' marginLeft='m'>
@@ -173,13 +173,11 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		textAlign: "center",
-		color: theme.colors.darkText,
 	},
 	input: {
 		paddingRight: theme.spacing.m,
 		paddingLeft: theme.spacing.m,
-		color: theme.colors.darkText,
-
+		color: theme.colors.text,
 		height: "100%",
 		flex: 1,
 	},
@@ -195,7 +193,7 @@ const styles = StyleSheet.create({
 	},
 	searchIcon: {
 		paddingRight: theme.spacing.m,
-		color: theme.colors.darkText,
+		color: theme.colors.text,
 	},
 	checkboxContainer: {
 		display: "flex",

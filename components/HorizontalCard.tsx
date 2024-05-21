@@ -13,7 +13,7 @@ const HorizontalCard = (props: HorizontalCardProps) => {
 	const { title, children } = props;
 
 	return (
-		<RestyleBox backgroundColor='mainBackground' style={styles.c1}>
+		<RestyleBox style={styles.c1} backgroundColor='cardBackground'>
 			<RestyleText color='primary' fontWeight='bold'>
 				{title}
 			</RestyleText>
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
 		padding: theme.spacing.m,
 		borderRadius: 15,
 		gap: theme.spacing.s,
+		elevation: 5,
 	},
 });
 

@@ -46,13 +46,10 @@ const Login = () => {
 			<RestyleBox style={styles.c2}>
 				<Image
 					style={styles.logo}
-					source={
-						darkMode
-							? require("@/assets/images/logo-teal.png")
-							: require("@/assets/images/logo-white.png")
-					}
+					source={require("@/assets/images/logo-white.png")}
 				/>
 			</RestyleBox>
+
 			<RestyleBox
 				style={styles.c3}
 				backgroundColor='mainBackground'
@@ -61,10 +58,10 @@ const Login = () => {
 			>
 				{!isKeyboardVisible && (
 					<>
-						<RestyleText variant='header' style={styles.text}>
+						<RestyleText variant='header' style={styles.text} color='text'>
 							Let's get started!
 						</RestyleText>
-						<RestyleText variant='body' style={styles.text}>
+						<RestyleText variant='body' style={styles.text} color='text'>
 							Login to start improve your shopping experience and collaboration
 							with your mate
 						</RestyleText>
@@ -106,20 +103,20 @@ const Login = () => {
 					</Pressable>
 				</View>
 				<RestyleBox style={styles.checkboxContainer}>
-					<RestyleText color='secondary'>Forgot password</RestyleText>
+					<RestyleText color='primary'>Forgot password</RestyleText>
 				</RestyleBox>
 				<AppButton
 					variant='filled'
 					title='Login'
 					onPress={() => {
 						console.log("TODO FETCH LOGIN");
-						router.navigate("/introduction");
+						router.navigate("/(introduction)/introduction");
 					}}
 				></AppButton>
-				<RestyleText textAlign='center'>
+				<RestyleText textAlign='center' color='text'>
 					No account yet? Register{" "}
 					<Link href='/Register'>
-						<RestyleText color='secondary'>here</RestyleText>
+						<RestyleText color='primary'>here</RestyleText>
 					</Link>
 				</RestyleText>
 			</RestyleBox>
@@ -159,13 +156,11 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		textAlign: "center",
-		color: theme.colors.darkText,
 	},
 	input: {
 		paddingRight: theme.spacing.m,
 		paddingLeft: theme.spacing.m,
-		color: theme.colors.darkText,
-
+		color: theme.colors.text,
 		height: "100%",
 		flex: 1,
 	},
@@ -181,7 +176,7 @@ const styles = StyleSheet.create({
 	},
 	searchIcon: {
 		paddingRight: theme.spacing.m,
-		color: theme.colors.darkText,
+		color: theme.colors.text,
 	},
 	checkboxContainer: {
 		display: "flex",

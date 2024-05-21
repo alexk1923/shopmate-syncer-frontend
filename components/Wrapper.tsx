@@ -9,7 +9,11 @@ type WrapperProps = {
 };
 
 const Wrapper = ({ children, style }: WrapperProps) => {
-	return <RestyleBox style={[styles.c1, style]}>{children}</RestyleBox>;
+	return (
+		<RestyleBox style={[styles.c1, style]} backgroundColor='mainBackground'>
+			{children}
+		</RestyleBox>
+	);
 };
 
 const styles = StyleSheet.create({
@@ -21,7 +25,6 @@ const styles = StyleSheet.create({
 		padding: theme.spacing.m,
 
 		gap: theme.spacing.m,
-		backgroundColor: "mainBackground",
 	},
 });
 
