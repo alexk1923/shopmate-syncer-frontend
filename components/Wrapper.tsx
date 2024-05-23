@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
 		display: "flex",
 		justifyContent: "flex-end",
 		padding: theme.spacing.m,
-
 		gap: theme.spacing.m,
 	},
 });

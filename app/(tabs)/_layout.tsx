@@ -47,7 +47,7 @@ export default function TabLayout() {
 				<Tabs.Screen
 					name='HomePage'
 					options={{
-						title: "Landing tab",
+						title: "Home",
 						tabBarIcon: ({ color }) => (
 							<FontAwesome6 name='house' size={24} color={color} />
 						),
@@ -89,9 +89,10 @@ export default function TabLayout() {
 					}}
 				/>
 				<Tabs.Screen
-					name='ChatPage'
+					name='(chat)'
 					options={{
 						title: "Chat",
+						headerShown: false,
 						tabBarIcon: ({ color }) => (
 							<MaterialIcons name='chat-bubble' size={24} color={color} />
 						),

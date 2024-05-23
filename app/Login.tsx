@@ -90,7 +90,6 @@ const Login = () => {
 					></TextInput>
 					<Pressable
 						onPress={() => {
-							console.log(showPassword);
 							setShowPassword((prevPassword) => !prevPassword);
 						}}
 					>

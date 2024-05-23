@@ -68,7 +68,6 @@ const PieChartComponent = () => {
 					strokeWidth={2}
 					strokeColor={currentTheme.colors.primary}
 					onPress={(item: (typeof pieData)[0], index: number) => {
-						console.log(item);
 						item = item;
 					}}
 					showText

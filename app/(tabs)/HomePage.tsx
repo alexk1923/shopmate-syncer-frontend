@@ -1,40 +1,26 @@
 import RestyleBox from "@/components/RestyleBox";
 import RestyleText from "@/components/RestyleText";
 import Wrapper from "@/components/Wrapper";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-	FontAwesome,
-	FontAwesome5,
-	FontAwesome6,
-	MaterialIcons,
-} from "@expo/vector-icons";
-import {
-	Animated,
-	Image,
-	Pressable,
-	StyleSheet,
-	Text,
-	View,
-	useWindowDimensions,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Image, StyleSheet, useWindowDimensions } from "react-native";
 import { theme } from "@/theme";
 import AppButton from "@/components/AppButton";
 import { router } from "expo-router";
-import CalendarComponent from "../CalendarComponent";
+import CalendarComponent from "@/components/CalendarComponent";
 import PieChartComponent from "@/components/PieChartComponent";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Toggle from "react-native-toggle-element";
+
 import ProductExpiryItem from "@/components/ProductExpiryItem";
-import HorizontalCard from "@/components/HorizontalCard";
+
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import { RowMap, SwipeListView } from "react-native-swipe-list-view";
-import SwipeableComponent from "@/components/SwipeableComponent";
+
 import { FoodTagKey, Product } from "@/constants/types";
 import SwipeListMenu from "@/components/SwipeListMenu";
 
 export default function HomePage(this: any) {
 	const { currentTheme } = useDarkLightTheme();
-	const { height, width } = useWindowDimensions();
 
 	const [expiryItems, setExpiryItems] = useState<(Product & { key: number })[]>(
 		[
@@ -82,12 +68,6 @@ export default function HomePage(this: any) {
 				tags: ["fruits_vegetables"] as FoodTagKey[],
 			},
 		];
-		// const updatedItems = fetchedItems.map((item) => {
-		// 	return { ...item, key: item.id };
-		// });
-		// console.log(updatedItems);
-
-		// setExpiryItems(updatedItems);
 	}, []);
 
 	const closeRow = (
@@ -104,12 +84,9 @@ export default function HomePage(this: any) {
 		rowKey: string | number
 	) => {
 		closeRow(rowMap, rowKey);
-		console.log("DELETE ROW:");
-		console.log("rowKey=" + rowKey);
 
 		const newData = [...expiryItems];
 		const updatedData = newData.filter((item) => item.id !== rowKey);
-		console.log(updatedData);
 
 		setExpiryItems(updatedData);
 	};

@@ -19,7 +19,7 @@ export {
 
 export const unstable_settings = {
 	// Ensure that reloading on `/modal` keeps a back button present.
-	// initialRouteName: "index",
+	initialRouteName: "index",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -80,6 +80,7 @@ function RootLayoutNav() {
 						animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
 					}}
 				/>
+
 				<Stack.Screen name='modal' options={{ presentation: "modal" }} />
 			</Stack>
 		</ThemeProvider>

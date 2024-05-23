@@ -18,7 +18,6 @@ const useDimensions = () => {
 			}
 		);
 		return () => subscription?.remove();
-		console.log(dimensions);
 	});
 
 	return { dimensions, setDimensions };
