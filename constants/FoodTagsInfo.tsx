@@ -9,7 +9,7 @@ type FoodTagType = {
 	};
 };
 
-export const FOOD_TAG_INFO = {
+export const FOOD_TAG_INFO: FoodTagType = {
 	meat: {
 		name: "Meat",
 		color: "#da7a14",

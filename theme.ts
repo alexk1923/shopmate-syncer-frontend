@@ -26,6 +26,8 @@ const palette = {
 
 	lightText: "#eae9fc",
 	darkText: "#050316",
+	transparent: "transparent",
+	gray: "#a6abb7",
 };
 
 export const theme = createTheme({
@@ -49,6 +51,9 @@ export const theme = createTheme({
 		lightAccent: palette.light.accent,
 		darkAccent: palette.light.accent,
 		error: palette.light.error,
+
+		transparent: palette.transparent,
+		gray: palette.gray,
 	},
 	spacing: {
 		s: 8,
@@ -81,6 +86,12 @@ export const theme = createTheme({
 			lineHeight: 27,
 		},
 
+		label: {
+			fontSize: 16,
+			lineHeight: 24,
+			color: "gray",
+		},
+
 		defaults: {},
 	},
 	buttonVariants: {
@@ -89,7 +100,7 @@ export const theme = createTheme({
 			color: "lightText",
 		},
 		outline: {
-			backgroundColor: "mainBackground",
+			backgroundColor: "transparent",
 			color: "secondary",
 			borderColor: "secondary",
 			borderWidth: 1,
@@ -123,5 +134,7 @@ export const darkTheme: Theme = {
 		lightAccent: palette.dark.accent,
 		darkAccent: palette.dark.accent,
 		error: palette.dark.error,
+
+		gray: palette.gray,
 	},
 };

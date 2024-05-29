@@ -7,8 +7,9 @@ import { FOOD_TAG_INFO } from "@/constants/FoodTagsInfo";
 import RestyleBox from "./RestyleBox";
 import { FoodTagKey } from "@/constants/types";
 
-const FoodTag = (props: { name: FoodTagKey }) => {
+const FoodTag = (props: { name: FoodTagKey; size?: number }) => {
 	const [imagePath, setImagePath] = useState<string>("");
+	const size = props.size ?? 24;
 
 	useEffect(() => {
 		// Dynamically import the image based on the name
@@ -26,12 +27,12 @@ const FoodTag = (props: { name: FoodTagKey }) => {
 	}, []);
 	return (
 		FOOD_TAG_INFO[props.name] && (
-			<RestyleBox style={styles.foodImage}>
+			<RestyleBox style={[styles.foodImage, { width: size, height: size }]}>
 				<Image
 					source={FOOD_TAG_INFO[props.name].uri}
 					style={{
-						width: 16,
-						height: 16,
+						width: Math.floor(size * 0.75),
+						height: Math.floor(size * 0.75),
 					}}
 				/>
 			</RestyleBox>
@@ -43,8 +44,6 @@ export default FoodTag;
 
 const styles = StyleSheet.create({
 	foodImage: {
-		width: 24,
-		height: 24,
 		borderRadius: 90,
 		borderColor: theme.colors.primary,
 		borderWidth: 1,

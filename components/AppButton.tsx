@@ -1,5 +1,11 @@
 import { Theme, theme } from "@/theme";
-import { StyleSheet, ViewStyle, Pressable, StyleProp } from "react-native";
+import {
+	StyleSheet,
+	ViewStyle,
+	Pressable,
+	StyleProp,
+	TouchableOpacity,
+} from "react-native";
 import {
 	VariantProps,
 	createRestyleComponent,
@@ -33,7 +39,10 @@ const AppButton = ({ onPress, title, variant, fullWidth, style }: Props) => {
 	return (
 		<ButtonContainer
 			variant={variant}
-			onPress={onPress}
+			onPress={() => {
+				console.log("Button pressed");
+				onPress();
+			}}
 			style={{ ...styles.appButtonContainer, ...StyleSheet.flatten(style) }}
 		>
 			<RestyleText
@@ -52,7 +61,6 @@ const AppButton = ({ onPress, title, variant, fullWidth, style }: Props) => {
 const styles = StyleSheet.create({
 	// ...
 	appButtonContainer: {
-		elevation: 8,
 		borderRadius: 15,
 		paddingVertical: theme.spacing.m,
 		paddingHorizontal: theme.spacing.xl,

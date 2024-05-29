@@ -16,35 +16,14 @@ import ProductExpiryItem from "@/components/ProductExpiryItem";
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import { RowMap, SwipeListView } from "react-native-swipe-list-view";
 
-import { FoodTagKey, Product } from "@/constants/types";
+import { FoodTagKey, Product, fetchedFood } from "@/constants/types";
 import SwipeListMenu from "@/components/SwipeListMenu";
 
 export default function HomePage(this: any) {
 	const { currentTheme } = useDarkLightTheme();
 
-	const [expiryItems, setExpiryItems] = useState<(Product & { key: number })[]>(
-		[
-			{
-				id: 1,
-				key: 1,
-				name: "Iaurt cu piersici",
-				expiryDate: new Date("2024-05-18"),
-				quantity: 2,
-				image: null,
-				tags: ["dairy", "drinks"] as FoodTagKey[],
-			},
-			{
-				id: 2,
-				key: 2,
-				name: "Banane",
-				expiryDate: new Date("2024-06-18"),
-				quantity: 1,
-				image:
-					"https://images.immediate.co.uk/production/volatile/sites/30/2017/01/Bunch-of-bananas-67e91d5.jpg?quality=90&resize=440,400",
-				tags: ["fruits_vegetables"] as FoodTagKey[],
-			},
-		]
-	);
+	const [expiryItems, setExpiryItems] =
+		useState<(Product & { key: number })[]>(fetchedFood);
 
 	useEffect(() => {
 		const fetchedItems = [
