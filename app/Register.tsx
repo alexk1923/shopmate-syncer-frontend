@@ -13,34 +13,140 @@ import { useDarkLightTheme } from "@/components/ThemeContext";
 import AppButton from "@/components/AppButton";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { theme } from "@/theme";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { useKeyboardVisible } from "./hooks/useKeyboardVisible";
+import { Controller, useForm } from "react-hook-form";
+import AppTextInput from "@/components/Form/AppTextInput";
+import { useMutation } from "@tanstack/react-query";
+import { register } from "./services/authService";
+
+type FormData = {
+	username: string;
+	password: string;
+	email: string;
+	confirmPassword: string;
+};
+
+type RegisterInput = {
+	firstName: string;
+	lastName: string;
+	email: string;
+	username: string;
+	password: string;
+};
 
 const Register = () => {
 	const { darkMode } = useDarkLightTheme();
-	const [showPassword, setShowPassword] = useState(false);
-	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const registerMutation = useMutation({
+		mutationFn: ({
+			firstName,
+			lastName,
+			email,
+			username,
+			password,
+		}: RegisterInput) =>
+			register(firstName, lastName, email, username, password),
+		onSuccess: async (data) => {
+			router.navigate("/login");
+		},
+		onError: (err) => {
+			console.log("Error login");
+			console.log(err);
+		},
+	});
 
-	const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+	const {
+		control,
+		handleSubmit,
+		watch,
+		formState: { errors },
+		resetField,
+	} = useForm<FormData>();
+
+	const inputs = [
+		// {
+		// 	id: 1,
+		// 	placeholder: "First Name",
+		// 	inputKey: "firstname",
+		// 	rules: { required: "First Name is required" },
+		// 	iconName: "",
+		// },
+		// {
+		// 	id: 2,
+		// 	placeholder: "Last Name",
+		// 	inputKey: "lastname",
+		// 	rules: { required: "Last Name is required" },
+		// 	iconName: "",
+		// },
+		{
+			id: 3,
+			placeholder: "Username",
+			inputKey: "username",
+			rules: { required: "Username is required" },
+			iconName: "user-large",
+		},
+		{
+			id: 4,
+			placeholder: "Email",
+			inputKey: "email",
+			rules: {
+				required: "Email is required",
+				pattern: {
+					value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+					message: "Invalid email address",
+				},
+			},
+			iconName: "envelope",
+		},
+		{
+			id: 5,
+			placeholder: "Password",
+			inputKey: "password",
+			rules: {
+				required: "Password is required",
+				minLength: {
+					value: 6,
+					message: "Password must be at least 6 characters",
+				},
+			},
+			iconName: "lock",
+			isPassword: true,
+		},
+		{
+			id: 6,
+			placeholder: "Confirm password",
+			inputKey: "confirmPassword",
+			rules: {
+				required: "Password confirmation is required",
+				validate: (value: string) =>
+					value === password || "Passwords do not match!",
+			},
+			iconName: "lock",
+			isPassword: true,
+		},
+	];
+
+	function onSubmit(data: FormData) {
+		console.log("onsubmit");
+		console.log(data);
+
+		// registrerMutation.mutate({
+		// 	username: data.username,
+		// 	password: data.password,
+		// });
+
+		resetField("password");
+		resetField("confirmPassword");
+	}
 
 	useEffect(() => {
-		const keyboardDidShowListener = Keyboard.addListener(
-			"keyboardDidShow",
-			() => {
-				setKeyboardVisible(true); // or some other action
-			}
-		);
-		const keyboardDidHideListener = Keyboard.addListener(
-			"keyboardDidHide",
-			() => {
-				setKeyboardVisible(false); // or some other action
-			}
-		);
+		console.log(errors);
+	}, [errors.username, errors.confirmPassword, errors.password, errors.email]);
 
-		return () => {
-			keyboardDidHideListener.remove();
-			keyboardDidShowListener.remove();
-		};
-	}, []);
+	// Watching the value of password
+	const password = watch("password");
+
+	const handleFormSubmit = handleSubmit(onSubmit);
 
 	return (
 		<RestyleBox backgroundColor='primary' style={styles.c1}>
@@ -50,82 +156,38 @@ const Register = () => {
 					source={
 						darkMode
 							? require("@/assets/images/logo-white.png")
-							: require("@/assets/images/logo-teal.png")
+							: require("@/assets/images/shopmate-logo-primary.png")
 					}
 				/>
 			</RestyleBox>
 			<RestyleBox
 				style={styles.c3}
-				paddingHorizontal='xl'
+				padding='xl'
 				gap='m'
 				backgroundColor='mainBackground'
 			>
 				<RestyleText variant='header' style={styles.text} color='text'>
-					Create new account
+					Create Account
 				</RestyleText>
 
-				<View style={styles.searchSection}>
-					<TextInput placeholder='Username' style={styles.input}></TextInput>
-					<FontAwesome6
-						name='user-large'
-						size={24}
-						color='black'
-						style={styles.searchIcon}
+				{inputs.map((input) => (
+					<AppTextInput
+						key={input.id}
+						control={control}
+						placeholder={input.placeholder}
+						errors={errors}
+						inputKey={input.inputKey}
+						iconName={input.iconName}
+						isPassword={input.isPassword}
+						rules={input.rules}
 					/>
-				</View>
-				<View style={styles.searchSection}>
-					<TextInput placeholder='Email' style={styles.input}></TextInput>
-					<FontAwesome6
-						name='envelope'
-						size={24}
-						color='black'
-						style={styles.searchIcon}
-					/>
-				</View>
-				<View style={styles.searchSection}>
-					<TextInput
-						placeholder='Password'
-						style={styles.input}
-						secureTextEntry={!showPassword}
-					/>
-					<Pressable
-						onPress={() => {
-							setShowPassword((prevPassword) => !prevPassword);
-						}}
-					>
-						<FontAwesome6
-							name={showPassword ? "eye" : "eye-slash"}
-							size={24}
-							color='black'
-							style={styles.searchIcon}
-						/>
-					</Pressable>
-				</View>
-				<View style={styles.searchSection}>
-					<TextInput
-						placeholder='Confirm password'
-						style={styles.input}
-						secureTextEntry={!showConfirmPassword}
-					/>
-					<Pressable
-						onPress={() => {
-							setShowConfirmPassword((prevPassword) => !prevPassword);
-						}}
-					>
-						<FontAwesome6
-							name={showConfirmPassword ? "eye" : "eye-slash"}
-							size={24}
-							color='black'
-							style={styles.searchIcon}
-						/>
-					</Pressable>
-				</View>
+				))}
 
 				<AppButton
 					variant='filled'
 					title='Register'
 					onPress={() => {
-						console.log("TODO FETCH LOGIN");
+						handleFormSubmit();
 					}}
 				></AppButton>
 				<RestyleText textAlign='center' color='text'>
@@ -160,7 +222,7 @@ const styles = StyleSheet.create({
 	c3: {
 		flex: 3,
 		display: "flex",
-		justifyContent: "center",
+		// justifyContent: "center",
 
 		borderTopLeftRadius: 45,
 		borderTopRightRadius: 45,

@@ -13,6 +13,8 @@ import {
 } from "@shopify/restyle";
 import React from "react";
 import RestyleText from "./RestyleText";
+import { LinearGradient } from "expo-linear-gradient";
+import { useDarkLightTheme } from "./ThemeContext";
 
 const buttonVariant = createVariant({ themeKey: "buttonVariants" });
 
@@ -32,26 +34,51 @@ type Props = {
 
 const ButtonContainer = createRestyleComponent<ButtonProps, Theme>(
 	[buttonVariant],
-	TouchableOpacity
+	LinearGradient
 );
 
 const AppButton = ({ onPress, title, variant, fullWidth, style }: Props) => {
+	const { currentTheme } = useDarkLightTheme();
+
 	return (
-		<ButtonContainer
-			variant={variant}
-			style={{ ...styles.appButtonContainer, ...StyleSheet.flatten(style) }}
-			onPress={onPress}
-		>
-			<RestyleText
-				color={variant === "filled" ? "lightText" : "primary"}
-				textAlign='center'
-				fontWeight='bold'
-				textTransform='uppercase'
-				variant='buttonSmall'
+		<TouchableOpacity onPress={onPress}>
+			<LinearGradient
+				colors={
+					variant === "filled"
+						? [
+								currentTheme.colors.lightPrimary,
+								currentTheme.colors.primary,
+								currentTheme.colors.darkPrimary,
+						  ]
+						: ["transparent", "transparent"]
+				}
+				style={[
+					styles.appButtonContainer,
+					variant === "outline" && {
+						borderWidth: 1,
+						borderColor: currentTheme.colors.primary,
+					},
+
+					StyleSheet.flatten(style),
+				]}
 			>
-				{title}
-			</RestyleText>
-		</ButtonContainer>
+				{/* <ButtonContainer
+				variant={variant}
+				style={{ ...styles.appButtonContainer, ...StyleSheet.flatten(style) }}
+				onPress={onPress}
+			> */}
+				<RestyleText
+					color={variant === "filled" ? "lightText" : "primary"}
+					textAlign='center'
+					fontWeight='bold'
+					textTransform='uppercase'
+					variant='buttonSmall'
+				>
+					{title}
+				</RestyleText>
+				{/* </ButtonContainer> */}
+			</LinearGradient>
+		</TouchableOpacity>
 	);
 };
 
@@ -62,6 +89,10 @@ const styles = StyleSheet.create({
 		paddingVertical: theme.spacing.m,
 		paddingHorizontal: theme.spacing.xl,
 		alignSelf: "center",
+	},
+
+	outlineContainer: {
+		borderWidth: 1,
 	},
 });
 

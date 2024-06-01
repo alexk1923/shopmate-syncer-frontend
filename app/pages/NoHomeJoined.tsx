@@ -16,6 +16,7 @@ import {
 import { useAuthStore } from "../store/useUserStore";
 import LottieView from "lottie-react-native";
 import AppButton from "@/components/AppButton";
+import { router } from "expo-router";
 
 const NoHomeScreen = () => {
 	const { currentTheme } = useDarkLightTheme();

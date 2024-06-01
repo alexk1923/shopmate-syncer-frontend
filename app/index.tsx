@@ -17,7 +17,7 @@ const Index = () => {
 					source={
 						darkMode
 							? require("@/assets/images/logo-white.png")
-							: require("@/assets/images/logo-teal.png")
+							: require("@/assets/images/shopmate-logo-primary.png")
 					}
 				/>
 				<AppButton

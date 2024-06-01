@@ -25,6 +25,7 @@ import { LoginInput } from "@/constants/types/AuthTypes";
 import { getUserById } from "./services/userService";
 import { useAuthStore } from "./store/useUserStore";
 import { setToken } from "./store/asyncStorage";
+import AppTextInput from "@/components/Form/AppTextInput";
 type FormData = {
 	username: string;
 	password: string;
@@ -70,6 +71,31 @@ const Login = () => {
 		resetField("password");
 	}
 
+	const inputs = [
+		{
+			id: 1,
+			placeholder: "Username",
+			inputKey: "username",
+			rules: { required: "Username is required" },
+			iconName: "user-large",
+		},
+
+		{
+			id: 2,
+			placeholder: "Password",
+			inputKey: "password",
+			rules: {
+				required: "Password is required",
+				minLength: {
+					value: 6,
+					message: "Password must be at least 6 characters",
+				},
+			},
+			iconName: "lock",
+			isPassword: true,
+		},
+	];
+
 	return (
 		<RestyleBox backgroundColor='primary' style={styles.c1}>
 			<RestyleBox style={styles.c2}>
@@ -97,67 +123,19 @@ const Login = () => {
 					</>
 				)}
 
-				<View
-					style={[
-						styles.searchSection,
-						{ backgroundColor: currentTheme.colors.mainBackground },
-					]}
-				>
-					<Controller
+				{inputs.map((input) => (
+					<AppTextInput
+						key={input.id}
 						control={control}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<>
-								<TextInput
-									placeholder='Username'
-									style={[styles.input, { color: currentTheme.colors.text }]}
-									autoComplete='username'
-									value={value}
-									onChangeText={(value) => onChange(value)}
-								></TextInput>
-								<FontAwesome6
-									name='user-large'
-									size={24}
-									color={currentTheme.colors.text}
-									style={styles.searchIcon}
-								/>
-							</>
-						)}
-						name='username'
-						rules={{ required: true }}
+						placeholder={input.placeholder}
+						errors={errors}
+						inputKey={input.inputKey}
+						iconName={input.iconName}
+						isPassword={input.isPassword}
+						rules={input.rules}
 					/>
-				</View>
-				<View style={styles.searchSection}>
-					<Controller
-						control={control}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<>
-								<TextInput
-									placeholder='Password'
-									style={styles.input}
-									autoComplete='password'
-									secureTextEntry={!showPassword}
-									onBlur={onBlur}
-									value={value}
-									onChangeText={(value) => onChange(value)}
-								></TextInput>
-								<Pressable
-									onPress={() => {
-										setShowPassword((prevPassword) => !prevPassword);
-									}}
-								>
-									<FontAwesome6
-										name={showPassword ? "eye" : "eye-slash"}
-										size={24}
-										color='black'
-										style={styles.searchIcon}
-									/>
-								</Pressable>
-							</>
-						)}
-						name='password'
-						rules={{ required: true }}
-					/>
-				</View>
+				))}
+
 				{loginMutation.isPending && <ActivityIndicator />}
 				{loginMutation.isError && (
 					<RestyleText color='error' fontWeight='bold'>
