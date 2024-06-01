@@ -3,7 +3,7 @@ import axios from "axios";
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 import { API_URL } from "../api/config";
-import { getToken } from "./asyncStorage";
+import { getToken, removeToken } from "./asyncStorage";
 import { router } from "expo-router";
 // import type {} from "@redux-devtools/extension"; // required for devtools typing
 
@@ -23,10 +23,12 @@ export const useAuthStore = create<AuthState>()(
 				user: null,
 				token: null,
 				setUser: (fetchedUser: User) => set({ user: fetchedUser }),
-				removeUser: () =>
+				removeUser: () => {
 					set((state) => {
 						return { user: null, token: null };
-					}),
+					});
+					removeToken();
+				},
 				setToken: (token: string) => {
 					set({ token });
 				},
