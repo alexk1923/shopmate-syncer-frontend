@@ -5,6 +5,8 @@ import {
 	TextInput,
 	Pressable,
 	Keyboard,
+	ActivityIndicator,
+	Text,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import RestyleBox from "@/components/RestyleBox";
@@ -13,33 +15,60 @@ import { useDarkLightTheme } from "@/components/ThemeContext";
 import AppButton from "@/components/AppButton";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { theme } from "@/theme";
+import { useForm, Controller } from "react-hook-form";
 import { Link, router } from "expo-router";
 
+import { useKeyboardVisible } from "./hooks/useKeyboardVisible";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "./services/authService";
+import { LoginInput } from "@/constants/types/AuthTypes";
+import { getUserById } from "./services/userService";
+import { useAuthStore } from "./store/useUserStore";
+import { setToken } from "./store/asyncStorage";
+type FormData = {
+	username: string;
+	password: string;
+};
+
 const Login = () => {
-	const { darkMode } = useDarkLightTheme();
+	const { currentTheme } = useDarkLightTheme();
 	const [showPassword, setShowPassword] = useState(false);
+	const { isKeyboardVisible } = useKeyboardVisible();
+	const setUser = useAuthStore((state) => state.setUser);
+	// const token = useAuthStore((state) => state.token);
 
-	const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+	const loginMutation = useMutation({
+		mutationFn: ({ username, password }: LoginInput) =>
+			login(username, password),
+		onSuccess: async (data) => {
+			console.log(data);
+			console.log("Success");
+			setToken(data.token);
+			const user = await getUserById(data.id);
+			setUser(user);
 
-	useEffect(() => {
-		const keyboardDidShowListener = Keyboard.addListener(
-			"keyboardDidShow",
-			() => {
-				setKeyboardVisible(true); // or some other action
-			}
-		);
-		const keyboardDidHideListener = Keyboard.addListener(
-			"keyboardDidHide",
-			() => {
-				setKeyboardVisible(false); // or some other action
-			}
-		);
+			router.navigate("/(introduction)/introduction");
+		},
+		onError: (err) => {
+			console.log("Error login");
+			console.log(err);
+		},
+	});
 
-		return () => {
-			keyboardDidHideListener.remove();
-			keyboardDidShowListener.remove();
-		};
-	}, []);
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+		resetField,
+	} = useForm<FormData>();
+	const handleFormSubmit = handleSubmit(onSubmit);
+
+	function onSubmit(data: FormData) {
+		console.log(data);
+
+		loginMutation.mutate({ username: data.username, password: data.password });
+		resetField("password");
+	}
 
 	return (
 		<RestyleBox backgroundColor='primary' style={styles.c1}>
@@ -68,50 +97,84 @@ const Login = () => {
 					</>
 				)}
 
-				<View style={styles.searchSection}>
-					<TextInput
-						placeholder='Username'
-						style={styles.input}
-						autoComplete='username'
-					></TextInput>
-					<FontAwesome6
-						name='user-large'
-						size={24}
-						color='black'
-						style={styles.searchIcon}
+				<View
+					style={[
+						styles.searchSection,
+						{ backgroundColor: currentTheme.colors.mainBackground },
+					]}
+				>
+					<Controller
+						control={control}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<>
+								<TextInput
+									placeholder='Username'
+									style={[styles.input, { color: currentTheme.colors.text }]}
+									autoComplete='username'
+									value={value}
+									onChangeText={(value) => onChange(value)}
+								></TextInput>
+								<FontAwesome6
+									name='user-large'
+									size={24}
+									color={currentTheme.colors.text}
+									style={styles.searchIcon}
+								/>
+							</>
+						)}
+						name='username'
+						rules={{ required: true }}
 					/>
 				</View>
 				<View style={styles.searchSection}>
-					<TextInput
-						placeholder='Password'
-						style={styles.input}
-						autoComplete='password'
-						secureTextEntry={!showPassword}
-					></TextInput>
-					<Pressable
-						onPress={() => {
-							setShowPassword((prevPassword) => !prevPassword);
-						}}
-					>
-						<FontAwesome6
-							name={showPassword ? "eye" : "eye-slash"}
-							size={24}
-							color='black'
-							style={styles.searchIcon}
-						/>
-					</Pressable>
+					<Controller
+						control={control}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<>
+								<TextInput
+									placeholder='Password'
+									style={styles.input}
+									autoComplete='password'
+									secureTextEntry={!showPassword}
+									onBlur={onBlur}
+									value={value}
+									onChangeText={(value) => onChange(value)}
+								></TextInput>
+								<Pressable
+									onPress={() => {
+										setShowPassword((prevPassword) => !prevPassword);
+									}}
+								>
+									<FontAwesome6
+										name={showPassword ? "eye" : "eye-slash"}
+										size={24}
+										color='black'
+										style={styles.searchIcon}
+									/>
+								</Pressable>
+							</>
+						)}
+						name='password'
+						rules={{ required: true }}
+					/>
 				</View>
+				{loginMutation.isPending && <ActivityIndicator />}
+				{loginMutation.isError && (
+					<RestyleText color='error' fontWeight='bold'>
+						{loginMutation.error.message}
+					</RestyleText>
+				)}
 				<RestyleBox style={styles.checkboxContainer}>
 					<RestyleText color='primary'>Forgot password</RestyleText>
 				</RestyleBox>
 				<AppButton
-					variant='filled'
+					variant='outline'
 					title='Login'
 					onPress={() => {
-						console.log("TODO FETCH LOGIN");
-						router.navigate("/(introduction)/introduction");
+						handleFormSubmit();
 					}}
-				></AppButton>
+				/>
+
 				<RestyleText textAlign='center' color='text'>
 					No account yet? Register{" "}
 					<Link href='/Register'>
@@ -159,7 +222,7 @@ const styles = StyleSheet.create({
 	input: {
 		paddingRight: theme.spacing.m,
 		paddingLeft: theme.spacing.m,
-		color: theme.colors.text,
+
 		height: "100%",
 		flex: 1,
 	},
@@ -169,13 +232,12 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: "#424242",
 		alignItems: "center",
-		backgroundColor: theme.colors.mainBackground,
+
 		borderRadius: 5,
 		height: 50,
 	},
 	searchIcon: {
 		paddingRight: theme.spacing.m,
-		color: theme.colors.text,
 	},
 	checkboxContainer: {
 		display: "flex",

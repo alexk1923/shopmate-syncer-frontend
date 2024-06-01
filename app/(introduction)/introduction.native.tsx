@@ -20,22 +20,15 @@ import RestyleText from "@/components/RestyleText";
 import RestyleBox from "@/components/RestyleBox";
 import { theme } from "@/theme";
 import { router } from "expo-router";
-import PagerView, {
-	PagerViewOnPageScrollEventData,
-} from "react-native-pager-view";
 
-// import PagerView, {
-// 	PagerViewOnPageScrollEventData,
-// } from "react-native-pager-view";
-
-const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
+import PagerView from "@/components/PagerView/pagerview";
+import { PagerViewOnPageScrollEventData } from "react-native-pager-view";
 
 export default function PaginationDotsExample() {
 	const width = Dimensions.get("window").width;
 	const ref = React.useRef<PagerView>(null);
 	const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
 	const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
-
 	const data = [
 		{
 			SvgComponent: IntroOneSvg({
@@ -91,7 +84,7 @@ export default function PaginationDotsExample() {
 						variant='body'
 						textAlign='center'
 						color='primary'
-						onPress={() => router.navigate("/(tabs)/HomePage")}
+						onPress={() => router.navigate("/(tabs)/Home")}
 					>
 						Skip
 					</RestyleText>
@@ -112,8 +105,8 @@ export default function PaginationDotsExample() {
 	});
 
 	const onPageScroll = React.useMemo(
-		() =>
-			Animated.event<PagerViewOnPageScrollEventData>(
+		() => {
+			return Animated.event<PagerViewOnPageScrollEventData>(
 				[
 					{
 						nativeEvent: {
@@ -125,40 +118,34 @@ export default function PaginationDotsExample() {
 				{
 					useNativeDriver: false,
 				}
-			),
+			);
+		},
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
 	);
 
 	return (
 		<SafeAreaView testID='safe-area-view' style={styles.flex}>
-			{Platform.OS === "web" ? (
-				<RestyleBox>
-					<RestyleText>This is the web</RestyleText>
-				</RestyleBox>
-			) : (
-				// <></>
-				<PagerView
-					initialPage={0}
-					testID='pager-view'
-					ref={ref}
-					style={styles.PagerView}
-					onPageScroll={onPageScroll}
-				>
-					{data.map((d) => (
-						<IntroScreen
-							title={d.title}
-							key={d.key}
-							SvgComponent={d.SvgComponent}
-							description={d.description}
-							ExtraComponent={
-								d.ExtraComponent === undefined ? <></> : d.ExtraComponent()
-							}
-						/>
-					))}
-				</PagerView>
-			)}
-
+			<PagerView
+				initialPage={0}
+				testID='pager-view'
+				ref={ref}
+				style={styles.PagerView}
+				onPageScroll={onPageScroll}
+			>
+				{data.map((d) => (
+					<IntroScreen
+						title={d.title}
+						key={d.key}
+						SvgComponent={d.SvgComponent}
+						description={d.description}
+						ExtraComponent={
+							d.ExtraComponent === undefined ? <></> : d.ExtraComponent()
+						}
+					/>
+				))}
+			</PagerView>
 			<View style={styles.dotsContainer}>
 				<View style={styles.dotContainer}>
 					<SlidingDot
@@ -176,8 +163,10 @@ export default function PaginationDotsExample() {
 		</SafeAreaView>
 	);
 }
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
+	child: { width, justifyContent: "center" },
 	flex: {
 		width: "100%",
 		height: "100%",

@@ -16,6 +16,7 @@ import { AppUser } from "@/constants/types";
 import RestyleBox from "@/components/RestyleBox";
 import RestyleText from "@/components/RestyleText";
 import { RouteProp } from "@react-navigation/native";
+import { useAuthStore } from "@/app/store/useUserStore";
 
 export {
 	// Catch any errors thrown by the Layout component.

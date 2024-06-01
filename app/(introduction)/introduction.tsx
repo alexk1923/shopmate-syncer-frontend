@@ -1,15 +1,7 @@
-import * as React from "react";
-import { StyleSheet } from "react-native";
+import React from "react";
 
-import RestyleText from "@/components/RestyleText";
-import RestyleBox from "@/components/RestyleBox";
+const introduction = () => {
+	return <div>introduction</div>;
+};
 
-export default function PaginationDotsExample() {
-	return (
-		<RestyleBox>
-			<RestyleText>Web version</RestyleText>
-		</RestyleBox>
-	);
-}
-
-const styles = StyleSheet.create({});
+export default introduction;

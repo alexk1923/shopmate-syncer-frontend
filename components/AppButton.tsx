@@ -32,18 +32,15 @@ type Props = {
 
 const ButtonContainer = createRestyleComponent<ButtonProps, Theme>(
 	[buttonVariant],
-	Pressable
+	TouchableOpacity
 );
 
 const AppButton = ({ onPress, title, variant, fullWidth, style }: Props) => {
 	return (
 		<ButtonContainer
 			variant={variant}
-			onPress={() => {
-				console.log("Button pressed");
-				onPress();
-			}}
 			style={{ ...styles.appButtonContainer, ...StyleSheet.flatten(style) }}
+			onPress={onPress}
 		>
 			<RestyleText
 				color={variant === "filled" ? "lightText" : "primary"}

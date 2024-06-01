@@ -14,17 +14,17 @@ import { useDarkLightTheme } from "@/components/ThemeContext";
 import RestyleBox from "@/components/RestyleBox";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { useAuthStore } from "../store/useUserStore";
+import * as Font from "expo-font";
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-	name: React.ComponentProps<typeof FontAwesome>["name"];
-	color: string;
-}) {
-	return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+// Initialise fonts
+Font.loadAsync(MaterialIcons.font);
+Font.loadAsync(FontAwesome6.font);
+Font.loadAsync(MaterialCommunityIcons.font);
 
 export default function TabLayout() {
 	const { currentTheme } = useDarkLightTheme();
+	const user = useAuthStore().user;
 
 	return (
 		<ThemeProvider theme={currentTheme}>
@@ -51,9 +51,10 @@ export default function TabLayout() {
 						}}
 					>
 						<Tabs.Screen
-							name='HomePage'
+							name='Home'
 							options={{
 								title: "Home",
+
 								tabBarIcon: ({ color }) => (
 									<FontAwesome6 name='house' size={24} color={color} />
 								),

@@ -11,6 +11,9 @@ import {
 	useDarkLightTheme,
 } from "@/components/ThemeContext";
 import { Platform, Text } from "react-native";
+import { QueryClientProvider } from "@tanstack/react-query";
+import queryClient from "./api/queryClient";
+import { useAuthStore } from "./store/useUserStore";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -55,34 +58,57 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
 	const { currentTheme } = useDarkLightTheme();
+	const initializeAuth = useAuthStore((state) => state.initializeAuth);
+
+	useEffect(() => {
+		initializeAuth();
+	}, []);
 
 	return (
-		<ThemeProvider theme={currentTheme}>
-			<Stack
-				screenOptions={{
-					contentStyle: { backgroundColor: currentTheme.colors.mainBackground },
-					statusBarColor: currentTheme.colors.mainBackground,
-					headerTintColor: currentTheme.colors.mainBackground,
-					navigationBarColor: currentTheme.colors.mainBackground,
-				}}
-			>
-				<Stack.Screen
-					name='index'
-					options={{
-						headerShown: false,
-						animation: "fade",
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider theme={currentTheme}>
+				<Stack
+					screenOptions={{
+						contentStyle: {
+							backgroundColor: currentTheme.colors.mainBackground,
+						},
+						statusBarColor: currentTheme.colors.mainBackground,
+						headerTintColor: currentTheme.colors.mainBackground,
+						navigationBarColor: currentTheme.colors.mainBackground,
 					}}
-				/>
-				<Stack.Screen
-					name='(tabs)'
-					options={{
-						headerShown: false,
-						animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
-					}}
-				/>
+				>
+					<Stack.Screen
+						name='index'
+						options={{
+							headerShown: false,
+							animation: "fade",
+						}}
+					/>
+					<Stack.Screen
+						name='Login'
+						options={{
+							headerShown: false,
+							animation: "fade",
+						}}
+					/>
+					<Stack.Screen
+						name='Register'
+						options={{
+							headerShown: false,
+							animation: "fade",
+						}}
+					/>
+					<Stack.Screen
+						name='(tabs)'
+						options={{
+							headerShown: false,
+							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
+						}}
+					/>
 
-				<Stack.Screen name='modal' options={{ presentation: "modal" }} />
-			</Stack>
-		</ThemeProvider>
+					<Stack.Screen name='modal' options={{ presentation: "modal" }} />
+				</Stack>
+			</ThemeProvider>
+		</QueryClientProvider>
 	);
 }

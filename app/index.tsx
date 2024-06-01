@@ -1,4 +1,3 @@
-// index.tsx
 import AppButton from "@/components/AppButton";
 import RestyleBox from "@/components/RestyleBox";
 import RestyleText from "@/components/RestyleText";

@@ -7,7 +7,7 @@ type AvatarProps = {
 	uri: string | null;
 	firstName?: string;
 	lastName?: string;
-	status: "online" | "away";
+	status?: "online" | "away";
 };
 
 const Avatar = (props: AvatarProps) => {
@@ -40,17 +40,19 @@ const Avatar = (props: AvatarProps) => {
 					</Text>
 				</RestyleBox>
 			)}
-			<RestyleBox
-				style={{
-					width: 15,
-					height: 15,
-					backgroundColor: dotColor,
-					borderRadius: 25,
-					top: "-10%",
-					borderWidth: 1,
-					borderColor: "white",
-				}}
-			></RestyleBox>
+			{status && (
+				<RestyleBox
+					style={{
+						width: 15,
+						height: 15,
+						backgroundColor: dotColor,
+						borderRadius: 25,
+						top: "-10%",
+						borderWidth: 1,
+						borderColor: "white",
+					}}
+				></RestyleBox>
+			)}
 		</RestyleBox>
 	);
 };

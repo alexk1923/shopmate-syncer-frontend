@@ -11,13 +11,14 @@ import CalendarComponent from "@/components/CalendarComponent";
 import PieChartComponent from "@/components/PieChartComponent";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+import * as Font from "expo-font";
 import ProductExpiryItem from "@/components/ProductExpiryItem";
 
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import { RowMap, SwipeListView } from "react-native-swipe-list-view";
-
 import { FoodTagKey, Product, fetchedFood } from "@/constants/types";
 import SwipeListMenu from "@/components/SwipeListMenu";
+Font.loadAsync(MaterialIcons.font);
 
 export default function HomePage(this: any) {
 	const { currentTheme } = useDarkLightTheme();
