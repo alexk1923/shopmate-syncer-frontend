@@ -38,6 +38,14 @@ const Login = () => {
 	const setUser = useAuthStore((state) => state.setUser);
 	// const token = useAuthStore((state) => state.token);
 
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+		resetField,
+	} = useForm<FormData>();
+	const handleFormSubmit = handleSubmit(onSubmit);
+
 	const loginMutation = useMutation({
 		mutationFn: ({ username, password }: LoginInput) =>
 			login(username, password),
@@ -48,27 +56,18 @@ const Login = () => {
 			const user = await getUserById(data.id);
 			setUser(user);
 
-			router.navigate("/(introduction)/introduction");
+			router.replace("/(introduction)/introduction");
 		},
 		onError: (err) => {
 			console.log("Error login");
 			console.log(err);
+			resetField("password");
 		},
 	});
 
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-		resetField,
-	} = useForm<FormData>();
-	const handleFormSubmit = handleSubmit(onSubmit);
-
 	function onSubmit(data: FormData) {
 		console.log(data);
-
 		loginMutation.mutate({ username: data.username, password: data.password });
-		resetField("password");
 	}
 
 	const inputs = [
@@ -126,6 +125,7 @@ const Login = () => {
 				{inputs.map((input) => (
 					<AppTextInput
 						key={input.id}
+						// @ts-ignore
 						control={control}
 						placeholder={input.placeholder}
 						errors={errors}

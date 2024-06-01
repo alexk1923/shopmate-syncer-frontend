@@ -1,6 +1,6 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, router, useNavigation } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
@@ -20,10 +20,10 @@ export {
 	ErrorBoundary,
 } from "expo-router";
 
-export const unstable_settings = {
-	// Ensure that reloading on `/modal` keeps a back button present.
-	initialRouteName: "index",
-};
+// export const unstable_settings = {
+// 	// Ensure that reloading on `/modal` keeps a back button present.
+// 	initialRouteName: "index",
+// };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -58,11 +58,6 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
 	const { currentTheme } = useDarkLightTheme();
-	const initializeAuth = useAuthStore((state) => state.initializeAuth);
-
-	useEffect(() => {
-		initializeAuth();
-	}, []);
 
 	return (
 		<QueryClientProvider client={queryClient}>
@@ -103,6 +98,7 @@ function RootLayoutNav() {
 						options={{
 							headerShown: false,
 							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
+							headerBackButtonMenuEnabled: false,
 						}}
 					/>
 

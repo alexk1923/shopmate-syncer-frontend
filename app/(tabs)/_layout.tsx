@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
-import { Pressable } from "react-native";
+import { Link, Tabs, useNavigation } from "expo-router";
+import { Alert, BackHandler, Pressable } from "react-native";
 import {
 	FontAwesome6,
 	MaterialCommunityIcons,
@@ -21,6 +21,11 @@ import * as Font from "expo-font";
 Font.loadAsync(MaterialIcons.font);
 Font.loadAsync(FontAwesome6.font);
 Font.loadAsync(MaterialCommunityIcons.font);
+
+export const unstable_settings = {
+	// Ensure that reloading on `/modal` keeps a back button present.
+	initialRouteName: "Home",
+};
 
 export default function TabLayout() {
 	const { currentTheme } = useDarkLightTheme();

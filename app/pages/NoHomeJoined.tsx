@@ -58,39 +58,11 @@ const NoHomeScreen = () => {
 				<RestyleText variant='subheader' color='primary' textAlign='center'>
 					No house joined yet.
 				</RestyleText>
-				<AppButton title={"Join"} onPress={() => {}} variant={"filled"} />
+				<AppButton title={"Join"} onPress={() => {}} variant={"outline"} />
+				<AppButton title={"Create"} onPress={() => {}} variant={"filled"} />
 			</Wrapper>
 		)
 	);
 };
-
-const styles = StyleSheet.create({
-	wrapper: {
-		justifyContent: "flex-start",
-	},
-
-	c1: {
-		display: "flex",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-	},
-
-	userContainer: {
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
-	},
-
-	profilePicture: {
-		width: 40,
-		height: 40,
-		borderRadius: 45,
-	},
-
-	userName: {
-		fontWeight: "bold",
-	},
-});
 
 export default NoHomeScreen;

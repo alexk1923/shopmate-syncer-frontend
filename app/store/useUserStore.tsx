@@ -49,6 +49,7 @@ export const useAuthStore = create<AuthState>()(
 							);
 
 							router.navigate("/Home");
+							router.replace("/Home");
 						} catch (error) {
 							console.error("Token verification failed", error);
 

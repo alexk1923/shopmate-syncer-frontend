@@ -32,15 +32,11 @@ export const login = async (username: string, password: string) => {
 };
 
 export const register = async (
-	firstName: string,
-	lastName: string,
 	email: string,
 	username: string,
 	password: string
 ) => {
 	const response = await axios.post(`${API_URL}/register`, {
-		firstName,
-		lastName,
 		username,
 		email,
 		password,

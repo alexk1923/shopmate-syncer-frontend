@@ -5,8 +5,10 @@ import {
 	TextInput,
 	Pressable,
 	Keyboard,
+	ActivityIndicator,
+	Animated,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import RestyleBox from "@/components/RestyleBox";
 import RestyleText from "@/components/RestyleText";
 import { useDarkLightTheme } from "@/components/ThemeContext";
@@ -19,39 +21,33 @@ import { Controller, useForm } from "react-hook-form";
 import AppTextInput from "@/components/Form/AppTextInput";
 import { useMutation } from "@tanstack/react-query";
 import { register } from "./services/authService";
-
-type FormData = {
-	username: string;
-	password: string;
-	email: string;
-	confirmPassword: string;
-};
-
-type RegisterInput = {
-	firstName: string;
-	lastName: string;
-	email: string;
-	username: string;
-	password: string;
-};
+import { RegisterInput } from "@/constants/types/AuthTypes";
+import LottieAnimation from "@/components/LottieAnimation";
+import { ANIMATIONS } from "@/constants/assets";
+import Wrapper from "@/components/Wrapper";
 
 const Register = () => {
 	const { darkMode } = useDarkLightTheme();
+	const [successRegistration, setSuccessRegistration] = useState(false);
 	const registerMutation = useMutation({
 		mutationFn: ({
-			firstName,
-			lastName,
 			email,
 			username,
 			password,
-		}: RegisterInput) =>
-			register(firstName, lastName, email, username, password),
+		}: Omit<RegisterInput, "confirmPassword">) =>
+			register(email, username, password),
 		onSuccess: async (data) => {
-			router.navigate("/login");
+			console.log("success");
+			setSuccessRegistration(true);
+			setTimeout(() => {
+				router.navigate("/Login");
+			}, 8000);
 		},
 		onError: (err) => {
 			console.log("Error login");
 			console.log(err);
+			resetField("password");
+			resetField("confirmPassword");
 		},
 	});
 
@@ -61,22 +57,24 @@ const Register = () => {
 		watch,
 		formState: { errors },
 		resetField,
-	} = useForm<FormData>();
+	} = useForm<RegisterInput>();
+
+	const { currentTheme } = useDarkLightTheme();
 
 	const inputs = [
 		// {
 		// 	id: 1,
 		// 	placeholder: "First Name",
-		// 	inputKey: "firstname",
+		// 	inputKey: "firstName",
 		// 	rules: { required: "First Name is required" },
-		// 	iconName: "",
+		// 	iconName: "user-pen",
 		// },
 		// {
 		// 	id: 2,
 		// 	placeholder: "Last Name",
-		// 	inputKey: "lastname",
+		// 	inputKey: "lastName",
 		// 	rules: { required: "Last Name is required" },
-		// 	iconName: "",
+		// 	iconName: "user-pen",
 		// },
 		{
 			id: 3,
@@ -126,17 +124,15 @@ const Register = () => {
 		},
 	];
 
-	function onSubmit(data: FormData) {
+	function onSubmit(data: RegisterInput) {
 		console.log("onsubmit");
 		console.log(data);
 
-		// registrerMutation.mutate({
-		// 	username: data.username,
-		// 	password: data.password,
-		// });
-
-		resetField("password");
-		resetField("confirmPassword");
+		registerMutation.mutate({
+			email: data.email,
+			username: data.username,
+			password: data.password,
+		});
 	}
 
 	useEffect(() => {
@@ -145,10 +141,19 @@ const Register = () => {
 
 	// Watching the value of password
 	const password = watch("password");
-
 	const handleFormSubmit = handleSubmit(onSubmit);
 
-	return (
+	const fadeAnim = useRef(new Animated.Value(0)).current;
+
+	useEffect(() => {
+		Animated.timing(fadeAnim, {
+			toValue: 1,
+			duration: 2000, // 2 seconds
+			useNativeDriver: true,
+		}).start();
+	}, [fadeAnim]);
+
+	return !successRegistration ? (
 		<RestyleBox backgroundColor='primary' style={styles.c1}>
 			<RestyleBox style={styles.c2}>
 				<Image
@@ -173,6 +178,7 @@ const Register = () => {
 				{inputs.map((input) => (
 					<AppTextInput
 						key={input.id}
+						// @ts-ignore
 						control={control}
 						placeholder={input.placeholder}
 						errors={errors}
@@ -182,6 +188,12 @@ const Register = () => {
 						rules={input.rules}
 					/>
 				))}
+				{registerMutation.isPending && <ActivityIndicator />}
+				{registerMutation.isError && (
+					<RestyleText color='error' fontWeight='bold'>
+						{registerMutation.error.message}
+					</RestyleText>
+				)}
 
 				<AppButton
 					variant='filled'
@@ -200,6 +212,15 @@ const Register = () => {
 				</RestyleText>
 			</RestyleBox>
 		</RestyleBox>
+	) : (
+		<Wrapper style={{ justifyContent: "center" }}>
+			<LottieAnimation animationName={ANIMATIONS.SUCCESS} />
+			<Animated.Text style={{ opacity: fadeAnim }}>
+				<RestyleText variant='header' color='primary'>
+					Registration complete!
+				</RestyleText>
+			</Animated.Text>
+		</Wrapper>
 	);
 };
 

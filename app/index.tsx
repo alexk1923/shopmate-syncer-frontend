@@ -5,9 +5,16 @@ import { useDarkLightTheme } from "@/components/ThemeContext";
 import Wrapper from "@/components/Wrapper";
 
 import { router } from "expo-router";
+import { useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
+import { useAuthStore } from "./store/useUserStore";
 const Index = () => {
 	const { darkMode } = useDarkLightTheme();
+	const initializeAuth = useAuthStore((state) => state.initializeAuth);
+
+	useEffect(() => {
+		initializeAuth();
+	}, []);
 
 	return (
 		<Wrapper style={{ justifyContent: "flex-end" }}>
@@ -20,6 +27,7 @@ const Index = () => {
 							: require("@/assets/images/shopmate-logo-primary.png")
 					}
 				/>
+
 				<AppButton
 					title='LOGIN'
 					onPress={() => {

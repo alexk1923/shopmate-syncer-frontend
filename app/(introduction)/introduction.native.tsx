@@ -7,6 +7,8 @@ import {
 	Animated,
 	Dimensions,
 	Platform,
+	Alert,
+	BackHandler,
 } from "react-native";
 
 import { SlidingDot } from "react-native-animated-pagination-dots";
@@ -19,12 +21,21 @@ import AppButton from "@/components/AppButton";
 import RestyleText from "@/components/RestyleText";
 import RestyleBox from "@/components/RestyleBox";
 import { theme } from "@/theme";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 
 import PagerView from "@/components/PagerView/pagerview";
 import { PagerViewOnPageScrollEventData } from "react-native-pager-view";
 
 export default function PaginationDotsExample() {
+	const navigation = useNavigation();
+
+	// Add an effect to prevent default back navigation
+	useEffect(() => {
+		navigation.addListener("beforeRemove", (e) => {
+			e.preventDefault();
+		});
+	}, [navigation]);
+
 	const width = Dimensions.get("window").width;
 	const ref = React.useRef<PagerView>(null);
 	const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
@@ -39,7 +50,7 @@ export default function PaginationDotsExample() {
 			title: "Shop better",
 			description:
 				"Improve your shopping experience using automated shopping lists",
-			key: 1,
+			key: 2,
 		},
 		{
 			SvgComponent: IntroSecondSvg({
@@ -49,7 +60,7 @@ export default function PaginationDotsExample() {
 			}),
 			title: "Collaborate",
 			description: "Use the chat to contact your shopmate faster",
-			key: 2,
+			key: 3,
 		},
 		{
 			SvgComponent: IntroThirdSvg({
@@ -60,8 +71,9 @@ export default function PaginationDotsExample() {
 			title: "Track of products",
 			description:
 				"Scan products to keep track of inventory and food expiry dates",
-			key: 3,
+			key: 4,
 		},
+
 		{
 			SvgComponent: IntroFourthSvg({
 				width: "100%",
@@ -84,7 +96,10 @@ export default function PaginationDotsExample() {
 						variant='body'
 						textAlign='center'
 						color='primary'
-						onPress={() => router.navigate("/(tabs)/Home")}
+						onPress={() => {
+							console.log("skip");
+							router.push("/(tabs)/Home");
+						}}
 					>
 						Skip
 					</RestyleText>
@@ -95,13 +110,13 @@ export default function PaginationDotsExample() {
 		},
 	];
 
-	const inputRange = [0, data.length + 1];
+	const inputRange = [0, data.length + 2];
 	const scrollX = Animated.add(
 		scrollOffsetAnimatedValue,
 		positionAnimatedValue
 	).interpolate({
 		inputRange,
-		outputRange: [0, (data.length + 1) * width],
+		outputRange: [0, (data.length + 2) * width],
 	});
 
 	const onPageScroll = React.useMemo(
@@ -134,6 +149,9 @@ export default function PaginationDotsExample() {
 				style={styles.PagerView}
 				onPageScroll={onPageScroll}
 			>
+				<View key={1}>
+					<RestyleText>sdsadasdsadasdas</RestyleText>
+				</View>
 				{data.map((d) => (
 					<IntroScreen
 						title={d.title}
@@ -151,7 +169,7 @@ export default function PaginationDotsExample() {
 					<SlidingDot
 						testID={"sliding-dot"}
 						marginHorizontal={3}
-						data={data}
+						data={["mainScreen", ...data]}
 						dotStyle={{ backgroundColor: theme.colors.secondary }}
 						slidingIndicatorStyle={{ backgroundColor: theme.colors.primary }}
 						//@ts-ignore
