@@ -21,3 +21,8 @@ export type ApiErrorz = {
 	message: string;
 	errorType?: string;
 };
+
+export type AccountSetupInput = {
+	firstName: string;
+	lastName: string;
+};

@@ -20,10 +20,10 @@ export {
 	ErrorBoundary,
 } from "expo-router";
 
-// export const unstable_settings = {
-// 	// Ensure that reloading on `/modal` keeps a back button present.
-// 	initialRouteName: "index",
-// };
+export const unstable_settings = {
+	// Ensure that reloading on `/modal` keeps a back button present.
+	initialRouteName: "index",
+};
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -80,6 +80,23 @@ function RootLayoutNav() {
 						}}
 					/>
 					<Stack.Screen
+						name='introduction/Introduction'
+						options={{
+							headerShown: false,
+							animation: "fade",
+							headerBackButtonMenuEnabled: false,
+						}}
+					/>
+					<Stack.Screen
+						name='(tabs)'
+						options={{
+							headerShown: false,
+							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
+							headerBackButtonMenuEnabled: false,
+						}}
+					/>
+
+					<Stack.Screen
 						name='Login'
 						options={{
 							headerShown: false,
@@ -93,8 +110,9 @@ function RootLayoutNav() {
 							animation: "fade",
 						}}
 					/>
+
 					<Stack.Screen
-						name='(tabs)'
+						name='pages/HouseScanQR'
 						options={{
 							headerShown: false,
 							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",

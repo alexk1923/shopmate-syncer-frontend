@@ -16,7 +16,7 @@ import AppButton from "@/components/AppButton";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { theme } from "@/theme";
 import { useForm, Controller } from "react-hook-form";
-import { Link, router } from "expo-router";
+import { Link, router, useNavigation } from "expo-router";
 
 import { useKeyboardVisible } from "./hooks/useKeyboardVisible";
 import { useMutation } from "@tanstack/react-query";
@@ -37,7 +37,7 @@ const Login = () => {
 	const { isKeyboardVisible } = useKeyboardVisible();
 	const setUser = useAuthStore((state) => state.setUser);
 	// const token = useAuthStore((state) => state.token);
-
+	const navigation = useNavigation();
 	const {
 		control,
 		handleSubmit,
@@ -46,17 +46,27 @@ const Login = () => {
 	} = useForm<FormData>();
 	const handleFormSubmit = handleSubmit(onSubmit);
 
+	const [navigate, setNavigate] = useState(false);
+
+	useEffect(() => {
+		if (navigate) {
+			console.log(navigation.getState().history);
+
+			router.navigate("introduction/Introduction");
+		}
+	}, [navigate]);
+
 	const loginMutation = useMutation({
 		mutationFn: ({ username, password }: LoginInput) =>
 			login(username, password),
 		onSuccess: async (data) => {
 			console.log(data);
 			console.log("Success");
+			console.log(navigation.getState().history);
 			setToken(data.token);
 			const user = await getUserById(data.id);
 			setUser(user);
-
-			router.replace("/(introduction)/introduction");
+			setNavigate(true);
 		},
 		onError: (err) => {
 			console.log("Error login");

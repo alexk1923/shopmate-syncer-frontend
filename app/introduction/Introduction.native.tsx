@@ -12,7 +12,7 @@ import {
 } from "react-native";
 
 import { SlidingDot } from "react-native-animated-pagination-dots";
-import IntroScreen from "../IntroScreen";
+
 import IntroOneSvg from "@/assets/images/IntroOneSvg";
 import IntroSecondSvg from "@/assets/images/IntroSecondSvg";
 import IntroThirdSvg from "@/assets/images/IntroThirdSvg";
@@ -26,8 +26,17 @@ import { router, useNavigation } from "expo-router";
 import PagerView from "@/components/PagerView/pagerview";
 import { PagerViewOnPageScrollEventData } from "react-native-pager-view";
 
+import AppTextInput from "@/components/Form/AppTextInput";
+import { useForm } from "react-hook-form";
+import { AccountSetupInput } from "@/constants/types/AuthTypes";
+import Wrapper from "@/components/Wrapper";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { useAuthStore } from "../store/useUserStore";
+import IntroScreen from "@/app/IntroScreen";
+
 export default function PaginationDotsExample() {
 	const navigation = useNavigation();
+	const user = useAuthStore((state) => state.user);
 
 	// Add an effect to prevent default back navigation
 	useEffect(() => {
@@ -38,6 +47,7 @@ export default function PaginationDotsExample() {
 
 	const width = Dimensions.get("window").width;
 	const ref = React.useRef<PagerView>(null);
+
 	const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
 	const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
 	const data = [
@@ -98,7 +108,8 @@ export default function PaginationDotsExample() {
 						color='primary'
 						onPress={() => {
 							console.log("skip");
-							router.push("/(tabs)/Home");
+							console.log(navigation.getState().history);
+							router.navigate("(tabs)/Home");
 						}}
 					>
 						Skip
@@ -106,17 +117,36 @@ export default function PaginationDotsExample() {
 				</RestyleBox>
 			),
 
-			key: 4,
+			key: 5,
 		},
 	];
+	const [accountSetup, setAccountSetup] = useState(false);
 
-	const inputRange = [0, data.length + 2];
+	useEffect(() => {
+		console.log(positionAnimatedValue);
+		console.log(scrollOffsetAnimatedValue);
+	}, [positionAnimatedValue, scrollOffsetAnimatedValue]);
+
+	function onSubmit(data: AccountSetupInput) {
+		console.log(data);
+		setAccountSetup(true);
+		ref.current?.setPage(1);
+	}
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+		resetField,
+	} = useForm<AccountSetupInput>();
+	const handleFormSubmit = handleSubmit(onSubmit);
+
+	const inputRange = [0, data.length + 1];
 	const scrollX = Animated.add(
 		scrollOffsetAnimatedValue,
 		positionAnimatedValue
 	).interpolate({
 		inputRange,
-		outputRange: [0, (data.length + 2) * width],
+		outputRange: [0, (data.length + 1) * width],
 	});
 
 	const onPageScroll = React.useMemo(
@@ -140,44 +170,118 @@ export default function PaginationDotsExample() {
 		[]
 	);
 
+	const inputs = [
+		{
+			id: 1,
+			placeholder: "First Name",
+			inputKey: "firstName",
+			rules: { required: "First Name is required" },
+			iconName: "user-pen",
+		},
+		{
+			id: 2,
+			placeholder: "Last Name",
+			inputKey: "lastName",
+			rules: { required: "Last Name is required" },
+			iconName: "user-pen",
+		},
+	];
+
+	const uploadImage = () => {};
+
 	return (
 		<SafeAreaView testID='safe-area-view' style={styles.flex}>
-			<PagerView
-				initialPage={0}
-				testID='pager-view'
-				ref={ref}
-				style={styles.PagerView}
-				onPageScroll={onPageScroll}
-			>
+			{user?.firstName && user?.lastName ? (
+				<>
+					<PagerView
+						initialPage={0}
+						testID='pager-view'
+						ref={ref}
+						style={styles.PagerView}
+						onPageScroll={onPageScroll}
+						onPageSelected={(e) => {
+							if (e.nativeEvent.position === 0) {
+								setAccountSetup(false);
+							}
+						}}
+					>
+						{data.map((d) => (
+							<IntroScreen
+								title={d.title}
+								key={d.key}
+								SvgComponent={d.SvgComponent}
+								description={d.description}
+								ExtraComponent={
+									d.ExtraComponent === undefined ? <></> : d.ExtraComponent()
+								}
+							/>
+						))}
+					</PagerView>
+					<View style={styles.dotsContainer}>
+						<View style={styles.dotContainer}>
+							<SlidingDot
+								testID={"sliding-dot"}
+								marginHorizontal={3}
+								data={data}
+								dotStyle={{ backgroundColor: theme.colors.secondary }}
+								slidingIndicatorStyle={{
+									backgroundColor: theme.colors.primary,
+								}}
+								//@ts-ignore
+								scrollX={scrollX}
+								dotSize={12}
+							/>
+						</View>
+					</View>
+				</>
+			) : (
 				<View key={1}>
-					<RestyleText>sdsadasdsadasdas</RestyleText>
+					<Wrapper style={{ justifyContent: "flex-start" }}>
+						<RestyleText variant='header' color='primary'>
+							Setup your account
+						</RestyleText>
+
+						<RestyleBox
+							aspectRatio={"1/1"}
+							width={"50%"}
+							backgroundColor='gray'
+							borderRadius={90}
+							alignSelf='center'
+							justifyContent='center'
+							alignItems='center'
+						>
+							<FontAwesome6 name='camera' size={60} color='#444444' />
+						</RestyleBox>
+
+						<AppButton
+							variant='outline'
+							title='Upload photo'
+							onPress={() => uploadImage()}
+						/>
+						<RestyleBox>
+							{inputs.map((input) => {
+								return (
+									<AppTextInput
+										control={control}
+										errors={errors}
+										placeholder={input.placeholder}
+										inputKey={input.inputKey}
+										rules={input.rules}
+										iconName={input.iconName}
+									/>
+								);
+							})}
+						</RestyleBox>
+						<AppButton
+							variant='filled'
+							title='Done'
+							onPress={() => {
+								handleFormSubmit();
+							}}
+						/>
+					</Wrapper>
 				</View>
-				{data.map((d) => (
-					<IntroScreen
-						title={d.title}
-						key={d.key}
-						SvgComponent={d.SvgComponent}
-						description={d.description}
-						ExtraComponent={
-							d.ExtraComponent === undefined ? <></> : d.ExtraComponent()
-						}
-					/>
-				))}
-			</PagerView>
-			<View style={styles.dotsContainer}>
-				<View style={styles.dotContainer}>
-					<SlidingDot
-						testID={"sliding-dot"}
-						marginHorizontal={3}
-						data={["mainScreen", ...data]}
-						dotStyle={{ backgroundColor: theme.colors.secondary }}
-						slidingIndicatorStyle={{ backgroundColor: theme.colors.primary }}
-						//@ts-ignore
-						scrollX={scrollX}
-						dotSize={12}
-					/>
-				</View>
-			</View>
+			)}
 		</SafeAreaView>
 	);
 }

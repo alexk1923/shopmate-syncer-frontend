@@ -47,9 +47,7 @@ export const useAuthStore = create<AuthState>()(
 									headers: { Authorization: `Bearer ${token}` },
 								}
 							);
-
-							router.navigate("/Home");
-							router.replace("/Home");
+							router.replace("(tabs)/Home");
 						} catch (error) {
 							console.error("Token verification failed", error);
 

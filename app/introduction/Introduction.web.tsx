@@ -3,10 +3,15 @@ import { Dimensions, StyleSheet, Text, View } from "react-native";
 
 import RestyleText from "@/components/RestyleText";
 import RestyleBox from "@/components/RestyleBox";
+import { Link } from "expo-router";
 
 export default function PaginationDotsExample() {
 	const colors = ["tomato", "thistle", "skyblue", "teal"];
-	return <Text>Web</Text>;
+	return (
+		<Text>
+			<Link href={"/(tabs)"}>Next page</Link>
+		</Text>
+	);
 }
 
 const { width } = Dimensions.get("window");

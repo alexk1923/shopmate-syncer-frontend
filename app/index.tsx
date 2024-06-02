@@ -4,17 +4,34 @@ import RestyleText from "@/components/RestyleText";
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import Wrapper from "@/components/Wrapper";
 
-import { router } from "expo-router";
-import { useEffect } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { router, useNavigation } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { AppState, Image, StyleSheet, Text, View } from "react-native";
 import { useAuthStore } from "./store/useUserStore";
 const Index = () => {
 	const { darkMode } = useDarkLightTheme();
 	const initializeAuth = useAuthStore((state) => state.initializeAuth);
+	const navigation = useNavigation();
+	const appStateChangeRef = useRef(false);
+
+	// Register the app resume event listener
+	useEffect(() => {
+		const appResumeListener = AppState.addEventListener("change", (state) => {
+			console.log("state is" + state);
+
+			if (state === "active") {
+				router.navigate("/(tabs)/Home");
+			}
+		});
+
+		return () => {
+			appResumeListener.remove();
+		};
+	}, []);
 
 	useEffect(() => {
 		initializeAuth();
-	}, []);
+	}, [appStateChangeRef.current]);
 
 	return (
 		<Wrapper style={{ justifyContent: "flex-end" }}>

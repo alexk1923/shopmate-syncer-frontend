@@ -16,12 +16,14 @@ import {
 import { useAuthStore } from "../store/useUserStore";
 import LottieView from "lottie-react-native";
 import AppButton from "@/components/AppButton";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 
 const NoHomeScreen = () => {
 	const { currentTheme } = useDarkLightTheme();
 	const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 	const user = useAuthStore().user;
+
+	const navigation = useNavigation();
 
 	const animationProgress = useRef(new Animated.Value(0));
 
@@ -34,6 +36,10 @@ const NoHomeScreen = () => {
 		}).start();
 	}, []);
 
+	useEffect(() => {
+		console.log("Current routes:", navigation.getState().routes);
+	}, []);
+
 	return (
 		user && (
 			<Wrapper style={{ justifyContent: "flex-start" }}>
@@ -44,7 +50,7 @@ const NoHomeScreen = () => {
 					username={user.username}
 				/>
 
-				{Platform.OS === "web" ? (
+				{Platform.OS === "ios" ? (
 					<></>
 				) : (
 					<AnimatedLottieView
@@ -58,8 +64,20 @@ const NoHomeScreen = () => {
 				<RestyleText variant='subheader' color='primary' textAlign='center'>
 					No house joined yet.
 				</RestyleText>
-				<AppButton title={"Join"} onPress={() => {}} variant={"outline"} />
-				<AppButton title={"Create"} onPress={() => {}} variant={"filled"} />
+				<AppButton
+					title={"Join"}
+					onPress={() => {
+						router.navigate("pages/HouseScanQR");
+					}}
+					variant={"outline"}
+				/>
+				<AppButton
+					title={"Create"}
+					onPress={() => {
+						console.log(navigation.getState().history);
+					}}
+					variant={"filled"}
+				/>
 			</Wrapper>
 		)
 	);

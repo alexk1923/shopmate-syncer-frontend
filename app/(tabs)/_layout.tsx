@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs, useNavigation } from "expo-router";
+import { Link, Tabs } from "expo-router";
 import { Alert, BackHandler, Pressable } from "react-native";
 import {
 	FontAwesome6,
@@ -16,6 +16,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useAuthStore } from "../store/useUserStore";
 import * as Font from "expo-font";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 
 // Initialise fonts
 Font.loadAsync(MaterialIcons.font);
@@ -23,11 +24,12 @@ Font.loadAsync(FontAwesome6.font);
 Font.loadAsync(MaterialCommunityIcons.font);
 
 export const unstable_settings = {
-	// Ensure that reloading on `/modal` keeps a back button present.
+	// Ensure any route can link back to `/`
 	initialRouteName: "Home",
 };
-
 export default function TabLayout() {
+	const navigation = useNavigation();
+
 	const { currentTheme } = useDarkLightTheme();
 	const user = useAuthStore().user;
 
@@ -56,10 +58,10 @@ export default function TabLayout() {
 						}}
 					>
 						<Tabs.Screen
+							key={"Homezz"}
 							name='Home'
 							options={{
 								title: "Home",
-
 								tabBarIcon: ({ color }) => (
 									<FontAwesome6 name='house' size={24} color={color} />
 								),
