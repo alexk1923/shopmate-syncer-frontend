@@ -10,11 +10,12 @@ import {
 } from "@shopify/restyle";
 import { Theme } from "@/theme";
 
-type AppFabProps = BackgroundColorProps<Theme> & {
+type AppFabProps = {
 	size: number;
 	onPress: () => void;
 	iconName: string;
 	iconColor: string;
+	backgroundColor: string;
 };
 
 const AppFab = (props: AppFabProps) => {
@@ -27,7 +28,7 @@ const AppFab = (props: AppFabProps) => {
 			justifyContent='center'
 			alignItems='center'
 			borderRadius={90}
-			backgroundColor={backgroundColor}
+			style={{ backgroundColor }}
 		>
 			<GestureHandlerRootView
 				style={{ justifyContent: "center", alignItems: "center" }}

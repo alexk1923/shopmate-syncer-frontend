@@ -17,6 +17,7 @@ import { useAuthStore } from "../store/useUserStore";
 import LottieView from "lottie-react-native";
 import AppButton from "@/components/AppButton";
 import { router, useNavigation } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const NoHomeScreen = () => {
 	const { currentTheme } = useDarkLightTheme();
@@ -64,6 +65,7 @@ const NoHomeScreen = () => {
 				<RestyleText variant='subheader' color='primary' textAlign='center'>
 					No house joined yet.
 				</RestyleText>
+
 				<AppButton
 					title={"Join"}
 					onPress={() => {
@@ -74,7 +76,7 @@ const NoHomeScreen = () => {
 				<AppButton
 					title={"Create"}
 					onPress={() => {
-						console.log(navigation.getState().history);
+						router.push("/pages/HouseCreate");
 					}}
 					variant={"filled"}
 				/>

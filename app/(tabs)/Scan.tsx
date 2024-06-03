@@ -29,10 +29,11 @@ import {
 	TextInput,
 } from "react-native-gesture-handler";
 import FoodTag from "@/components/FoodTag";
-import { Product, fetchedFood } from "@/constants/types";
+
 import ProductCard from "@/components/ProductCard";
 import DashboardPage from "./DashboardPage";
 import FlipCard from "@/components/FlipCard";
+import { Product, fetchedFood } from "@/constants/types/ProductTypes";
 
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
@@ -114,6 +115,7 @@ export default function Scan() {
 	}, []);
 	const takePicture = async () => {
 		if (cameraRef) {
+			// @ts-ignore
 			const photo = await cameraRef.takePictureAsync();
 			setPhoto(photo.uri); // Save the photo URI to display later
 		}
@@ -166,6 +168,7 @@ export default function Scan() {
 				<Wrapper style={{ justifyContent: "flex-end" }}>
 					<RestyleBox justifyContent='center' gap='s'>
 						<ControllingAnimationProgress
+							// @ts-ignore
 							animationFile={tutorialInfo[tutorialStep].animation}
 						/>
 						<RestyleText variant='subheader' color='text'>
@@ -202,6 +205,7 @@ export default function Scan() {
 					{photo === null ? (
 						<CameraView
 							style={styles.camera}
+							// @ts-ignore
 							ref={(ref) => setCameraRef(ref)}
 							facing={facing as CameraType}
 							barcodeScannerSettings={{

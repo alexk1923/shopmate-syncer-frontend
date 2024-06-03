@@ -33,6 +33,7 @@ import Wrapper from "@/components/Wrapper";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useAuthStore } from "../store/useUserStore";
 import IntroScreen from "@/app/IntroScreen";
+import ImagePicker from "@/components/Profile/ImagePicker";
 
 export default function PaginationDotsExample() {
 	const navigation = useNavigation();
@@ -107,9 +108,7 @@ export default function PaginationDotsExample() {
 						textAlign='center'
 						color='primary'
 						onPress={() => {
-							console.log("skip");
-							console.log(navigation.getState().history);
-							router.navigate("(tabs)/Home");
+							router.push("(tabs)/Home");
 						}}
 					>
 						Skip
@@ -241,27 +240,13 @@ export default function PaginationDotsExample() {
 							Setup your account
 						</RestyleText>
 
-						<RestyleBox
-							aspectRatio={"1/1"}
-							width={"50%"}
-							backgroundColor='gray'
-							borderRadius={90}
-							alignSelf='center'
-							justifyContent='center'
-							alignItems='center'
-						>
-							<FontAwesome6 name='camera' size={60} color='#444444' />
-						</RestyleBox>
+						<ImagePicker onPress={() => {}} />
 
-						<AppButton
-							variant='outline'
-							title='Upload photo'
-							onPress={() => uploadImage()}
-						/>
 						<RestyleBox>
 							{inputs.map((input) => {
 								return (
 									<AppTextInput
+										// @ts-ignore
 										control={control}
 										errors={errors}
 										placeholder={input.placeholder}

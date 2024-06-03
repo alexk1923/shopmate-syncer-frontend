@@ -5,7 +5,7 @@ import {
 	TextInput,
 	TextInputProps,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { theme } from "@/theme";
 import { FontAwesome6 } from "@expo/vector-icons";
 import RestyleText from "./RestyleText";
@@ -37,23 +37,38 @@ const AppInput = (props: InputProps) => {
 		onChangeText,
 	} = props;
 	const { currentTheme } = useDarkLightTheme();
+	const [isFocused, setIsFocused] = useState(false);
 
 	return (
 		<View>
 			<RestyleText variant='label'>{label}</RestyleText>
-			<RestyleBox style={styles.searchSection} backgroundColor='mainBackground'>
+			<RestyleBox
+				style={styles.searchSection}
+				backgroundColor='mainBackground'
+				borderColor={isFocused ? "primary" : "gray"}
+			>
 				<TextInput
 					placeholder={placeholder}
-					style={styles.input}
+					style={[
+						styles.input,
+						{
+							color: isFocused
+								? currentTheme.colors.primary
+								: currentTheme.colors.text,
+						},
+					]}
 					autoComplete={autocomplete}
 					defaultValue={defaultValue}
 					value={value}
 					onChangeText={onChangeText}
+					onFocus={() => setIsFocused(true)}
 				></TextInput>
 				<FontAwesome6
 					name={iconName}
 					size={iconSize}
-					color={currentTheme.colors.gray}
+					color={
+						isFocused ? currentTheme.colors.primary : currentTheme.colors.gray
+					}
 					style={[styles.searchIcon]}
 				/>
 			</RestyleBox>
@@ -65,7 +80,7 @@ const styles = StyleSheet.create({
 	input: {
 		paddingRight: theme.spacing.m,
 		paddingLeft: theme.spacing.m,
-		color: theme.colors.text,
+		fontWeight: "bold",
 		height: "100%",
 		width: "100%",
 		flex: 1,
@@ -74,7 +89,6 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		borderWidth: 1,
-		borderColor: "#424242",
 		alignItems: "center",
 		// backgroundColor: currentTheme.colors.mainBackground,
 		borderRadius: 5,

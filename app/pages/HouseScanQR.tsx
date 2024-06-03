@@ -74,6 +74,7 @@ const ScanQRCode = () => {
 		>
 			<CameraView
 				style={styles.camera}
+				// @ts-ignore
 				ref={(ref) => setCameraRef(ref)}
 				facing={facing as CameraType}
 				barcodeScannerSettings={{
@@ -84,17 +85,18 @@ const ScanQRCode = () => {
 					setBarcode(scanningResult.data);
 				}}
 			>
-				<RestyleBox width='100%'>
-					<RestyleText
-						variant='header'
-						textAlign='center'
-						style={{ color: "white" }}
-					>
-						Scan QR
-					</RestyleText>
-				</RestyleBox>
+				<LottieAnimation
+					animationName={ANIMATIONS.QR_SCANNER}
+					style={{ width: "100%" }}
+				/>
 
-				<LottieAnimation animationName={ANIMATIONS.QR_SCANNER} />
+				<RestyleText
+					variant='header'
+					textAlign='center'
+					style={{ color: "white" }}
+				>
+					{barcode ? "Loading..." : "Scan QR"}
+				</RestyleText>
 			</CameraView>
 		</RestyleBox>
 	);
@@ -107,7 +109,8 @@ const styles = StyleSheet.create({
 		// height: 400,
 		height: "75%",
 		width: "100%",
-		justifyContent: "flex-start",
+		justifyContent: "center",
+		alignItems: "center",
 		// padding: theme.spacing.m,
 	},
 	buttonContainer: {

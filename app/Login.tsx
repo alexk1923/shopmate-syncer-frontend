@@ -19,13 +19,14 @@ import { useForm, Controller } from "react-hook-form";
 import { Link, router, useNavigation } from "expo-router";
 
 import { useKeyboardVisible } from "./hooks/useKeyboardVisible";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { login } from "./services/authService";
 import { LoginInput } from "@/constants/types/AuthTypes";
-import { getUserById } from "./services/userService";
+
 import { useAuthStore } from "./store/useUserStore";
 import { setToken } from "./store/asyncStorage";
 import AppTextInput from "@/components/Form/AppTextInput";
+import { UserService } from "./services/userService";
 type FormData = {
 	username: string;
 	password: string;
@@ -45,16 +46,18 @@ const Login = () => {
 		resetField,
 	} = useForm<FormData>();
 	const handleFormSubmit = handleSubmit(onSubmit);
-
-	const [navigate, setNavigate] = useState(false);
-
-	useEffect(() => {
-		if (navigate) {
-			console.log(navigation.getState().history);
-
-			router.navigate("introduction/Introduction");
-		}
-	}, [navigate]);
+	const setUserId = useAuthStore((state) => state.setUserId);
+	const queryClient = useQueryClient();
+	// const getUserQuery = useQuery({
+	// 	queryKey: ["user", userId],
+	// 	queryFn: async () => {
+	// 		if (userId) {
+	// 			const user = await UserService.getUserById(userId);
+	// 			setUser(user);
+	// 		}
+	// 	},
+	// 	enabled: userId !== null,
+	// });
 
 	const loginMutation = useMutation({
 		mutationFn: ({ username, password }: LoginInput) =>
@@ -62,11 +65,23 @@ const Login = () => {
 		onSuccess: async (data) => {
 			console.log(data);
 			console.log("Success");
-			console.log(navigation.getState().history);
+
 			setToken(data.token);
-			const user = await getUserById(data.id);
-			setUser(user);
-			setNavigate(true);
+			setUserId(data.id);
+			// const user = await UserService.getUserById(data.id);
+			// setUser(user);
+			queryClient.prefetchQuery({
+				queryKey: ["user", data.id],
+				queryFn: async () => {
+					if (data.id) {
+						const user = await UserService.getUserById(data.id);
+						setUser(user);
+						return user;
+					}
+				},
+			});
+			// setUserId(data.id);
+			router.navigate("introduction/Introduction");
 		},
 		onError: (err) => {
 			console.log("Error login");

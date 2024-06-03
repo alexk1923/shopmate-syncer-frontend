@@ -12,11 +12,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import RestyleText from "./RestyleText";
 import ScrollPage from "./ScrollPage";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { FoodTagKey, Product } from "@/constants/types";
+
 import RestyleBox from "./RestyleBox";
 import AppButton from "./AppButton";
 import { theme } from "@/theme";
-import AppInput from "./AppInput";
+import AppInput from "./AppEditInput";
 import { useDarkLightTheme } from "./ThemeContext";
 import Toggle from "react-native-toggle-element/lib/toggle";
 
@@ -34,6 +34,8 @@ import {
 } from "react-native-gesture-handler";
 import AppBottomSheetModal from "./AppBottomSheetModal";
 import TagPickerItem from "./TagPickerItem";
+import { Product } from "@/constants/types/ProductTypes";
+import AppEditInput from "./AppEditInput";
 
 type EditFields = {
 	name: string;
@@ -146,7 +148,7 @@ const ProductCardEdit = (props: {
 				/>
 
 				<RestyleBox padding='m' gap='m'>
-					<AppInput
+					<AppEditInput
 						label={"Product Name"}
 						placeholder={"e.g. Banana"}
 						iconName={"pencil"}
@@ -160,6 +162,7 @@ const ProductCardEdit = (props: {
 							});
 						}}
 					/>
+
 					<RestyleBox flexDirection='row' justifyContent='space-between'>
 						<RestyleBox flexDirection='row' gap='s' alignItems='center'>
 							<RestyleText variant='label'>

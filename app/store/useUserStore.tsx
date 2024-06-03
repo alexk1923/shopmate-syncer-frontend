@@ -10,6 +10,8 @@ import { router } from "expo-router";
 interface AuthState {
 	user: User | null;
 	token: string | null;
+	userId: number | null;
+	setUserId: (userId: number) => void;
 	setUser: (user: User) => void;
 	setToken: (token: string) => void;
 	removeUser: () => void;
@@ -22,6 +24,8 @@ export const useAuthStore = create<AuthState>()(
 			(set) => ({
 				user: null,
 				token: null,
+				userId: null,
+				setUserId: (userId: number) => set({ userId: userId }),
 				setUser: (fetchedUser: User) => set({ user: fetchedUser }),
 				removeUser: () => {
 					set((state) => {

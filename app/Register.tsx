@@ -25,6 +25,7 @@ import { RegisterInput } from "@/constants/types/AuthTypes";
 import LottieAnimation from "@/components/LottieAnimation";
 import { ANIMATIONS } from "@/constants/assets";
 import Wrapper from "@/components/Wrapper";
+import SuccessScreen from "@/components/SuccessScreen";
 
 const Register = () => {
 	const { darkMode } = useDarkLightTheme();
@@ -213,14 +214,7 @@ const Register = () => {
 			</RestyleBox>
 		</RestyleBox>
 	) : (
-		<Wrapper style={{ justifyContent: "center" }}>
-			<LottieAnimation animationName={ANIMATIONS.SUCCESS} />
-			<Animated.Text style={{ opacity: fadeAnim }}>
-				<RestyleText variant='header' color='primary'>
-					Registration complete!
-				</RestyleText>
-			</Animated.Text>
-		</Wrapper>
+		<SuccessScreen text={"Registration complete"} />
 	);
 };
 

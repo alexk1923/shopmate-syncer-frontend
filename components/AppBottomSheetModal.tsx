@@ -21,7 +21,7 @@ const AppBottomSheetModal = ({
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
 	// variables
-	const snapPoints = useMemo(() => ["50%"], []);
+	const snapPoints = useMemo(() => ["70%", "90%"], []);
 
 	// callbacks
 	const handlePresentModalPress = useCallback(() => {
@@ -29,6 +29,10 @@ const AppBottomSheetModal = ({
 	}, []);
 
 	const handleSheetChanges = useCallback((index: number) => {
+		console.log(index);
+		if (index === -1) {
+			handleCloseModal();
+		}
 		console.log("handleSheetChanges", index);
 	}, []);
 
@@ -93,7 +97,8 @@ const styles = StyleSheet.create({
 	},
 	contentContainer: {
 		flex: 1,
-		alignItems: "center",
+		// alignItems: "center",
+		padding: 16,
 	},
 });
 

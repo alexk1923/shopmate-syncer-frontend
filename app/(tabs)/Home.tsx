@@ -5,20 +5,31 @@ import NoHomeScreen from "../pages/NoHomeJoined";
 import { router, useNavigation } from "expo-router";
 import { Alert, BackHandler } from "react-native";
 import { CommonActions } from "@react-navigation/native";
+import { useQuery } from "@tanstack/react-query";
+import { UserService } from "../services/userService";
 
 const Home = () => {
 	const navigation = useNavigation();
+	const userId = useAuthStore((state) => state.userId);
+	const setUser = useAuthStore((state) => state.setUser);
+
+	const { data, isLoading, error } = useQuery<User | null>({
+		queryKey: ["user", userId],
+		queryFn: async () => {
+			const user = await UserService.getUserById(userId as number);
+			setUser(user);
+			return user;
+		},
+		enabled: userId !== null,
+	});
 
 	useEffect(() => {
 		const backAction = () => {
-			console.log("router can go back");
-			console.log(navigation.getState().history);
-
 			if (!navigation.canGoBack()) {
-				Alert.alert("Hold on!", "Are you sure you want to exit the app?", [
-					{ text: "Cancel", onPress: () => null, style: "cancel" },
-					{ text: "YES", onPress: () => BackHandler.exitApp() },
-				]);
+				// Alert.alert("Hold on!", "Are you sure you want to exit the app?", [
+				// 	{ text: "Cancel", onPress: () => null, style: "cancel" },
+				// 	{ text: "YES", onPress: () => BackHandler.exitApp() },
+				// ]);
 
 				return true;
 			}
@@ -32,25 +43,9 @@ const Home = () => {
 		return () => backHandler.remove();
 	}, []);
 
-	useEffect(() => {
-		// Log the current navigation state
-		// navigation.dispatch(
-		// 	CommonActions.reset({
-		// 		index: 0,
-		// 		routes: [{ name: "(tabs)" }],
-		// 	})
-		// );
+	console.log("data is" + data);
 
-		console.log("router can go back");
-		console.log(router.canGoBack());
-		console.log("parent is");
-
-		console.log(navigation.getState().history);
-	}, [navigation.getState().history]);
-
-	const user = useAuthStore().user;
-
-	return user?.houseId ? <HomePage /> : <NoHomeScreen />;
+	return data?.houseId ? <HomePage /> : <NoHomeScreen />;
 };
 
 export default Home;

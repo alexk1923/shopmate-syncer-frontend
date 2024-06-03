@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: "100%",
 		display: "flex",
-		justifyContent: "flex-end",
+		justifyContent: "center",
 		padding: theme.spacing.m,
 		gap: theme.spacing.m,
 	},

@@ -68,7 +68,7 @@ function RootLayoutNav() {
 							backgroundColor: currentTheme.colors.mainBackground,
 						},
 						statusBarColor: currentTheme.colors.mainBackground,
-						headerTintColor: currentTheme.colors.mainBackground,
+						headerTintColor: currentTheme.colors.primary,
 						navigationBarColor: currentTheme.colors.mainBackground,
 					}}
 				>
@@ -114,9 +114,16 @@ function RootLayoutNav() {
 					<Stack.Screen
 						name='pages/HouseScanQR'
 						options={{
-							headerShown: false,
+							title: "Join House",
 							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
-							headerBackButtonMenuEnabled: false,
+						}}
+					/>
+
+					<Stack.Screen
+						name='pages/HouseCreate'
+						options={{
+							title: "Create House",
+							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
 						}}
 					/>
 

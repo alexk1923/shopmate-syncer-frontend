@@ -37,6 +37,7 @@
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.4",
     "expo-web-browser": "~13.0.3",
+    "fastest-levenshtein": "^1.0.16",
     "lottie-react-native": "6.7.0",
     "prop-types": "^15.8.1",
     "react": "18.2.0",
