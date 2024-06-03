@@ -135,17 +135,13 @@ const Login = () => {
 				paddingHorizontal='xl'
 				gap='m'
 			>
-				{!isKeyboardVisible && (
-					<>
-						<RestyleText variant='header' style={styles.text} color='text'>
-							Let's get started!
-						</RestyleText>
-						<RestyleText variant='body' style={styles.text} color='text'>
-							Login to start improve your shopping experience and collaboration
-							with your mate
-						</RestyleText>
-					</>
-				)}
+				<RestyleText variant='header' style={styles.text} color='text'>
+					Let's get started!
+				</RestyleText>
+				<RestyleText variant='body' style={styles.text} color='text'>
+					Login to start improve your shopping experience and collaboration with
+					your mate
+				</RestyleText>
 
 				{inputs.map((input) => (
 					<AppTextInput

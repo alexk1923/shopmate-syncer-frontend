@@ -34,24 +34,35 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useAuthStore } from "../store/useUserStore";
 import IntroScreen from "@/app/IntroScreen";
 import ImagePicker from "@/components/Profile/ImagePicker";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { UserService } from "../services/userService";
+import { string } from "prop-types";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 export default function PaginationDotsExample() {
 	const navigation = useNavigation();
 	const user = useAuthStore((state) => state.user);
-
-	// Add an effect to prevent default back navigation
-	useEffect(() => {
-		navigation.addListener("beforeRemove", (e) => {
-			e.preventDefault();
-		});
-	}, [navigation]);
 
 	const width = Dimensions.get("window").width;
 	const ref = React.useRef<PagerView>(null);
 
 	const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
 	const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
-	const data = [
+
+	const userId = useAuthStore((state) => state.userId);
+	const setUser = useAuthStore((state) => state.setUser);
+
+	const { data, isLoading, error } = useQuery<User | null>({
+		queryKey: ["user", userId],
+		queryFn: async () => {
+			const user = await UserService.getUserById(userId as number);
+			setUser(user);
+			return user;
+		},
+		enabled: userId !== null,
+	});
+
+	const screens = [
 		{
 			SvgComponent: IntroOneSvg({
 				width: "100%",
@@ -61,7 +72,7 @@ export default function PaginationDotsExample() {
 			title: "Shop better",
 			description:
 				"Improve your shopping experience using automated shopping lists",
-			key: 2,
+			key: 1,
 		},
 		{
 			SvgComponent: IntroSecondSvg({
@@ -71,7 +82,7 @@ export default function PaginationDotsExample() {
 			}),
 			title: "Collaborate",
 			description: "Use the chat to contact your shopmate faster",
-			key: 3,
+			key: 2,
 		},
 		{
 			SvgComponent: IntroThirdSvg({
@@ -82,7 +93,7 @@ export default function PaginationDotsExample() {
 			title: "Track of products",
 			description:
 				"Scan products to keep track of inventory and food expiry dates",
-			key: 4,
+			key: 3,
 		},
 
 		{
@@ -116,20 +127,61 @@ export default function PaginationDotsExample() {
 				</RestyleBox>
 			),
 
-			key: 5,
+			key: 4,
 		},
 	];
 	const [accountSetup, setAccountSetup] = useState(false);
+
+	useEffect(() => {
+		if (data?.firstName === null || data?.lastName === null) {
+			setAccountSetup(true);
+		}
+	}, [data]);
+
+	// Add an effect to prevent default back navigation
+	useEffect(() => {
+		navigation.addListener("beforeRemove", (e) => {
+			e.preventDefault();
+		});
+	}, [navigation]);
 
 	useEffect(() => {
 		console.log(positionAnimatedValue);
 		console.log(scrollOffsetAnimatedValue);
 	}, [positionAnimatedValue, scrollOffsetAnimatedValue]);
 
-	function onSubmit(data: AccountSetupInput) {
-		console.log(data);
-		setAccountSetup(true);
-		ref.current?.setPage(1);
+	const queryClient = useQueryClient();
+	const accountSetupMutation = useMutation({
+		mutationFn: async ({ firstName, lastName }: UpdateUserType) => {
+			if (data) {
+				const user = await UserService.updateUser(
+					data?.id,
+					firstName,
+					lastName
+				);
+				return user;
+			}
+			return null;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["user", data?.id] });
+			setAccountSetup(false);
+			ref.current?.setPage(1);
+			console.log("Update successfully");
+		},
+		onError: (error) => {
+			console.log("here is the error:");
+
+			console.log(error);
+		},
+	});
+
+	function onSubmit(formData: AccountSetupInput) {
+		console.log(formData);
+		accountSetupMutation.mutate({
+			firstName: formData.firstName,
+			lastName: formData.lastName,
+		});
 	}
 	const {
 		control,
@@ -139,13 +191,13 @@ export default function PaginationDotsExample() {
 	} = useForm<AccountSetupInput>();
 	const handleFormSubmit = handleSubmit(onSubmit);
 
-	const inputRange = [0, data.length + 1];
+	const inputRange = [0, screens.length + 1];
 	const scrollX = Animated.add(
 		scrollOffsetAnimatedValue,
 		positionAnimatedValue
 	).interpolate({
 		inputRange,
-		outputRange: [0, (data.length + 1) * width],
+		outputRange: [0, (screens.length + 1) * width],
 	});
 
 	const onPageScroll = React.useMemo(
@@ -190,7 +242,8 @@ export default function PaginationDotsExample() {
 
 	return (
 		<SafeAreaView testID='safe-area-view' style={styles.flex}>
-			{user?.firstName && user?.lastName ? (
+			<LoadingOverlay isVisible={isLoading || accountSetupMutation.isPending} />
+			{!accountSetup ? (
 				<>
 					<PagerView
 						initialPage={0}
@@ -200,11 +253,11 @@ export default function PaginationDotsExample() {
 						onPageScroll={onPageScroll}
 						onPageSelected={(e) => {
 							if (e.nativeEvent.position === 0) {
-								setAccountSetup(false);
+								// setAccountSetup(false);
 							}
 						}}
 					>
-						{data.map((d) => (
+						{screens.map((d) => (
 							<IntroScreen
 								title={d.title}
 								key={d.key}
@@ -221,7 +274,7 @@ export default function PaginationDotsExample() {
 							<SlidingDot
 								testID={"sliding-dot"}
 								marginHorizontal={3}
-								data={data}
+								data={screens}
 								dotStyle={{ backgroundColor: theme.colors.secondary }}
 								slidingIndicatorStyle={{
 									backgroundColor: theme.colors.primary,
@@ -253,6 +306,7 @@ export default function PaginationDotsExample() {
 										inputKey={input.inputKey}
 										rules={input.rules}
 										iconName={input.iconName}
+										key={input.id}
 									/>
 								);
 							})}

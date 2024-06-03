@@ -6,7 +6,7 @@ import FoodTag from "./FoodTag";
 import { FOOD_TAG_INFO } from "@/constants/FoodTagsInfo";
 import RestyleText from "./RestyleText";
 import HorizontalCard from "./HorizontalCard";
-import { FoodTagKey } from "@/constants/types";
+
 import { useEffect, useRef, useState } from "react";
 import React from "react";
 import PieChartLegend from "./PieChartLegend";

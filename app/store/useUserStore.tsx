@@ -21,7 +21,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
 	devtools(
 		persist(
-			(set) => ({
+			(set, get) => ({
 				user: null,
 				token: null,
 				userId: null,
@@ -38,12 +38,8 @@ export const useAuthStore = create<AuthState>()(
 				},
 				initializeAuth: async () => {
 					const token = await getToken();
-					console.log("token is here");
-					console.log(token);
 
 					if (token) {
-						console.log("am intrat pe token");
-
 						try {
 							const response = await axios.get<User>(
 								`${API_URL}/verify-token`,
@@ -51,7 +47,15 @@ export const useAuthStore = create<AuthState>()(
 									headers: { Authorization: `Bearer ${token}` },
 								}
 							);
-							router.replace("(tabs)/Home");
+
+							if (
+								get().user?.firstName === null ||
+								get().user?.lastName === null
+							) {
+								router.replace("introduction/Introduction");
+							} else {
+								router.replace("(tabs)/Home");
+							}
 						} catch (error) {
 							console.error("Token verification failed", error);
 

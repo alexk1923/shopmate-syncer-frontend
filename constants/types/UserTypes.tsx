@@ -7,3 +7,9 @@ type User = {
 	profilePicture: string;
 	houseId: number | null;
 };
+
+type UpdateUserType = {
+	firstName?: string;
+	lastName?: string;
+	birthday?: Date;
+};

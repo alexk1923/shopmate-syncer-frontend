@@ -68,9 +68,10 @@ export default function TabLayout() {
 							}}
 						/>
 						<Tabs.Screen
-							name='ShoppingPage'
+							name='(shopping)'
 							options={{
 								title: "Shopping",
+								headerShown: false,
 								tabBarIcon: ({ color }) => (
 									<FontAwesome6 name='cart-shopping' size={24} color={color} />
 								),

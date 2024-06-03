@@ -77,6 +77,12 @@ export const theme = createTheme({
 			lineHeight: 24,
 		},
 
+		bodyBold: {
+			fontSize: 16,
+			lineHeight: 24,
+			fontWeight: "bold",
+		},
+
 		buttonSmall: {
 			fontSize: 16,
 			lineHeight: 24,

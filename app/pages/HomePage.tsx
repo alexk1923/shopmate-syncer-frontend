@@ -16,12 +16,26 @@ import ProductExpiryItem from "@/components/ProductExpiryItem";
 
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import { RowMap, SwipeListView } from "react-native-swipe-list-view";
-import { FoodTagKey, Product, fetchedFood } from "@/constants/types";
+
 import SwipeListMenu from "@/components/SwipeListMenu";
+import {
+	Product,
+	fetchedFood,
+	FoodTagKey,
+} from "@/constants/types/ProductTypes";
+import { useAuthStore } from "../store/useUserStore";
+import Avatar from "@/components/Avatar";
 Font.loadAsync(MaterialIcons.font);
 
 export default function HomePage(this: any) {
 	const { currentTheme } = useDarkLightTheme();
+	const currentUser = useAuthStore((state) => state.user);
+
+	if (currentUser === null) {
+		console.log("Current user is null");
+		router.navigate("/login");
+		return <></>;
+	}
 
 	const [expiryItems, setExpiryItems] =
 		useState<(Product & { key: number })[]>(fetchedFood);
@@ -87,14 +101,15 @@ export default function HomePage(this: any) {
 			<Wrapper style={styles.wrapper}>
 				<RestyleBox style={styles.c1}>
 					<RestyleBox style={styles.userContainer} gap='s'>
-						<Image
-							source={require("@/assets/images/pexels_profile.jpg")}
-							style={styles.profilePicture}
+						<Avatar
+							uri={currentUser.profilePicture}
+							firstName={currentUser.firstName}
+							lastName={currentUser.lastName}
 						/>
 						<RestyleBox>
 							<RestyleText color='text'>Hello,</RestyleText>
 							<RestyleText variant='body' style={styles.userName} color='text'>
-								Firstname Lastname 👋
+								{currentUser?.firstName} {currentUser?.lastName} 👋
 							</RestyleText>
 						</RestyleBox>
 					</RestyleBox>
