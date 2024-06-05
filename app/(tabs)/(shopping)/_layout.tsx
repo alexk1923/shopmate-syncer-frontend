@@ -1,22 +1,13 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
 
-import { ThemeProvider } from "@shopify/restyle";
-import { darkTheme, theme } from "@/theme";
+import { ThemeProvider, backgroundColor } from "@shopify/restyle";
+
 import {
 	DarkLightThemeProvider,
 	useDarkLightTheme,
 } from "@/components/ThemeContext";
-import { Image, Platform, StyleSheet, Text } from "react-native";
-import { User } from "react-native-gifted-chat";
-import { AppUser } from "@/constants/types";
-import RestyleBox from "@/components/RestyleBox";
-import RestyleText from "@/components/RestyleText";
-import { RouteProp } from "@react-navigation/native";
-import { useAuthStore } from "@/app/store/useUserStore";
+import { Platform, StyleSheet } from "react-native";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -31,7 +22,7 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function ChatLayoutNav() {
+export default function ShoppingLayoutNav() {
 	const { currentTheme } = useDarkLightTheme();
 
 	return (
@@ -42,6 +33,10 @@ export default function ChatLayoutNav() {
 					statusBarColor: currentTheme.colors.mainBackground,
 					headerTintColor: currentTheme.colors.primary,
 					navigationBarColor: currentTheme.colors.mainBackground,
+
+					headerStyle: {
+						backgroundColor: currentTheme.colors.cardBackground,
+					},
 					// headerShown: true,
 				}}
 			>
@@ -84,6 +79,16 @@ export default function ChatLayoutNav() {
 					name='History'
 					options={{
 						title: "History",
+						headerShown: true,
+						animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
+						headerBackTitleVisible: true,
+					}}
+				/>
+
+				<Stack.Screen
+					name='Filter'
+					options={{
+						title: "Filter",
 						headerShown: true,
 						animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
 						headerBackTitleVisible: true,

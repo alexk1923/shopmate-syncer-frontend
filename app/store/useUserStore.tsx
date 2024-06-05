@@ -29,7 +29,7 @@ export const useAuthStore = create<AuthState>()(
 				setUser: (fetchedUser: User) => set({ user: fetchedUser }),
 				removeUser: () => {
 					set((state) => {
-						return { user: null, token: null };
+						return { user: null, token: null, userId: null };
 					});
 					removeToken();
 				},

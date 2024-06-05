@@ -81,7 +81,7 @@ const Login = () => {
 				},
 			});
 			// setUserId(data.id);
-			router.navigate("introduction/Introduction");
+			router.push("introduction/Introduction");
 		},
 		onError: (err) => {
 			console.log("Error login");

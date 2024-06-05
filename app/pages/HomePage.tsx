@@ -3,7 +3,12 @@ import RestyleText from "@/components/RestyleText";
 import Wrapper from "@/components/Wrapper";
 import React, { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Image, StyleSheet, useWindowDimensions } from "react-native";
+import {
+	Image,
+	ScrollView,
+	StyleSheet,
+	useWindowDimensions,
+} from "react-native";
 import { theme } from "@/theme";
 import AppButton from "@/components/AppButton";
 import { router } from "expo-router";
@@ -25,6 +30,10 @@ import {
 } from "@/constants/types/ProductTypes";
 import { useAuthStore } from "../store/useUserStore";
 import Avatar from "@/components/Avatar";
+import { useQuery } from "@tanstack/react-query";
+import { ItemService } from "../services/itemService";
+import { backgroundColor } from "@shopify/restyle";
+import { getExpiryDays } from "../utils/getExpiryDays";
 Font.loadAsync(MaterialIcons.font);
 
 export default function HomePage(this: any) {
@@ -36,6 +45,17 @@ export default function HomePage(this: any) {
 		router.navigate("/login");
 		return <></>;
 	}
+
+	const { data, isLoading, error } = useQuery({
+		queryKey: ["foods", currentUser?.houseId],
+		queryFn: async () => {
+			if (!currentUser || !currentUser.houseId) {
+				throw new Error("User or houseId is not defined");
+			}
+			const foodList = await ItemService.getFoodList(currentUser.houseId);
+			return foodList;
+		},
+	});
 
 	const [expiryItems, setExpiryItems] =
 		useState<(Product & { key: number })[]>(fetchedFood);
@@ -137,7 +157,7 @@ export default function HomePage(this: any) {
 					</RestyleBox>
 				</RestyleBox>
 
-				<RestyleBox gap='m'>
+				<RestyleBox gap='m' flex={1}>
 					<PieChartComponent />
 
 					<RestyleBox
@@ -151,30 +171,37 @@ export default function HomePage(this: any) {
 						>
 							Expiring soon ⌛
 						</RestyleText>
-						<SwipeListView
-							data={expiryItems}
-							renderItem={(product) => (
-								<ProductExpiryItem
-									key={product.item.key}
+						<ScrollView>
+							<SwipeListView
+								data={data?.sort(
+									(a, b) =>
+										getExpiryDays(a.expiryDate) - getExpiryDays(b.expiryDate)
+								)}
+								renderItem={(product) => (
+									<ProductExpiryItem
+										key={product.item.key}
+										// @ts-ignore
+										product={product.item}
+									/>
+								)}
+								renderHiddenItem={renderHiddenItem}
+								onRightAction={(row, rowMap) => {
 									// @ts-ignore
-									product={product.item}
-								/>
-							)}
-							renderHiddenItem={renderHiddenItem}
-							onRightAction={(row, rowMap) => {
-								// @ts-ignore
-								deleteRow(rowMap, row);
-							}}
-							onRightActionStatusChange={() => {
-								// empty method to trigger activation
-							}}
-							// restDisplacementThreshold={1}
-							restSpeedThreshold={100}
-							rightOpenValue={-100}
-							disableRightSwipe
-							rightActivationValue={-150}
-							rightActionValue={-400} // until where will the row extend (translate)
-						/>
+									deleteRow(rowMap, row);
+								}}
+								onRightActionStatusChange={() => {
+									// empty method to trigger activation
+								}}
+								// restDisplacementThreshold={1}
+								restSpeedThreshold={100}
+								rightOpenValue={-100}
+								disableRightSwipe
+								rightActivationValue={-150}
+								rightActionValue={-400} // until where will the row extend (translate)
+								scrollEnabled={true}
+								style={{ flex: 1, overflow: "hidden" }}
+							/>
+						</ScrollView>
 					</RestyleBox>
 				</RestyleBox>
 			</Wrapper>
@@ -253,5 +280,7 @@ const styles = StyleSheet.create({
 		borderRadius: 15,
 		gap: theme.spacing.s,
 		elevation: 5,
+		flex: 1,
+		// height: 200,
 	},
 });

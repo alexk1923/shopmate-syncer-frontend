@@ -288,7 +288,7 @@ export default function PaginationDotsExample() {
 				</>
 			) : (
 				<View key={1}>
-					<Wrapper style={{ justifyContent: "flex-start" }}>
+					<Wrapper>
 						<RestyleText variant='header' color='primary'>
 							Setup your account
 						</RestyleText>

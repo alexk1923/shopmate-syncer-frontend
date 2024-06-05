@@ -11,6 +11,8 @@ import RestyleBox from "@/components/RestyleBox";
 import { useAuthStore } from "@/app/store/useUserStore";
 import { FontAwesome, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import RestyleText from "@/components/RestyleText";
+import Separator from "@/components/Separator";
+import Wrapper from "@/components/Wrapper";
 
 const ShoppingPage = () => {
 	const { darkMode, setDarkMode } = useDarkLightTheme();
@@ -21,75 +23,74 @@ const ShoppingPage = () => {
 	const { currentTheme } = useDarkLightTheme();
 
 	return (
-		<Box
-			backgroundColor='mainBackground'
-			flex={1}
-			alignItems='center'
-			justifyContent='center'
-		>
-			<RestyleText variant='header' color='primary'>
-				Shopping menu
-			</RestyleText>
+		<Wrapper style={{ justifyContent: "center" }}>
 			<Box
-				style={[
-					styles.separator,
-					{ borderBottomColor: currentTheme.colors.primary },
-				]}
-			/>
-
-			<RestyleBox
-				flexDirection='row'
-				flexWrap='wrap'
-				justifyContent='center'
+				backgroundColor='mainBackground'
+				flex={1}
 				alignItems='center'
+				justifyContent='center'
 			>
-				<SquareCard
-					title={"Inventory"}
-					animationName={ANIMATIONS.HISTORY}
-					redirect={"/Inventory"}
-					icon={undefined}
-					image={IMAGES.INVENTORY}
+				<RestyleText variant='header' color='primary'>
+					Shopping menu
+				</RestyleText>
+				<Separator color={currentTheme.colors.primary} />
+
+				<RestyleBox
+					flexDirection='row'
+					flexWrap='wrap'
+					justifyContent='center'
+					alignItems='center'
+				>
+					<SquareCard
+						title={"Inventory"}
+						animationName={ANIMATIONS.HISTORY}
+						redirect={"/Inventory"}
+						icon={undefined}
+						image={IMAGES.INVENTORY}
+					/>
+
+					<SquareCard
+						title={"Shopping mode"}
+						animationName={ANIMATIONS.HISTORY}
+						redirect={"/ShoppingMode"}
+						icon={
+							<FontAwesome6 name='basket-shopping' size={24} color='black' />
+						}
+						image={IMAGES.SHOPPING_MODE}
+					/>
+
+					<SquareCard
+						title={"Wishlist"}
+						animationName={ANIMATIONS.HISTORY}
+						redirect={"/Wishlist"}
+						icon={<FontAwesome name='heart' size={24} color='black' />}
+						image={IMAGES.WISHLIST}
+					/>
+
+					<SquareCard
+						title={"History"}
+						animationName={ANIMATIONS.HISTORY}
+						redirect={"/History"}
+						icon={<FontAwesome5 name='history' size={24} color='black' />}
+						image={IMAGES.HISTORY}
+					/>
+				</RestyleBox>
+
+				<Button
+					onPress={() => setDarkMode(!darkMode)}
+					title='Change dark mode'
+				></Button>
+
+				<AppButton
+					title={"Logout"}
+					onPress={() => {
+						removeUser();
+						router.replace("/");
+					}}
+					variant={"filled"}
 				/>
-
-				<SquareCard
-					title={"Shopping mode"}
-					animationName={ANIMATIONS.HISTORY}
-					redirect={"/ShoppingMode"}
-					icon={<FontAwesome6 name='basket-shopping' size={24} color='black' />}
-					image={IMAGES.SHOPPING_MODE}
-				/>
-
-				<SquareCard
-					title={"Wishlist"}
-					animationName={ANIMATIONS.HISTORY}
-					redirect={"/Wishlist"}
-					icon={<FontAwesome name='heart' size={24} color='black' />}
-					image={IMAGES.WISHLIST}
-				/>
-
-				<SquareCard
-					title={"History"}
-					animationName={ANIMATIONS.HISTORY}
-					redirect={"/History"}
-					icon={<FontAwesome5 name='history' size={24} color='black' />}
-					image={IMAGES.HISTORY}
-				/>
-			</RestyleBox>
-
-			<Button
-				onPress={() => setDarkMode(!darkMode)}
-				title='Change dark mode'
-			></Button>
-
-			<AppButton
-				title={"Logout"}
-				onPress={() => {
-					removeUser();
-					router.navigate("/");
-				}}
-				variant={"filled"}
-			/>
-		</Box>
+			</Box>
+		</Wrapper>
 	);
 };
 
@@ -104,13 +105,6 @@ const styles = StyleSheet.create({
 		color: "mainText",
 		fontSize: 20,
 		fontWeight: "bold",
-	},
-	separator: {
-		marginVertical: theme.spacing.m,
-		height: 1,
-		width: "80%",
-
-		borderBottomWidth: StyleSheet.hairlineWidth,
 	},
 });
 

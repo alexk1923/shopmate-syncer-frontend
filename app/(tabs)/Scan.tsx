@@ -34,6 +34,10 @@ import ProductCard from "@/components/ProductCard";
 import DashboardPage from "./DashboardPage";
 import FlipCard from "@/components/FlipCard";
 import { Product, fetchedFood } from "@/constants/types/ProductTypes";
+import { useQuery } from "@tanstack/react-query";
+import { ItemService } from "../services/itemService";
+import { useAuthStore } from "../store/useUserStore";
+import { Food } from "@/constants/types/FoodTypes";
 
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
@@ -89,21 +93,34 @@ export default function Scan() {
 	const [cameraRef, setCameraRef] = useState(null);
 	const { currentTheme } = useDarkLightTheme();
 	const [photo, setPhoto] = useState(null);
+	const user = useAuthStore((state) => state.user);
+	const { data, isLoading, error } = useQuery({
+		queryKey: ["foods", user?.houseId],
+		queryFn: async () => {
+			if (!user || !user.houseId) {
+				throw new Error("User or houseId is not defined");
+			}
+			const foodList = await ItemService.getFoodList(user.houseId);
+			return foodList;
+		},
+	});
+	const [foundProduct, setFoundProduct] = useState<Food | null>(null);
+
 	// ref
 	const bottomSheetRef = useRef<BottomSheet>(null);
-	const [foundProduct, setFoundProduct] = useState<Product | null>(null);
 
 	useEffect(() => {
 		if (photo) {
-			for (let item of fetchedFood) {
-				console.log(item.barcode + "vs" + barcode);
+			if (data) {
+				for (let item of data) {
+					console.log(item.item.barcode + "vs" + barcode);
 
-				if (item.barcode === barcode) {
-					console.log("yes");
-					5941486000434;
-					591486000434;
-					setFoundProduct(item);
-					break;
+					if (item.item.barcode === barcode) {
+						console.log("yes");
+
+						setFoundProduct(item);
+						break;
+					}
 				}
 			}
 		}
@@ -195,6 +212,7 @@ export default function Scan() {
 					backgroundColor='mainBackground'
 					justifyContent='center'
 					paddingBottom='xl'
+					gap='m'
 				>
 					<RestyleBox width='100%'>
 						<RestyleText variant='header' textAlign='center' color='text'>
@@ -211,11 +229,12 @@ export default function Scan() {
 							barcodeScannerSettings={{
 								barcodeTypes: ["ean13", "ean8"],
 							}}
-							onBarcodeScanned={(scanningResult) => {
-								console.log(scanningResult);
-
-								setBarcode(scanningResult.data);
-								takePicture();
+							onBarcodeScanned={async (scanningResult) => {
+								if (barcode === "") {
+									console.log(scanningResult);
+									setBarcode(scanningResult.data);
+									await takePicture();
+								}
 							}}
 							enableTorch={enableTorch}
 						>
@@ -235,10 +254,32 @@ export default function Scan() {
 									<RestyleText>We did it</RestyleText>
 								</RestyleBox>
 							}
-							foundProduct={foundProduct}
+							foundProduct={{
+								tags: foundProduct.tags,
+								id: foundProduct.id,
+								expiryDate: foundProduct.expiryDate,
+								...foundProduct.item,
+							}}
 						/>
 					) : (
-						<Text>Product not found</Text>
+						<>
+							<RestyleText variant='bodyBold' textAlign='center'>
+								Product not found
+							</RestyleText>
+							<AppButton
+								title='Add'
+								variant='filled'
+								onPress={() => {}}
+							></AppButton>
+							<AppButton
+								title='Back'
+								variant='outline'
+								onPress={() => {
+									setPhoto(null);
+									setBarcode("");
+								}}
+							></AppButton>
+						</>
 					)}
 
 					{photo === null && (

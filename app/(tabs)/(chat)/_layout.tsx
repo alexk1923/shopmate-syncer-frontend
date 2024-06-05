@@ -68,10 +68,15 @@ export default function ChatLayoutNav() {
 		<ThemeProvider theme={currentTheme}>
 			<Stack
 				screenOptions={{
-					contentStyle: { backgroundColor: currentTheme.colors.mainBackground },
+					contentStyle: {
+						backgroundColor: currentTheme.colors.mainBackground,
+					},
 					statusBarColor: currentTheme.colors.mainBackground,
 					headerTintColor: currentTheme.colors.primary,
 					navigationBarColor: currentTheme.colors.mainBackground,
+					headerStyle: {
+						backgroundColor: currentTheme.colors.cardBackground,
+					},
 					// headerShown: true,
 				}}
 			>

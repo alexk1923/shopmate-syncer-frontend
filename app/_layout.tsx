@@ -100,14 +100,14 @@ function RootLayoutNav() {
 						name='Login'
 						options={{
 							headerShown: false,
-							animation: "fade",
+							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
 						}}
 					/>
 					<Stack.Screen
 						name='Register'
 						options={{
 							headerShown: false,
-							animation: "fade",
+							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
 						}}
 					/>
 

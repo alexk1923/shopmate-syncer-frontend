@@ -48,7 +48,7 @@ const Index = () => {
 				<AppButton
 					title='LOGIN'
 					onPress={() => {
-						router.navigate("/Login");
+						router.push("/Login");
 					}}
 					variant={"filled"}
 					fullWidth
@@ -57,7 +57,7 @@ const Index = () => {
 					title='REGISTER'
 					variant={"outline"}
 					onPress={() => {
-						router.navigate("/Register");
+						router.push("/Register");
 					}}
 					fullWidth
 				></AppButton>

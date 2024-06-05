@@ -55,7 +55,7 @@ const HorizontalCard = (props: HorizontalCardProps) => {
 };
 
 const { width } = Dimensions.get("window");
-const boxSize = width / 2 - 40;
+const boxSize = width / 2 - 50;
 
 const styles = StyleSheet.create({
 	// container: {

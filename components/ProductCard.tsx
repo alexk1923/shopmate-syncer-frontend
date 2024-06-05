@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import FoodTag from "./FoodTag";
 import RestyleText from "./RestyleText";
 import Wrapper from "./Wrapper";
-import { Product } from "@/constants/types";
+
 import RestyleBox from "./RestyleBox";
 import AppButton from "./AppButton";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome6 } from "@expo/vector-icons";
 import ScrollPage from "./ScrollPage";
 import { tags } from "react-native-svg/lib/typescript/xml";
+import { Product } from "@/constants/types/ProductTypes";
 
 const ProductCard = (props: {
 	foundProduct: Product;

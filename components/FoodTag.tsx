@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { theme } from "@/theme";
 import { FOOD_TAG_INFO } from "@/constants/FoodTagsInfo";
 import RestyleBox from "./RestyleBox";
-import { FoodTagKey } from "@/constants/types";
+import { FoodTagKey } from "@/constants/types/ProductTypes";
 
 const FoodTag = (props: { name: FoodTagKey; size?: number }) => {
 	const [imagePath, setImagePath] = useState<string>("");

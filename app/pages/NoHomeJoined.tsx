@@ -43,7 +43,7 @@ const NoHomeScreen = () => {
 
 	return (
 		user && (
-			<Wrapper style={{ justifyContent: "flex-start" }}>
+			<Wrapper>
 				<WelcomeMessage
 					firstName={user.firstName}
 					lastName={user.lastName}

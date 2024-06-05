@@ -4,7 +4,8 @@ import { theme } from "@/theme";
 import RestyleBox from "./RestyleBox";
 import RestyleText from "./RestyleText";
 import FoodTag from "./FoodTag";
-import { Product } from "@/constants/types";
+import { Food } from "@/constants/types/FoodTypes";
+import { getExpiryDays } from "@/app/utils/getExpiryDays";
 
 const timeColors = {
 	darkRed: "#510202",
@@ -13,28 +14,27 @@ const timeColors = {
 	green: "#06b820",
 };
 
-const ProductExpiryItem = (props: { product: Product }) => {
-	const { name, expiryDate, quantity, image, tags } = props.product;
+const ProductExpiryItem = ({ product }: { product: Food }) => {
+	// const {  name, expiryDate, quantity, image, tags } = props.product;
+
+	const { item, tags } = product;
+	const { name, quantity } = item;
+
+	// const { name, quantity } = item;
+	const { expiryDate } = product;
+	const image = null;
+
 	const [expiryColor, setExpiryColor] = useState(timeColors.green);
 	const [diffDays, setDiffDays] = useState(0);
 
 	useEffect(() => {
-		const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-		const today = new Date();
-
-		if (expiryDate < today) {
+		const diffDays = getExpiryDays(expiryDate);
+		if (diffDays < 0) {
 			setExpiryColor(timeColors.darkRed);
-			setDiffDays(
-				-1 * (Math.round(Math.abs((+expiryDate - +new Date()) / oneDay)) + 1)
-			);
-			return;
+			setDiffDays(diffDays * -1);
+		} else {
+			setDiffDays(diffDays);
 		}
-
-		const diffDays =
-			Math.round(Math.abs((+new Date() - +expiryDate) / oneDay)) + 1;
-		console.log(diffDays);
-
-		setDiffDays(diffDays);
 	}, [expiryDate]);
 
 	useEffect(() => {
@@ -82,7 +82,7 @@ const ProductExpiryItem = (props: { product: Product }) => {
 					</RestyleText>
 					<RestyleBox flexDirection='row'>
 						{tags.map((tag) => (
-							<FoodTag name={tag} key={tag} />
+							<FoodTag name={tag.name.toLowerCase()} key={tag.name} />
 						))}
 					</RestyleBox>
 				</RestyleBox>
@@ -104,6 +104,7 @@ const ProductExpiryItem = (props: { product: Product }) => {
 				</RestyleBox>
 			</RestyleBox>
 		</RestyleBox>
+		// <></>
 	);
 };
 

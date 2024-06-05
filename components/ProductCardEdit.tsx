@@ -36,6 +36,7 @@ import AppBottomSheetModal from "./AppBottomSheetModal";
 import TagPickerItem from "./TagPickerItem";
 import { Product } from "@/constants/types/ProductTypes";
 import AppEditInput from "./AppEditInput";
+import ToggleButton from "./ToggleButton";
 
 type EditFields = {
 	name: string;
@@ -69,12 +70,21 @@ const ProductCardEdit = (props: {
 	}, [editFields]);
 
 	useEffect(() => {
+		console.log("====================================");
+		console.log("My product is");
+		console.log(foundProduct);
+
+		console.log("====================================");
+
 		setEditFields({
 			name: foundProduct.name,
 			tags: foundProduct.tags,
 			expiryDate: foundProduct.expiryDate,
 			isFood: foundProduct.isFood ?? false,
 		});
+		if (foundProduct.expiryDate) {
+			setHasExpiryDate(true);
+		}
 	}, [foundProduct]);
 
 	const updateTags = (tagKey: string) => {
@@ -114,6 +124,11 @@ const ProductCardEdit = (props: {
 		return "";
 	};
 
+	const handleToggleIsFood = () =>
+		setEditFields((prevFields) => {
+			return { ...prevFields, isFood: !prevFields.isFood };
+		});
+
 	return (
 		<>
 			<RestyleBox
@@ -125,7 +140,7 @@ const ProductCardEdit = (props: {
 			>
 				{isDatePickerOpen && (
 					<DateTimePicker
-						value={new Date()}
+						value={foundProduct.expiryDate}
 						mode={"date"}
 						is24Hour={true}
 						onChange={onChange}
@@ -139,7 +154,7 @@ const ProductCardEdit = (props: {
 					}
 					style={{
 						width: "100%",
-						// height: "25%",
+						height: "25%",
 						aspectRatio: "3/2",
 						objectFit: "cover",
 						alignSelf: "center",
@@ -169,26 +184,9 @@ const ProductCardEdit = (props: {
 								{!editFields.isFood ? `Non-Food ` : `Food 🍔 `}
 							</RestyleText>
 
-							<Toggle
+							<ToggleButton
 								value={editFields.isFood}
-								onPress={() =>
-									setEditFields((prevFields) => {
-										return { ...prevFields, isFood: !prevFields.isFood };
-									})
-								}
-								thumbButton={{
-									width: 30,
-									height: 30,
-									radius: 30,
-									activeBackgroundColor: theme.colors.primary,
-									inActiveBackgroundColor: "#ababab",
-								}}
-								trackBar={{
-									width: 50,
-									height: 20,
-									activeBackgroundColor: theme.colors.lightPrimary,
-									inActiveBackgroundColor: "#cecece",
-								}}
+								onPress={handleToggleIsFood}
 							/>
 						</RestyleBox>
 
@@ -206,7 +204,7 @@ const ProductCardEdit = (props: {
 								</RestyleBox>
 								{hasExpiryDate && (
 									<RestyleText>
-										{editFields.expiryDate?.toLocaleDateString()}
+										{new Date(editFields.expiryDate).toISOString()}
 									</RestyleText>
 								)}
 							</RestyleBox>

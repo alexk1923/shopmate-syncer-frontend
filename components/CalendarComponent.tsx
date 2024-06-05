@@ -60,13 +60,13 @@ const CalendarComponent = () => {
 								textSectionTitleColor: currentTheme.colors.text,
 								textDayHeaderFontWeight: "normal" as const,
 								// dates
-								dayTextColor: currentTheme.colors.text,
+								dayTextColor: currentTheme.colors.primary,
 								todayTextColor: currentTheme.colors.primary,
 								textDayFontWeight: "500" as const,
 								textDayStyle: { marginTop: Platform.OS === "android" ? 2 : 4 },
 								// selected date
 								selectedDayBackgroundColor: currentTheme.colors.primary,
-								selectedDayTextColor: currentTheme.colors.text,
+								selectedDayTextColor: "white",
 								// disabled date
 								textDisabledColor: currentTheme.colors.text,
 								// dot (marked date)
@@ -88,7 +88,7 @@ const CalendarComponent = () => {
 const styles = StyleSheet.create({
 	calendar: {
 		minHeight: 80,
-		flex: 1,
+		// flex: 1,
 	},
 });
 

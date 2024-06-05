@@ -1,4 +1,5 @@
 import { ImageSourcePropType } from "react-native";
+import { FoodCategory } from "./FoodCategoryTypes";
 
 type FoodTagType = {
 	[key: string]: {
@@ -73,7 +74,7 @@ export type Product = {
 	barcode: string;
 	quantity: number;
 	image: string | null;
-	tags: FoodTagKey[];
+	tags: FoodCategory[];
 	isFood: boolean;
 };
 
