@@ -16,7 +16,7 @@ export {
 
 export const unstable_settings = {
 	// Ensure that reloading on `/modal` keeps a back button present.
-	initialRouteName: "(shopping)",
+	initialRouteName: "ShoppingMode ",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -76,12 +76,13 @@ export default function ShoppingLayoutNav() {
 				/>
 
 				<Stack.Screen
-					name='History'
+					name='ScheduleHistory'
 					options={{
-						title: "History",
+						title: "ScheduleHistory",
 						headerShown: true,
 						animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
 						headerBackTitleVisible: true,
+						headerBackButtonMenuEnabled: true,
 					}}
 				/>
 
@@ -91,7 +92,6 @@ export default function ShoppingLayoutNav() {
 						title: "Filter",
 						headerShown: true,
 						animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
-						headerBackTitleVisible: true,
 					}}
 				/>
 			</Stack>

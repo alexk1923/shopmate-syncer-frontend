@@ -1,15 +1,13 @@
 import {
-	View,
-	Text,
 	Image,
 	TouchableOpacity,
 	ImageSourcePropType,
 	ListRenderItemInfo,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import RestyleBox from "./RestyleBox";
-import RestyleText from "./RestyleText";
-import { useDarkLightTheme } from "./ThemeContext";
+import React, { useEffect, useState } from "react";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
+import { useDarkLightTheme } from "../ThemeContext";
 
 type TagPickerProps = {
 	item: ListRenderItemInfo<{ name: string; uri: ImageSourcePropType }>;

@@ -9,10 +9,9 @@ import {
 	Animated,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import RestyleBox from "@/components/RestyleBox";
-import RestyleText from "@/components/RestyleText";
+
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import AppButton from "@/components/AppButton";
+
 import { FontAwesome6 } from "@expo/vector-icons";
 import { theme } from "@/theme";
 import { Link, router } from "expo-router";
@@ -22,10 +21,12 @@ import AppTextInput from "@/components/Form/AppTextInput";
 import { useMutation } from "@tanstack/react-query";
 import { register } from "./services/authService";
 import { RegisterInput } from "@/constants/types/AuthTypes";
-import LottieAnimation from "@/components/LottieAnimation";
+import LottieAnimation from "@/components/common/LottieAnimation";
 import { ANIMATIONS } from "@/constants/assets";
-import Wrapper from "@/components/Wrapper";
-import SuccessScreen from "@/components/SuccessScreen";
+import SuccessScreen from "@/components/common/SuccessScreen";
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import AppButton from "@/components/misc/AppButton";
 
 const Register = () => {
 	const { darkMode } = useDarkLightTheme();

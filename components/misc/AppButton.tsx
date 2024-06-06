@@ -12,9 +12,10 @@ import {
 	createVariant,
 } from "@shopify/restyle";
 import React from "react";
-import RestyleText from "./RestyleText";
+
 import { LinearGradient } from "expo-linear-gradient";
-import { useDarkLightTheme } from "./ThemeContext";
+import { useDarkLightTheme } from "../ThemeContext";
+import RestyleText from "../layout/RestyleText";
 
 const buttonVariant = createVariant({ themeKey: "buttonVariants" });
 

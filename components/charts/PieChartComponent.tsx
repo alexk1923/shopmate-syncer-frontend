@@ -1,16 +1,16 @@
 import { Image, Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
-import RestyleBox from "./RestyleBox";
+
 import { theme } from "@/theme";
-import FoodTag from "./FoodTag";
+
 import { FOOD_TAG_INFO } from "@/constants/FoodTagsInfo";
-import RestyleText from "./RestyleText";
-import HorizontalCard from "./HorizontalCard";
 
 import { useEffect, useRef, useState } from "react";
 import React from "react";
+import RestyleBox from "../layout/RestyleBox";
+import HorizontalCard from "../cards/HorizontalCard";
 import PieChartLegend from "./PieChartLegend";
-import { useDarkLightTheme } from "./ThemeContext";
+import { useDarkLightTheme } from "../ThemeContext";
 
 const PieChartComponent = () => {
 	const [selectedItem, setSelectedItem] = useState<(typeof pieData)[0]>(

@@ -12,22 +12,19 @@ import {
 	DateData,
 	WeekCalendar,
 } from "react-native-calendars";
-import RestyleBox from "@/components/RestyleBox";
 
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import { useAuthStore } from "@/app/store/useUserStore";
-import { ShoppingScheduleService } from "@/app/services/shoppingScheduleService";
-import { ShoppingSchedule } from "@/constants/types/ShoppingSchedule";
-import { useQuery } from "@tanstack/react-query";
 import { useShoppingSchedule } from "@/app/hooks/useShoppingSchedule";
 import { useFocusEffect } from "expo-router";
+import RestyleBox from "../layout/RestyleBox";
+import { convertDateToLocaleISO } from "@/app/utils/convertDateToLocaleISO";
 
 type CalendarComponentProps = {
 	onDayLongPress: (date: DateData) => void;
 };
 
 const CalendarComponent = ({ onDayLongPress }: CalendarComponentProps) => {
-	const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+	const [date, setDate] = useState<Date | string>(new Date());
 	const { currentTheme } = useDarkLightTheme();
 
 	const [markedDays, setMarkedDays] = useState({});
@@ -74,7 +71,10 @@ const CalendarComponent = ({ onDayLongPress }: CalendarComponentProps) => {
 	}, [shoppingScheduleQuery.data]);
 
 	useEffect(() => {
-		setDate(new Date().toISOString().split("T")[0]);
+		const localDate = new Date().toLocaleDateString("en-GB");
+		const [day, month, year] = localDate.split("/");
+
+		setDate(`${year}-${month}-${day}`);
 	}, [currentTheme]);
 
 	useFocusEffect(
@@ -88,6 +88,7 @@ const CalendarComponent = ({ onDayLongPress }: CalendarComponentProps) => {
 			<View key={currentTheme.colors.mainBackground}>
 				<CalendarProvider
 					// date={ITEMS[1]?.title}
+					// date={date}
 					date={date}
 					style={{
 						...styles.calendar,
@@ -97,6 +98,7 @@ const CalendarComponent = ({ onDayLongPress }: CalendarComponentProps) => {
 					<RestyleBox style={{ flex: 1 }}>
 						<WeekCalendar
 							hideArrows={false}
+							// monthFormat='mm'
 							// hideDayNames
 							minDate='2023-01-01'
 							animateScroll

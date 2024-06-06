@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet, Modal, Alert, Pressable } from "react-native";
 import React, { useState } from "react";
-import RestyleBox from "./RestyleBox";
+
 import { StatusBar } from "expo-status-bar";
-import RestyleText from "./RestyleText";
+
 import { FontAwesome6 } from "@expo/vector-icons";
-import { useDarkLightTheme } from "./ThemeContext";
+import { useDarkLightTheme } from "../ThemeContext";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
 
 type AppModalProps = {
 	children: React.ReactNode;

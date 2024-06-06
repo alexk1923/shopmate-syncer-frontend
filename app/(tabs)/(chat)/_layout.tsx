@@ -13,8 +13,7 @@ import {
 import { Image, Platform, StyleSheet, Text } from "react-native";
 import { User } from "react-native-gifted-chat";
 import { AppUser } from "@/constants/types";
-import RestyleBox from "@/components/RestyleBox";
-import RestyleText from "@/components/RestyleText";
+
 import { RouteProp } from "@react-navigation/native";
 import { useAuthStore } from "@/app/store/useUserStore";
 

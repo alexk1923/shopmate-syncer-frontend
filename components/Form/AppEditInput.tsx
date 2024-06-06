@@ -8,8 +8,8 @@ import {
 import React, { useState } from "react";
 import { theme } from "@/theme";
 import { FontAwesome6 } from "@expo/vector-icons";
-import RestyleBox from "../RestyleBox";
-import RestyleText from "../RestyleText";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
 import { useDarkLightTheme } from "../ThemeContext";
 
 type InputProps = {

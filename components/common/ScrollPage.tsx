@@ -1,7 +1,6 @@
-import AppButton from "@/components/AppButton";
-import RestyleBox from "@/components/RestyleBox";
 import { FOOD_TAG_INFO } from "@/constants/FoodTagsInfo";
-import { FoodTagKey } from "@/constants/types";
+import { FoodTagKey } from "@/constants/types/ProductTypes";
+
 import * as React from "react";
 import { useEffect } from "react";
 import {
@@ -22,6 +21,7 @@ import Animated, {
 } from "react-native-reanimated";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
+import RestyleBox from "../layout/RestyleBox";
 
 const PAGE_HEIGHT = 100;
 // const DATA = ["alexk1923", "claudiububatu", "andreidragomirAAAAAAAAAAAAA"];

@@ -9,34 +9,32 @@ import {
 	useWindowDimensions,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import RestyleText from "./RestyleText";
-import ScrollPage from "./ScrollPage";
+
 import { FontAwesome6 } from "@expo/vector-icons";
 
-import RestyleBox from "./RestyleBox";
-import AppButton from "./AppButton";
-import { theme } from "@/theme";
-import AppInput from "./Form/AppEditInput";
-import { useDarkLightTheme } from "./ThemeContext";
 import Toggle from "react-native-toggle-element/lib/toggle";
 
-import AppFab from "./AppFab";
-import FoodTag from "./FoodTag";
 import DateTimePicker, {
 	DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import Modal from "./AppModal";
-import AppModal from "./AppModal";
+
 import { FOOD_TAG_INFO } from "@/constants/FoodTagsInfo";
 import {
 	GestureHandlerRootView,
 	TouchableOpacity,
 } from "react-native-gesture-handler";
-import AppBottomSheetModal from "./AppBottomSheetModal";
-import TagPickerItem from "./TagPickerItem";
+
 import { Product } from "@/constants/types/ProductTypes";
-import AppEditInput from "./Form/AppEditInput";
-import ToggleButton from "./ToggleButton";
+import AppEditInput from "../Form/AppEditInput";
+import { useDarkLightTheme } from "../ThemeContext";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
+import AppButton from "../misc/AppButton";
+import AppFab from "../misc/AppFab";
+import FoodTag from "../misc/FoodTag";
+import TagPickerItem from "../misc/TagPickerItem";
+import ToggleButton from "../misc/ToggleButton";
+import AppBottomSheetModal from "../modals/AppBottomSheetModal";
 
 type EditFields = {
 	name: string;

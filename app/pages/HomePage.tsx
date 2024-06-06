@@ -1,52 +1,46 @@
-import RestyleBox from "@/components/RestyleBox";
-import RestyleText from "@/components/RestyleText";
-import Wrapper from "@/components/Wrapper";
 import React, { useCallback, useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import {
-	Alert,
-	Image,
-	ScrollView,
-	StyleSheet,
-	useWindowDimensions,
-} from "react-native";
+import { StyleSheet } from "react-native";
 import { theme } from "@/theme";
-import AppButton from "@/components/AppButton";
+
 import { router } from "expo-router";
-import CalendarComponent from "@/components/CalendarComponent";
-import PieChartComponent from "@/components/PieChartComponent";
+import CalendarComponent from "@/components/widgets/CalendarComponent";
+
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import * as Font from "expo-font";
-import ProductExpiryItem from "@/components/ProductExpiryItem";
 
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import { RowMap, SwipeListView } from "react-native-swipe-list-view";
 
-import SwipeListMenu from "@/components/SwipeListMenu";
-import {
-	Product,
-	fetchedFood,
-	FoodTagKey,
-} from "@/constants/types/ProductTypes";
+import { Product } from "@/constants/types/ProductTypes";
 import { useAuthStore } from "../store/useUserStore";
-import Avatar from "@/components/Avatar";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { useQuery } from "@tanstack/react-query";
 import { ItemService } from "../services/itemService";
 
 import { getExpiryDays } from "../utils/getExpiryDays";
 import { DateData } from "react-native-calendars";
 
-import ScheduleModal from "@/components/ScheduleModal";
-
-import { ShoppingScheduleService } from "../services/shoppingScheduleService";
 import {
 	ShoppingDayType,
 	ShoppingSchedule,
 } from "@/constants/types/ShoppingSchedule";
 import { useShoppingSchedule } from "../hooks/useShoppingSchedule";
-import AppModal from "@/components/AppModal";
+
 import { convertDateToLocaleISO } from "../utils/convertDateToLocaleISO";
+import ProductExpiryItem from "@/components/Products/ProductExpiryItem";
+import PieChartComponent from "@/components/charts/PieChartComponent";
+import SwipeListMenu from "@/components/common/SwipeListMenu";
+import AppButton from "@/components/misc/AppButton";
+import AppModal from "@/components/modals/AppModal";
+import ScheduleModal from "@/components/modals/ScheduleModal";
+
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import Wrapper from "@/components/layout/Wrapper";
+import Avatar from "@/components/misc/Avatar";
+import { useItems } from "../hooks/useItems";
 Font.loadAsync(MaterialIcons.font);
 
 export default function HomePage(this: any) {
@@ -78,6 +72,8 @@ export default function HomePage(this: any) {
 			return foodList;
 		},
 	});
+
+	const { foodQuery } = useItems();
 
 	const [expiryItems, setExpiryItems] = useState<(Product & { key: number })[]>(
 		[]
@@ -129,6 +125,12 @@ export default function HomePage(this: any) {
 			/>
 		);
 	};
+
+	useEffect(() => {
+		console.log("====================================");
+		console.log(foodQuery.data);
+		console.log("====================================");
+	}, [foodQuery.data]);
 
 	const checkExistingSchedule = () => {
 		if (shoppingSchedule) {
@@ -249,7 +251,11 @@ export default function HomePage(this: any) {
 							title='View details'
 							onPress={() => {
 								setExistingScheduleModalOpen(false);
-								router.navigate("/History");
+								// router.navigate("(tabs)/(shopping)/ShoppingPage");
+								router.replace("(tabs)/(shopping)/ShoppingPage");
+								setTimeout(() => {
+									router.navigate("(tabs)/(shopping)/ScheduleHistory");
+								}, 0);
 							}}
 							variant={"filled"}
 						/>
@@ -311,9 +317,10 @@ export default function HomePage(this: any) {
 						</RestyleText>
 
 						<SwipeListView
-							data={data?.sort(
+							data={foodQuery.data?.sort(
 								(a, b) =>
-									getExpiryDays(a.expiryDate) - getExpiryDays(b.expiryDate)
+									getExpiryDays(a.food.expiryDate) -
+									getExpiryDays(b.food.expiryDate)
 							)}
 							renderItem={(product) => (
 								<ProductExpiryItem

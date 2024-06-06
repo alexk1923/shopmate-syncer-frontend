@@ -1,9 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React from "react";
-import RestyleBox from "./RestyleBox";
-import RestyleText from "./RestyleText";
+
 import { FontAwesome } from "@expo/vector-icons";
-import { useDarkLightTheme } from "./ThemeContext";
+import { useDarkLightTheme } from "../ThemeContext";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
 
 type ChipProps = {
 	text: string;

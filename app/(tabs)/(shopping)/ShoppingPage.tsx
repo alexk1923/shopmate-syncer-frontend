@@ -1,18 +1,21 @@
 import { View, Text, Button, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import { createText, createBox } from "@shopify/restyle";
 import { Theme, theme } from "@/theme";
-import AppButton from "@/components/AppButton";
+
 import { router, useNavigation } from "expo-router";
-import SquareCard from "@/components/SquareCard";
+
 import { ANIMATIONS, IMAGES } from "@/constants/assets";
-import RestyleBox from "@/components/RestyleBox";
+
 import { useAuthStore } from "@/app/store/useUserStore";
 import { FontAwesome, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
-import RestyleText from "@/components/RestyleText";
-import Separator from "@/components/Separator";
-import Wrapper from "@/components/Wrapper";
+import SquareCard from "@/components/cards/SquareCard";
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import Separator from "@/components/layout/Separator";
+import Wrapper from "@/components/layout/Wrapper";
+import AppButton from "@/components/misc/AppButton";
 
 const ShoppingPage = () => {
 	const { darkMode, setDarkMode } = useDarkLightTheme();

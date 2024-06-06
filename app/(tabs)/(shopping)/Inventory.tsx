@@ -4,19 +4,15 @@ import { RowMap, SwipeListView } from "react-native-swipe-list-view";
 import { useQuery } from "@tanstack/react-query";
 import { ItemService } from "@/app/services/itemService";
 import { useAuthStore } from "@/app/store/useUserStore";
-import ProductExpiryItem from "@/components/ProductExpiryItem";
-import SwipeListMenu from "@/components/SwipeListMenu";
+
 import { Product } from "@/constants/types/ProductTypes";
-import RestyleText from "@/components/RestyleText";
-import Wrapper from "@/components/Wrapper";
+
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import Separator from "@/components/Separator";
-import AppFab from "@/components/AppFab";
+
 import { router } from "expo-router";
-import RestyleBox from "@/components/RestyleBox";
 
 import { useFilterStore } from "@/app/store/useFilterStore";
-import FilterGroup from "@/components/FilterGroup";
+
 import {
 	EXPIRY_STATUS,
 	Item,
@@ -27,6 +23,13 @@ import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Food } from "@/constants/types/FoodTypes";
 import { getExpiryDays } from "@/app/utils/getExpiryDays";
+import ProductExpiryItem from "@/components/Products/ProductExpiryItem";
+import SwipeListMenu from "@/components/common/SwipeListMenu";
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import Separator from "@/components/layout/Separator";
+import Wrapper from "@/components/layout/Wrapper";
+import AppFab from "@/components/misc/AppFab";
 
 const Inventory = () => {
 	const user = useAuthStore((state) => state.user);
@@ -178,45 +181,41 @@ const Inventory = () => {
 
 			<Separator color={currentTheme.colors.primary} />
 
-			{filter.isFood ? (
-				<SwipeListView
-					data={
-						filter.isFood
-							? filter.sortingOrder === SORTING_ORDER.ASCENDING
-								? foodQuery.data?.filter(filterByExpiryStatus).sort(sortByFn)
-								: foodQuery.data
-										?.filter(filterByExpiryStatus)
-										.sort(sortByFn)
-										.reverse()
+			<SwipeListView
+				data={
+					filter.isFood
+						? filter.sortingOrder === SORTING_ORDER.ASCENDING
+							? foodQuery.data?.filter(filterByExpiryStatus).sort(sortByFn)
 							: foodQuery.data
-					}
-					renderItem={(product) => (
-						<ProductExpiryItem
-							key={product.item.key}
-							// @ts-ignore
-							product={product.item}
-						/>
-					)}
-					renderHiddenItem={renderHiddenItem}
-					onRightAction={(row, rowMap) => {
+									?.filter(filterByExpiryStatus)
+									.sort(sortByFn)
+									.reverse()
+						: filter.sortingOrder === SORTING_ORDER.ASCENDING
+						? itemQuery.data?.sort(sortByFn)
+						: itemQuery.data?.sort(sortByFn).reverse()
+				}
+				renderItem={(product) => (
+					<ProductExpiryItem
+						key={product.item.key}
 						// @ts-ignore
-						deleteRow(rowMap, row);
-					}}
-					onRightActionStatusChange={() => {
-						// empty method to trigger activation
-					}}
-					// restDisplacementThreshold={1}
-					restSpeedThreshold={100}
-					rightOpenValue={-100}
-					disableRightSwipe
-					rightActivationValue={-150}
-					rightActionValue={-400} // until where will the row extend (translate)
-				/>
-			) : (
-				itemQuery.data?.map((item) => (
-					<Text key={item.barcode}>{item.name}</Text>
-				))
-			)}
+						product={product.item}
+					/>
+				)}
+				renderHiddenItem={renderHiddenItem}
+				onRightAction={(row, rowMap) => {
+					// @ts-ignore
+					deleteRow(rowMap, row);
+				}}
+				onRightActionStatusChange={() => {
+					// empty method to trigger activation
+				}}
+				// restDisplacementThreshold={1}
+				restSpeedThreshold={100}
+				rightOpenValue={-100}
+				disableRightSwipe
+				rightActivationValue={-150}
+				rightActionValue={-400} // until where will the row extend (translate)
+			/>
 		</Wrapper>
 	);
 };

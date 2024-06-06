@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import React from "react";
-import RestyleText from "@/components/RestyleText";
-import Wrapper from "@/components/Wrapper";
+import RestyleText from "@/components/layout/RestyleText";
+import Wrapper from "@/components/layout/Wrapper";
 
 type IntroScreenProps = {
 	SvgComponent: React.JSX.Element;

@@ -2,7 +2,7 @@ import { Food } from "@/constants/types/FoodTypes";
 import { getToken } from "../store/asyncStorage";
 import axios from "axios";
 import { API_URL } from "../api/config";
-import { Item } from "@/constants/types/ItemTypes";
+import { FoodItem, Item } from "@/constants/types/ItemTypes";
 
 export const ItemService = {
 	getItemList: async (houseId: number): Promise<Item[]> => {
@@ -28,10 +28,10 @@ export const ItemService = {
 		}
 	},
 
-	getFoodList: async (houseId: number): Promise<Food[]> => {
+	getFoodList: async (houseId: number): Promise<FoodItem[]> => {
 		try {
 			const token = await getToken();
-			const response = await axios.get<Food[]>(
+			const response = await axios.get<FoodItem[]>(
 				`${API_URL}/food?houseId=${houseId}`,
 				{
 					headers: { Authorization: `Bearer ${token}` },

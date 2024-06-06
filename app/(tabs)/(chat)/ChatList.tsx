@@ -1,5 +1,5 @@
-import RestyleBox from "@/components/RestyleBox";
-import UserConversation from "@/components/UserConversation";
+import UserConversation from "@/components/chat/UserConversation";
+import RestyleBox from "@/components/layout/RestyleBox";
 import { router, useNavigation } from "expo-router";
 import React, { useState, useCallback, useEffect } from "react";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";

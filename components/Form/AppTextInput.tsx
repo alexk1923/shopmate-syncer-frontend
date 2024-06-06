@@ -8,7 +8,7 @@ import {
 	RegisterOptions,
 } from "react-hook-form";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
-import RestyleText from "../RestyleText";
+import RestyleText from "../layout/RestyleText";
 import { useDarkLightTheme } from "../ThemeContext";
 import { theme } from "@/theme";
 

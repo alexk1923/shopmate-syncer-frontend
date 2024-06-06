@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import RestyleBox from "./RestyleBox";
+
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { FontAwesome6 } from "@expo/vector-icons";
 import {
@@ -9,6 +9,7 @@ import {
 	VariantProps,
 } from "@shopify/restyle";
 import { Theme } from "@/theme";
+import RestyleBox from "../layout/RestyleBox";
 
 type AppFabProps = {
 	size: number;

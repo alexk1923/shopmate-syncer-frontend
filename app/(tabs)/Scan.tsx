@@ -12,10 +12,7 @@ import {
 import React, { useEffect, useRef } from "react";
 import { Animated, Easing } from "react-native";
 import LottieView from "lottie-react-native";
-import RestyleBox from "@/components/RestyleBox";
-import Wrapper from "@/components/Wrapper";
-import AppButton from "@/components/AppButton";
-import RestyleText from "@/components/RestyleText";
+
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { theme } from "@/theme";
 import { CameraType } from "expo-camera/build/legacy/Camera.types";
@@ -28,16 +25,19 @@ import {
 	GestureHandlerRootView,
 	TextInput,
 } from "react-native-gesture-handler";
-import FoodTag from "@/components/FoodTag";
 
-import ProductCard from "@/components/ProductCard";
 import DashboardPage from "./DashboardPage";
-import FlipCard from "@/components/FlipCard";
+
 import { Product, fetchedFood } from "@/constants/types/ProductTypes";
 import { useQuery } from "@tanstack/react-query";
 import { ItemService } from "../services/itemService";
 import { useAuthStore } from "../store/useUserStore";
 import { Food } from "@/constants/types/FoodTypes";
+import FlipCard from "@/components/cards/FlipCard";
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import Wrapper from "@/components/layout/Wrapper";
+import AppButton from "@/components/misc/AppButton";
 
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 

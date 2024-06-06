@@ -1,11 +1,13 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { theme } from "@/theme";
-import RestyleBox from "./RestyleBox";
-import RestyleText from "./RestyleText";
-import FoodTag from "./FoodTag";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
+
 import { Food } from "@/constants/types/FoodTypes";
 import { getExpiryDays } from "@/app/utils/getExpiryDays";
+import FoodTag from "../misc/FoodTag";
+import { Item } from "@/constants/types/ItemTypes";
 
 const timeColors = {
 	darkRed: "#510202",
@@ -14,14 +16,49 @@ const timeColors = {
 	green: "#06b820",
 };
 
-const ProductExpiryItem = ({ product }: { product: Food }) => {
-	// const {  name, expiryDate, quantity, image, tags } = props.product;
+const ProductExpiryItem = ({ product }: { product: Item }) => {
+	if (!product.food) {
+		const { name, quantity, image } = product as Item;
+		return (
+			<RestyleBox
+				style={{
+					flexDirection: "row",
+					justifyContent: "space-between",
+				}}
+				backgroundColor='cardBackground'
+				paddingHorizontal='m'
+			>
+				<RestyleBox
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						gap: theme.spacing.s,
+					}}
+				>
+					<Image
+						source={
+							image
+								? { uri: image }
+								: require("@/assets/images/unknown-food-image.webp")
+						}
+						style={styles.foodImage}
+					/>
+					<RestyleBox style={{ alignItems: "flex-start" }}>
+						<RestyleText variant='body' fontWeight='bold' color={"text"}>
+							{name} (x {quantity})
+						</RestyleText>
+					</RestyleBox>
+				</RestyleBox>
+			</RestyleBox>
+			// <></>
+		);
+	}
 
-	const { item, tags } = product;
-	const { name, quantity } = item;
+	const { tags } = product.food;
+	const { name, quantity } = product;
 
 	// const { name, quantity } = item;
-	const { expiryDate } = product;
+	const { expiryDate } = product.food;
 	const image = null;
 
 	const [expiryColor, setExpiryColor] = useState(timeColors.green);
@@ -38,7 +75,7 @@ const ProductExpiryItem = ({ product }: { product: Food }) => {
 	}, [expiryDate]);
 
 	useEffect(() => {
-		if (diffDays < 3) {
+		if (diffDays < 5) {
 			setExpiryColor(timeColors.red);
 		} else if (diffDays < 25) {
 			setExpiryColor(timeColors.yellow);

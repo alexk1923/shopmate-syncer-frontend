@@ -1,10 +1,9 @@
 import { View, Text } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
-import Wrapper from "@/components/Wrapper";
-import RestyleBox from "@/components/RestyleBox";
-import RestyleText from "@/components/RestyleText";
+
 import { useLocalSearchParams } from "expo-router";
+import Wrapper from "@/components/layout/Wrapper";
 
 const ChatConversation = () => {
 	const { username } = useLocalSearchParams();

@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useState } from "react";
-import AutoGenerate from "@/components/AutoGenerate";
-import RestyleText from "@/components/RestyleText";
-import Wrapper from "@/components/Wrapper";
-import AppFab from "@/components/AppFab";
-import AppButton from "@/components/AppButton";
+
 import { LinearGradient } from "expo-linear-gradient";
+import RestyleText from "@/components/layout/RestyleText";
+import Wrapper from "@/components/layout/Wrapper";
+import AppButton from "@/components/misc/AppButton";
+import AutoGenerate from "@/components/shopping/AutoGenerate";
 
 const ShoppingMode = () => {
 	const [shoppingMode, setShoppingMode] = useState(false);

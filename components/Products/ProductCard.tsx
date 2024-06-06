@@ -1,16 +1,10 @@
 import { View, Text, Image, Pressable } from "react-native";
 import React, { useState } from "react";
-import FoodTag from "./FoodTag";
-import RestyleText from "./RestyleText";
-import Wrapper from "./Wrapper";
 
-import RestyleBox from "./RestyleBox";
-import AppButton from "./AppButton";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { FontAwesome6 } from "@expo/vector-icons";
-import ScrollPage from "./ScrollPage";
-import { tags } from "react-native-svg/lib/typescript/xml";
 import { Product } from "@/constants/types/ProductTypes";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
+import AppButton from "../misc/AppButton";
 
 const ProductCard = (props: {
 	foundProduct: Product;

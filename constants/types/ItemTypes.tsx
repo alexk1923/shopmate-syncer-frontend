@@ -37,5 +37,10 @@ export type Item = {
 	storeId: number;
 	barcode: string;
 	boughtById: number;
+	food: Food | null;
+};
+
+export type FoodItem = Omit<Item, "food" | "isFood"> & {
+	isFood: true;
 	food: Food;
 };

@@ -2,7 +2,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 
-import RestyleBox from "./RestyleBox";
+import RestyleBox from "../layout/RestyleBox";
 
 // @ts-ignore
 const SwipeListMenu = (props) => {

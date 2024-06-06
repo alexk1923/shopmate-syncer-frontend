@@ -1,13 +1,13 @@
-import AppButton from "@/components/AppButton";
-import RestyleBox from "@/components/RestyleBox";
-import RestyleText from "@/components/RestyleText";
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import Wrapper from "@/components/Wrapper";
 
 import { router, useNavigation } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { AppState, Image, StyleSheet, Text, View } from "react-native";
 import { useAuthStore } from "./store/useUserStore";
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import Wrapper from "@/components/layout/Wrapper";
+import AppButton from "@/components/misc/AppButton";
 const Index = () => {
 	const { darkMode } = useDarkLightTheme();
 	const initializeAuth = useAuthStore((state) => state.initializeAuth);

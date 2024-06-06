@@ -7,15 +7,15 @@ import {
 } from "react-native";
 import React from "react";
 
-import RestyleBox from "./RestyleBox";
+import RestyleBox from "../layout/RestyleBox";
 
-import Wrapper from "./Wrapper";
-import RestyleText from "./RestyleText";
+import Wrapper from "../layout/Wrapper";
+import RestyleText from "../layout/RestyleText";
 import { theme } from "@/theme";
 
 import { router } from "expo-router";
 import { AppUser } from "@/constants/types";
-import Avatar from "./Avatar";
+import Avatar from "../misc/Avatar";
 
 type UserConversationType = {
 	conversations: AppUser[];

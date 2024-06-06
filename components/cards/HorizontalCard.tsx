@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { theme } from "@/theme";
-import RestyleText from "./RestyleText";
-import RestyleBox from "./RestyleBox";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
 
 type HorizontalCardProps = {
 	title: string;

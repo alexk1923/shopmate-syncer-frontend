@@ -1,6 +1,4 @@
 import {
-	View,
-	Text,
 	StyleSheet,
 	TouchableOpacity,
 	Dimensions,
@@ -9,14 +7,12 @@ import {
 } from "react-native";
 import React from "react";
 import { theme } from "@/theme";
-import RestyleText from "./RestyleText";
-import RestyleBox from "./RestyleBox";
-import LottieView from "lottie-react-native";
-import { router } from "expo-router";
-import { useDarkLightTheme } from "./ThemeContext";
-import { IMAGES } from "@/constants/assets";
 
-type HorizontalCardProps = {
+import { router } from "expo-router";
+import { useDarkLightTheme } from "../ThemeContext";
+import RestyleText from "../layout/RestyleText";
+
+type SquareCardProps = {
 	title: string;
 	// children: React.ReactNode;
 
@@ -26,7 +22,7 @@ type HorizontalCardProps = {
 	image: ImageURISource;
 };
 
-const HorizontalCard = (props: HorizontalCardProps) => {
+const SquareCard = (props: SquareCardProps) => {
 	const { title, animationName, redirect, icon, image } = props;
 	const { currentTheme } = useDarkLightTheme();
 
@@ -85,4 +81,4 @@ const styles = StyleSheet.create({
 		height: 100,
 	},
 });
-export default HorizontalCard;
+export default SquareCard;

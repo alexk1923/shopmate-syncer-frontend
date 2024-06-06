@@ -5,9 +5,9 @@ import {
 	BottomSheetView,
 	BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { useDarkLightTheme } from "./ThemeContext";
+import { useDarkLightTheme } from "../ThemeContext";
 import { backgroundColor } from "@shopify/restyle";
-import AppButton from "./AppButton";
+import AppButton from "../misc/AppButton";
 
 const AppBottomSheetModal = ({
 	children,

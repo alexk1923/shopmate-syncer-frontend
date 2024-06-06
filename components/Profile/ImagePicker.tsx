@@ -1,7 +1,7 @@
 import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
-import RestyleBox from "../RestyleBox";
-import AppButton from "../AppButton";
+import RestyleBox from "../layout/RestyleBox";
+import AppButton from "../misc/AppButton";
 
 const ImagePicker = ({ onPress }) => {
 	return (

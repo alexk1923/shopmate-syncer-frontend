@@ -1,8 +1,8 @@
 import { View, Text, ViewStyle, StyleProp } from "react-native";
 import React from "react";
-import RestyleBox from "./RestyleBox";
-import RestyleText from "./RestyleText";
-import SelectionChip from "./SelectionChip";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
+import SelectionChip from "../misc/SelectionChip";
 
 type ChipType = {
 	id: number;

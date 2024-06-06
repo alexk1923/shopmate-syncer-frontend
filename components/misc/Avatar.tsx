@@ -1,7 +1,6 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import RestyleBox from "./RestyleBox";
-import RestyleText from "./RestyleText";
+import RestyleBox from "../layout/RestyleBox";
 
 type AvatarProps = {
 	uri: string | null;

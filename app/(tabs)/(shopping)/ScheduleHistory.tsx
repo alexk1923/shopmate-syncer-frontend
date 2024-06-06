@@ -1,15 +1,18 @@
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import React, { Fragment, useEffect, useState } from "react";
-import RestyleText from "@/components/RestyleText";
-import Separator from "@/components/Separator";
+
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import Wrapper from "@/components/Wrapper";
+
 import { useShoppingSchedule } from "@/app/hooks/useShoppingSchedule";
-import RestyleBox from "@/components/RestyleBox";
+
 import { ScrollView } from "react-native-gesture-handler";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { ShoppingSchedule } from "@/constants/types/ShoppingSchedule";
-import LoadingOverlay from "@/components/LoadingOverlay";
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import Separator from "@/components/layout/Separator";
+import Wrapper from "@/components/layout/Wrapper";
+import LoadingOverlay from "@/components/modals/LoadingOverlay";
 
 type GroupType = {
 	[key: string]: ShoppingSchedule[];
@@ -70,7 +73,7 @@ const ScheduleHistory = () => {
 	return (
 		<Wrapper>
 			<RestyleText variant='header' color='primary'>
-				History
+				Schedule history
 			</RestyleText>
 			<Separator color={currentTheme.colors.primary} />
 

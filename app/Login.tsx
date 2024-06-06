@@ -9,10 +9,9 @@ import {
 	Text,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import RestyleBox from "@/components/RestyleBox";
-import RestyleText from "@/components/RestyleText";
+
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import AppButton from "@/components/AppButton";
+
 import { FontAwesome6 } from "@expo/vector-icons";
 import { theme } from "@/theme";
 import { useForm, Controller } from "react-hook-form";
@@ -27,6 +26,9 @@ import { useAuthStore } from "./store/useUserStore";
 import { setToken } from "./store/asyncStorage";
 import AppTextInput from "@/components/Form/AppTextInput";
 import { UserService } from "./services/userService";
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import AppButton from "@/components/misc/AppButton";
 type FormData = {
 	username: string;
 	password: string;

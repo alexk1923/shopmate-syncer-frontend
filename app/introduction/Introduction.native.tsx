@@ -17,9 +17,7 @@ import IntroOneSvg from "@/assets/images/IntroOneSvg";
 import IntroSecondSvg from "@/assets/images/IntroSecondSvg";
 import IntroThirdSvg from "@/assets/images/IntroThirdSvg";
 import IntroFourthSvg from "@/assets/images/IntroFourthSvg";
-import AppButton from "@/components/AppButton";
-import RestyleText from "@/components/RestyleText";
-import RestyleBox from "@/components/RestyleBox";
+
 import { theme } from "@/theme";
 import { router, useNavigation } from "expo-router";
 
@@ -29,7 +27,7 @@ import { PagerViewOnPageScrollEventData } from "react-native-pager-view";
 import AppTextInput from "@/components/Form/AppTextInput";
 import { useForm } from "react-hook-form";
 import { AccountSetupInput } from "@/constants/types/AuthTypes";
-import Wrapper from "@/components/Wrapper";
+
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useAuthStore } from "../store/useUserStore";
 import IntroScreen from "@/app/IntroScreen";
@@ -37,7 +35,11 @@ import ImagePicker from "@/components/Profile/ImagePicker";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { UserService } from "../services/userService";
 import { string } from "prop-types";
-import LoadingOverlay from "@/components/LoadingOverlay";
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import Wrapper from "@/components/layout/Wrapper";
+import AppButton from "@/components/misc/AppButton";
+import LoadingOverlay from "@/components/modals/LoadingOverlay";
 
 export default function PaginationDotsExample() {
 	const navigation = useNavigation();

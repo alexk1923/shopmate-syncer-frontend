@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
-import { FoodTagKey } from "@/constants/types";
+
 import { theme } from "@/theme";
-import FoodTag from "./FoodTag";
-import { useDarkLightTheme } from "./ThemeContext";
-import RestyleText from "./RestyleText";
+import { FoodTagKey } from "@/constants/types/ProductTypes";
+import { useDarkLightTheme } from "../ThemeContext";
+import RestyleText from "../layout/RestyleText";
+import FoodTag from "../misc/FoodTag";
+
 const renderDot = (color: string) => {
 	return (
 		<View

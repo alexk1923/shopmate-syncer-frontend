@@ -1,6 +1,6 @@
 import AppEditInput from "@/components/Form/AppEditInput";
 import ImagePicker from "@/components/Profile/ImagePicker";
-import Wrapper from "@/components/Wrapper";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isLoading } from "expo-font";
 import React, { useEffect, useState } from "react";
@@ -17,24 +17,29 @@ import {
 
 import { UserService } from "../services/userService";
 import { distance, closest } from "fastest-levenshtein";
-import Avatar from "@/components/Avatar";
-import RestyleBox from "@/components/RestyleBox";
-import RestyleText from "@/components/RestyleText";
+
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import { theme } from "@/theme";
-import AppFab from "@/components/AppFab";
-import AppButton from "@/components/AppButton";
-import Chip from "@/components/Chip";
+
 import { LinearGradient } from "expo-linear-gradient";
-import AppBottomSheetModal from "@/components/AppBottomSheetModal";
+
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { backgroundColor } from "@shopify/restyle";
 import { HouseService } from "../services/houseService";
 import { router } from "expo-router";
-import SuccessScreen from "@/components/SuccessScreen";
+
 import { useAuthStore } from "../store/useUserStore";
-import LoadingOverlay from "@/components/LoadingOverlay";
+import SuccessScreen from "@/components/common/SuccessScreen";
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import AppButton from "@/components/misc/AppButton";
+import AppFab from "@/components/misc/AppFab";
+import Chip from "@/components/misc/Chip";
+import AppBottomSheetModal from "@/components/modals/AppBottomSheetModal";
+import LoadingOverlay from "@/components/modals/LoadingOverlay";
+import { Avatar } from "react-native-gifted-chat";
+import Wrapper from "@/components/layout/Wrapper";
 
 const HouseCreate = () => {
 	const [houseName, setHouseName] = useState("");

@@ -1,20 +1,18 @@
 import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
-import RestyleText from "@/components/RestyleText";
-import ToggleButton from "@/components/ToggleButton";
 
 import { useFilterStore } from "@/app/store/useFilterStore";
-import Chip from "@/components/Chip";
-import SelectionChip from "@/components/SelectionChip";
-import Wrapper from "@/components/Wrapper";
-import RestyleBox from "@/components/RestyleBox";
+
 import { EXPIRY_STATUS, SORTING_TYPE } from "@/constants/types/ItemTypes";
 import DateTimePicker, {
 	DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import FilterGroup from "@/components/FilterGroup";
-import AppButton from "@/components/AppButton";
+
 import { router } from "expo-router";
+import FilterGroup from "@/components/Products/FilterGroup";
+import RestyleText from "@/components/layout/RestyleText";
+import Wrapper from "@/components/layout/Wrapper";
+import AppButton from "@/components/misc/AppButton";
 
 const Filter = () => {
 	const currentFilters = useFilterStore((state) => state.filter);

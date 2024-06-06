@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 import Toggle from "react-native-toggle-element/lib/toggle";
-import { useDarkLightTheme } from "./ThemeContext";
+import { useDarkLightTheme } from "../ThemeContext";
 
 type ToggleButtonProps = {
 	value: boolean;

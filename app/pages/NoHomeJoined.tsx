@@ -1,8 +1,7 @@
 import WelcomeMessage from "@/components/Profile/WelcomeMessage";
-import RestyleBox from "@/components/RestyleBox";
-import RestyleText from "@/components/RestyleText";
+
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import Wrapper from "@/components/Wrapper";
+
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useRef } from "react";
 import {
@@ -15,9 +14,12 @@ import {
 } from "react-native";
 import { useAuthStore } from "../store/useUserStore";
 import LottieView from "lottie-react-native";
-import AppButton from "@/components/AppButton";
+
 import { router, useNavigation } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import RestyleText from "@/components/layout/RestyleText";
+import Wrapper from "@/components/layout/Wrapper";
+import AppButton from "@/components/misc/AppButton";
 
 const NoHomeScreen = () => {
 	const { currentTheme } = useDarkLightTheme();

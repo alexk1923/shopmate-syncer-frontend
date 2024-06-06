@@ -1,5 +1,3 @@
-import ProductCard from "@/components/ProductCard";
-
 import React, { FC, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
@@ -8,10 +6,12 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from "react-native-reanimated";
-import ProductCardEdit from "./ProductCardEdit";
-import { useDarkLightTheme } from "./ThemeContext";
-import AppBottomSheetModal from "./AppBottomSheetModal";
+
+import { useDarkLightTheme } from "../ThemeContext";
+import AppBottomSheetModal from "../modals/AppBottomSheetModal";
 import { Product } from "@/constants/types/ProductTypes";
+import ProductCardEdit from "../Products/ProductCardEdit";
+import ProductCard from "../Products/ProductCard";
 
 const FlipCard = (props: {
 	foundProduct: Product;

@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React from "react";
-import RestyleBox from "./RestyleBox";
-import RestyleText from "./RestyleText";
+
 import { FontAwesome } from "@expo/vector-icons";
 
 type ChipProps = {

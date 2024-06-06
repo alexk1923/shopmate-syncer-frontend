@@ -2,9 +2,10 @@ import { View, Text, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { theme } from "@/theme";
 import Toggle from "react-native-toggle-element/lib/toggle";
-import HorizontalCard from "./HorizontalCard";
-import RestyleBox from "./RestyleBox";
-import RestyleText from "./RestyleText";
+
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
+import HorizontalCard from "@/components/cards/HorizontalCard";
 
 const AutoGenerate = () => {
 	const [autoGenerate, setAutoGenerate] = useState(false);

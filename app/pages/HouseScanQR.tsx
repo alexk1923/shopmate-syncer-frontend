@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { View, Button, Text, StyleSheet } from "react-native";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import AppButton from "@/components/AppButton";
-import FlipCard from "@/components/FlipCard";
-import RestyleBox from "@/components/RestyleBox";
-import RestyleText from "@/components/RestyleText";
+
 import { theme } from "@/theme";
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import LottieAnimation from "@/components/LottieAnimation";
+import LottieAnimation from "@/components/common/LottieAnimation";
 import { ANIMATIONS } from "@/constants/assets";
-import Wrapper from "@/components/Wrapper";
+import RestyleBox from "@/components/layout/RestyleBox";
+import RestyleText from "@/components/layout/RestyleText";
+import Wrapper from "@/components/layout/Wrapper";
+import AppButton from "@/components/misc/AppButton";
 
 const ScanQRCode = () => {
 	const [scanned, setScanned] = useState(false);

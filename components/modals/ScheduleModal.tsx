@@ -1,22 +1,23 @@
 import { View, Text, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
-import AppButton from "./AppButton";
-import AppEditInput from "./Form/AppEditInput";
-import AppModal from "./AppModal";
-import RestyleBox from "./RestyleBox";
-import RestyleText from "./RestyleText";
 
-import AppFab from "./AppFab";
 import DateTimePicker, {
 	DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { useDarkLightTheme } from "./ThemeContext";
+
 import {
 	ShoppingDayType,
 	ShoppingSchedule,
 } from "@/constants/types/ShoppingSchedule";
 
 import { router } from "expo-router";
+import AppEditInput from "../Form/AppEditInput";
+import { useDarkLightTheme } from "../ThemeContext";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
+import AppButton from "../misc/AppButton";
+import AppFab from "../misc/AppFab";
+import AppModal from "./AppModal";
 
 type ScheduleModalProps = {
 	open: boolean;
@@ -132,7 +133,11 @@ const ScheduleModal = ({
 				<AppButton
 					title='View details'
 					onPress={() => {
-						router.navigate("/ScheduleHistory");
+						setOpen(false);
+						router.replace("(tabs)/(shopping)/ShoppingPage");
+						setTimeout(() => {
+							router.navigate("(tabs)/(shopping)/ScheduleHistory");
+						}, 0);
 					}}
 					variant={"outline"}
 				/>

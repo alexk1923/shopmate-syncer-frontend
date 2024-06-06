@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
-import { Alert, BackHandler, Pressable } from "react-native";
+
+import { Link, Tabs, router } from "expo-router";
+
 import {
 	FontAwesome6,
 	MaterialCommunityIcons,
@@ -11,12 +11,13 @@ import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { darkTheme, theme } from "@/theme";
 import { ThemeProvider, backgroundColor } from "@shopify/restyle";
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import RestyleBox from "@/components/RestyleBox";
+
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { useAuthStore } from "../store/useUserStore";
+
 import * as Font from "expo-font";
-import { CommonActions, useNavigation } from "@react-navigation/native";
+
+import RestyleBox from "@/components/layout/RestyleBox";
 
 // Initialise fonts
 Font.loadAsync(MaterialIcons.font);
@@ -28,10 +29,7 @@ export const unstable_settings = {
 	initialRouteName: "Home",
 };
 export default function TabLayout() {
-	const navigation = useNavigation();
-
 	const { currentTheme } = useDarkLightTheme();
-	const user = useAuthStore().user;
 
 	return (
 		<ThemeProvider theme={currentTheme}>
@@ -58,7 +56,6 @@ export default function TabLayout() {
 						}}
 					>
 						<Tabs.Screen
-							key={"Homezz"}
 							name='Home'
 							options={{
 								title: "Home",
@@ -76,6 +73,12 @@ export default function TabLayout() {
 									<FontAwesome6 name='cart-shopping' size={24} color={color} />
 								),
 							}}
+							// listeners={() => ({
+							// 	tabPress: (e) => {
+							// 		e.preventDefault();
+							// 		router.navigate("/(shopping)/ShoppingPage"); /// your screen without Tab bar
+							// 	},
+							// })}
 						/>
 						<Tabs.Screen
 							name='Scan'

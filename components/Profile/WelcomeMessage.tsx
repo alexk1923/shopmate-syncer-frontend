@@ -2,10 +2,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Image, StyleSheet } from "react-native";
 
-import RestyleBox from "../RestyleBox";
-import RestyleText from "../RestyleText";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
 import { useDarkLightTheme } from "../ThemeContext";
-import Avatar from "../Avatar";
+import Avatar from "../misc/Avatar";
 
 type WelcomeMessageProps = {
 	firstName: string;
