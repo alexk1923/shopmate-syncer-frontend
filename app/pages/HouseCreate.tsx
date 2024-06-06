@@ -1,4 +1,4 @@
-import AppEditInput from "@/components/AppEditInput";
+import AppEditInput from "@/components/Form/AppEditInput";
 import ImagePicker from "@/components/Profile/ImagePicker";
 import Wrapper from "@/components/Wrapper";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

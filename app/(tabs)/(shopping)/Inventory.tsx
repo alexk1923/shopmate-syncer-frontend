@@ -75,7 +75,7 @@ const Inventory = () => {
 			case SORTING_TYPE.EXPIRY_DATE:
 				return +(item1 as Food).expiryDate - +(item2 as Food).expiryDate;
 			case SORTING_TYPE.ALPHABETICALLY:
-				if (item1.name && item2.name) {
+				if ((item1 as Item).name && (item2 as Item).name) {
 					return (item1 as Item).name.localeCompare((item2 as Item).name);
 				} else {
 					return (item1 as Food).item.name.localeCompare(

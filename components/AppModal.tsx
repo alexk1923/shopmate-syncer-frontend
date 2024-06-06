@@ -4,6 +4,7 @@ import RestyleBox from "./RestyleBox";
 import { StatusBar } from "expo-status-bar";
 import RestyleText from "./RestyleText";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useDarkLightTheme } from "./ThemeContext";
 
 type AppModalProps = {
 	children: React.ReactNode;
@@ -14,29 +15,34 @@ type AppModalProps = {
 
 const AppModal = (props: AppModalProps) => {
 	const { children, modalVisible, onModalClose, title } = props;
+	const { currentTheme } = useDarkLightTheme();
 	return (
 		<Modal
 			animationType='fade'
 			transparent
-			onRequestClose={() => {
-				onModalClose();
-			}}
+			onRequestClose={onModalClose}
 			visible={modalVisible}
 		>
 			<View style={styles.flexContainer}>
 				<RestyleBox
 					style={styles.childrenContainer}
 					backgroundColor='cardBackground'
-					padding='s'
+					padding='m'
+					gap='m'
 				>
 					<View style={styles.titleBar}>
 						<RestyleText color='primary' variant='subheader'>
 							{title}
 						</RestyleText>
 						<Pressable onPress={onModalClose}>
-							<FontAwesome6 name='xmark' size={24} color='black' />
+							<FontAwesome6
+								name='xmark'
+								size={24}
+								color={currentTheme.colors.error}
+							/>
 						</Pressable>
 					</View>
+
 					{children}
 				</RestyleBox>
 			</View>
@@ -46,8 +52,6 @@ const AppModal = (props: AppModalProps) => {
 };
 
 const styles = StyleSheet.create({
-	c: {},
-
 	flexContainer: {
 		justifyContent: "center",
 		alignItems: "center",
@@ -58,7 +62,7 @@ const styles = StyleSheet.create({
 
 	childrenContainer: {
 		width: "85%",
-		height: "50%",
+
 		borderRadius: 15,
 	},
 

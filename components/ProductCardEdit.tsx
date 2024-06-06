@@ -16,7 +16,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import RestyleBox from "./RestyleBox";
 import AppButton from "./AppButton";
 import { theme } from "@/theme";
-import AppInput from "./AppEditInput";
+import AppInput from "./Form/AppEditInput";
 import { useDarkLightTheme } from "./ThemeContext";
 import Toggle from "react-native-toggle-element/lib/toggle";
 
@@ -35,7 +35,7 @@ import {
 import AppBottomSheetModal from "./AppBottomSheetModal";
 import TagPickerItem from "./TagPickerItem";
 import { Product } from "@/constants/types/ProductTypes";
-import AppEditInput from "./AppEditInput";
+import AppEditInput from "./Form/AppEditInput";
 import ToggleButton from "./ToggleButton";
 
 type EditFields = {

@@ -8,16 +8,16 @@ import {
 import React, { useState } from "react";
 import { theme } from "@/theme";
 import { FontAwesome6 } from "@expo/vector-icons";
-import RestyleText from "./RestyleText";
-import { useDarkLightTheme } from "./ThemeContext";
-import RestyleBox from "./RestyleBox";
+import RestyleBox from "../RestyleBox";
+import RestyleText from "../RestyleText";
+import { useDarkLightTheme } from "../ThemeContext";
 
 type InputProps = {
 	label: string;
 	placeholder: string;
-	iconName: string;
-	iconColor: string;
-	iconSize: number;
+	iconName?: string;
+	iconColor?: string;
+	iconSize?: number;
 	autocomplete?: TextInputProps["autoComplete"];
 	defaultValue?: string;
 	value: string;

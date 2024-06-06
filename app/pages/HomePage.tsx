@@ -1,9 +1,10 @@
 import RestyleBox from "@/components/RestyleBox";
 import RestyleText from "@/components/RestyleText";
 import Wrapper from "@/components/Wrapper";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
+	Alert,
 	Image,
 	ScrollView,
 	StyleSheet,
@@ -30,15 +31,36 @@ import {
 } from "@/constants/types/ProductTypes";
 import { useAuthStore } from "../store/useUserStore";
 import Avatar from "@/components/Avatar";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ItemService } from "../services/itemService";
-import { backgroundColor } from "@shopify/restyle";
+
 import { getExpiryDays } from "../utils/getExpiryDays";
+import { DateData } from "react-native-calendars";
+
+import ScheduleModal from "@/components/ScheduleModal";
+
+import { ShoppingScheduleService } from "../services/shoppingScheduleService";
+import {
+	ShoppingDayType,
+	ShoppingSchedule,
+} from "@/constants/types/ShoppingSchedule";
+import { useShoppingSchedule } from "../hooks/useShoppingSchedule";
+import AppModal from "@/components/AppModal";
+import { convertDateToLocaleISO } from "../utils/convertDateToLocaleISO";
 Font.loadAsync(MaterialIcons.font);
 
 export default function HomePage(this: any) {
 	const { currentTheme } = useDarkLightTheme();
 	const currentUser = useAuthStore((state) => state.user);
+
+	const { shoppingScheduleQuery, shoppingScheduleMutation } =
+		useShoppingSchedule();
+	const [isScheduleShoppingOpen, setIsScheduleShoppingOpen] = useState(false);
+	const [existingScheduleModalOpen, setExistingScheduleModalOpen] =
+		useState(false);
+
+	const [existingSchedule, setExistingSchedule] =
+		useState<ShoppingSchedule | null>(null);
 
 	if (currentUser === null) {
 		console.log("Current user is null");
@@ -57,32 +79,23 @@ export default function HomePage(this: any) {
 		},
 	});
 
-	const [expiryItems, setExpiryItems] =
-		useState<(Product & { key: number })[]>(fetchedFood);
+	const [expiryItems, setExpiryItems] = useState<(Product & { key: number })[]>(
+		[]
+	);
+
+	const [shoppingSchedule, setShoppingSchedule] = useState<
+		Omit<ShoppingDayType, "shoppingDate"> & { shoppingDate: Date | null }
+	>({
+		title: "",
+		shoppingDate: null,
+	});
 
 	useEffect(() => {
-		const fetchedItems = [
-			{
-				id: 1,
-				key: 1,
-				name: "Iaurt cu piersici",
-				expiryDate: new Date("2024-05-18"),
-				quantity: 2,
-				image: null,
-				tags: ["dairy", "drinks"] as FoodTagKey[],
-			},
-			{
-				id: 2,
-				key: 2,
-				name: "Banane",
-				expiryDate: new Date("2024-06-18"),
-				quantity: 1,
-				image:
-					"https://images.immediate.co.uk/production/volatile/sites/30/2017/01/Bunch-of-bananas-67e91d5.jpg?quality=90&resize=440,400",
-				tags: ["fruits_vegetables"] as FoodTagKey[],
-			},
-		];
-	}, []);
+		if (shoppingScheduleMutation.isSuccess) {
+			setShoppingSchedule({ title: "", shoppingDate: null });
+			setIsScheduleShoppingOpen(false);
+		}
+	}, [shoppingScheduleMutation.isSuccess]);
 
 	const closeRow = (
 		rowMap: { [x: string]: { closeRow: () => void } },
@@ -98,6 +111,8 @@ export default function HomePage(this: any) {
 		rowKey: string | number
 	) => {
 		closeRow(rowMap, rowKey);
+
+		console.warn("TODO: Implement deleting item from database");
 
 		const newData = [...expiryItems];
 		const updatedData = newData.filter((item) => item.id !== rowKey);
@@ -115,9 +130,134 @@ export default function HomePage(this: any) {
 		);
 	};
 
+	const checkExistingSchedule = () => {
+		if (shoppingSchedule) {
+			const existingSchedule = shoppingScheduleQuery.data?.find(
+				(shoppingEvent) => {
+					console.log(
+						new Date(shoppingEvent.shoppingDate).toISOString() +
+							"vs." +
+							new Date(shoppingSchedule?.shoppingDate).toISOString()
+					);
+
+					return (
+						shoppingSchedule.shoppingDate &&
+						new Date(shoppingEvent.shoppingDate).toISOString() ===
+							new Date(shoppingSchedule?.shoppingDate).toISOString()
+					);
+				}
+			);
+
+			return existingSchedule;
+		}
+		return false;
+	};
+
+	useEffect(() => {
+		console.log("S-a apelat din useeffect bai frate");
+
+		if (shoppingSchedule && shoppingSchedule.shoppingDate) {
+			const schedule = checkExistingSchedule();
+
+			console.log("shopping schedule query is:");
+			console.log(schedule);
+
+			if (schedule) {
+				// Open existing schedule modal only if a modal is not already open
+				if (!isScheduleShoppingOpen) {
+					setExistingScheduleModalOpen(true);
+				}
+				setExistingSchedule(schedule);
+			} else {
+				setExistingSchedule(null);
+				setIsScheduleShoppingOpen(true);
+			}
+		}
+	}, [shoppingSchedule, shoppingSchedule.shoppingDate]);
+
+	const handleDateSelect = (date: DateData) => {
+		const selectedDate = convertDateToLocaleISO(new Date(date.dateString));
+
+		setShoppingSchedule((prev) => {
+			return { ...prev, shoppingDate: selectedDate };
+		});
+	};
+
+	const handleSubmitNewShopping = () => {
+		console.log("Before submitting, I have this shopping date");
+		console.log(shoppingSchedule.shoppingDate);
+
+		if (shoppingSchedule.shoppingDate) {
+			shoppingScheduleMutation.mutate({
+				title: shoppingSchedule.title,
+				shoppingDate: shoppingSchedule.shoppingDate,
+			});
+		}
+	};
+
+	const sortShoppingScheduleByDate = useCallback(() => {
+		if (shoppingScheduleQuery.data) {
+			const sorted = shoppingScheduleQuery.data.sort((ss1, ss2) => {
+				return (
+					getExpiryDays(ss1.shoppingDate) - getExpiryDays(ss2.shoppingDate)
+				);
+			});
+
+			const remainingDays = sorted.map(
+				(schedule) => getExpiryDays(schedule.shoppingDate) - 1
+			);
+
+			if (remainingDays[0] === 0) {
+				return "Today";
+			}
+
+			return remainingDays[0];
+		}
+
+		return "-";
+	}, [shoppingScheduleQuery.data]);
+
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
-			<CalendarComponent />
+			<ScheduleModal
+				open={isScheduleShoppingOpen}
+				setOpen={setIsScheduleShoppingOpen}
+				shoppingSchedule={shoppingSchedule}
+				setShoppingSchedule={setShoppingSchedule}
+				handleSubmit={handleSubmitNewShopping}
+				isPending={shoppingScheduleMutation.isPending}
+				isError={shoppingScheduleMutation.isError}
+				errorMessage={shoppingScheduleMutation.error?.message}
+				existingSchedule={existingSchedule}
+			/>
+
+			<AppModal
+				modalVisible={existingScheduleModalOpen}
+				onModalClose={() => setExistingScheduleModalOpen(false)}
+				title={"Shopping schedule"}
+			>
+				{existingSchedule && (
+					<>
+						<RestyleText>
+							{`A shopping event was already scheduled on ${new Date(
+								existingSchedule?.shoppingDate
+							).toLocaleDateString()} by ${
+								existingSchedule.createdBy.firstName
+							} ${existingSchedule.createdBy.lastName}.`}
+						</RestyleText>
+						<AppButton
+							title='View details'
+							onPress={() => {
+								setExistingScheduleModalOpen(false);
+								router.navigate("/History");
+							}}
+							variant={"filled"}
+						/>
+					</>
+				)}
+			</AppModal>
+
+			<CalendarComponent onDayLongPress={handleDateSelect} />
 			<Wrapper style={styles.wrapper}>
 				<RestyleBox style={styles.c1}>
 					<RestyleBox style={styles.userContainer} gap='s'>
@@ -145,12 +285,12 @@ export default function HomePage(this: any) {
 						<RestyleText variant='body' color='text'>
 							Next shopping:{" "}
 							<RestyleText variant='body' color='primary' fontWeight='bold'>
-								2 days
+								{sortShoppingScheduleByDate()}
 							</RestyleText>
 						</RestyleText>
 						<AppButton
 							title={"Schedule"}
-							onPress={() => router.navigate("/shopping/calendar")}
+							onPress={() => setIsScheduleShoppingOpen(true)}
 							variant={"filled"}
 							style={styles.scheduleButton}
 						/>
@@ -158,8 +298,6 @@ export default function HomePage(this: any) {
 				</RestyleBox>
 
 				<RestyleBox gap='m' flex={1}>
-					<PieChartComponent />
-
 					<RestyleBox
 						style={styles.expiryContainer}
 						backgroundColor='cardBackground'
@@ -171,38 +309,39 @@ export default function HomePage(this: any) {
 						>
 							Expiring soon ⌛
 						</RestyleText>
-						<ScrollView>
-							<SwipeListView
-								data={data?.sort(
-									(a, b) =>
-										getExpiryDays(a.expiryDate) - getExpiryDays(b.expiryDate)
-								)}
-								renderItem={(product) => (
-									<ProductExpiryItem
-										key={product.item.key}
-										// @ts-ignore
-										product={product.item}
-									/>
-								)}
-								renderHiddenItem={renderHiddenItem}
-								onRightAction={(row, rowMap) => {
+
+						<SwipeListView
+							data={data?.sort(
+								(a, b) =>
+									getExpiryDays(a.expiryDate) - getExpiryDays(b.expiryDate)
+							)}
+							renderItem={(product) => (
+								<ProductExpiryItem
+									key={product.item.key}
 									// @ts-ignore
-									deleteRow(rowMap, row);
-								}}
-								onRightActionStatusChange={() => {
-									// empty method to trigger activation
-								}}
-								// restDisplacementThreshold={1}
-								restSpeedThreshold={100}
-								rightOpenValue={-100}
-								disableRightSwipe
-								rightActivationValue={-150}
-								rightActionValue={-400} // until where will the row extend (translate)
-								scrollEnabled={true}
-								style={{ flex: 1, overflow: "hidden" }}
-							/>
-						</ScrollView>
+									product={product.item}
+								/>
+							)}
+							renderHiddenItem={renderHiddenItem}
+							onRightAction={(row, rowMap) => {
+								// @ts-ignore
+								deleteRow(rowMap, row);
+							}}
+							onRightActionStatusChange={() => {
+								// empty method to trigger activation
+							}}
+							// restDisplacementThreshold={1}
+							restSpeedThreshold={100}
+							rightOpenValue={-100}
+							disableRightSwipe
+							rightActivationValue={-150}
+							rightActionValue={-400} // until where will the row extend (translate)
+							scrollEnabled={true}
+							style={{ flex: 1, overflow: "hidden" }}
+						/>
 					</RestyleBox>
+
+					<PieChartComponent />
 				</RestyleBox>
 			</Wrapper>
 		</GestureHandlerRootView>

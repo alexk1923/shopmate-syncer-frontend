@@ -58,9 +58,19 @@ export const useAuthStore = create<AuthState>()(
 							}
 						} catch (error) {
 							console.error("Token verification failed", error);
+							if (axios.isAxiosError(error)) {
+								if (!error.response) {
+									throw new Error("Network error");
+								}
 
-							set({ user: null, token: null });
-							await AsyncStorage.removeItem("userToken");
+								// Remove token only if it is unauthorized
+								if (error.response.status === 401) {
+									set({ user: null, token: null });
+									await AsyncStorage.removeItem("userToken");
+								}
+
+								throw error.response.data;
+							}
 						}
 					}
 				},

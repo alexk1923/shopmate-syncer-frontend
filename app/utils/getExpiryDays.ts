@@ -3,8 +3,6 @@ export const getExpiryDays = (expiryDate: Date) => {
 	const today = new Date();
 	const formatedExpiryDate = new Date(expiryDate);
 
-	console.log(today + "vs" + formatedExpiryDate);
-
 	let diffDays = 0;
 	if (formatedExpiryDate < today) {
 		diffDays =
@@ -14,7 +12,6 @@ export const getExpiryDays = (expiryDate: Date) => {
 
 	diffDays =
 		Math.round(Math.abs((+new Date() - +formatedExpiryDate) / oneDay)) + 1;
-	console.log(diffDays);
 
 	return diffDays;
 };

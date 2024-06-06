@@ -12,13 +12,6 @@ import RestyleText from "../RestyleText";
 import { useDarkLightTheme } from "../ThemeContext";
 import { theme } from "@/theme";
 
-// type FormData = {
-// 	username: string;
-// 	password: string;
-// 	email: string;
-// 	confirmPassword: string;
-// };
-
 type AppTextInputProps = {
 	control: Control<FormData, any>;
 	errors: FieldErrors<FormData>;
@@ -37,7 +30,6 @@ const AppTextInput = ({
 	rules,
 	iconName,
 	isPassword,
-	FormDataType,
 }: AppTextInputProps) => {
 	const { currentTheme } = useDarkLightTheme();
 	const [showPassword, setShowPassword] = useState(false);

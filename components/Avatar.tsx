@@ -35,7 +35,7 @@ const Avatar = (props: AvatarProps) => {
 					alignItems='center'
 					style={styles.profilePic}
 				>
-					<Text>
+					<Text style={{ color: "white" }}>
 						{firstName && lastName ? firstName[0] + lastName[0] : "User"}
 					</Text>
 				</RestyleBox>

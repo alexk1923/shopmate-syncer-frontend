@@ -68,9 +68,9 @@ const ShoppingPage = () => {
 					/>
 
 					<SquareCard
-						title={"History"}
+						title={"Schedule History"}
 						animationName={ANIMATIONS.HISTORY}
-						redirect={"/History"}
+						redirect={"/ScheduleHistory"}
 						icon={<FontAwesome5 name='history' size={24} color='black' />}
 						image={IMAGES.HISTORY}
 					/>

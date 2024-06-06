@@ -5,7 +5,7 @@ const TOKEN_KEY = "userToken";
 export const getToken = async () => {
 	try {
 		const token = await AsyncStorage.getItem(TOKEN_KEY);
-		console.log("AOLO");
+		console.log("Stored token:");
 		console.log(token);
 
 		return token;
