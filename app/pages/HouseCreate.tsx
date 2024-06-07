@@ -1,5 +1,4 @@
 import AppEditInput from "@/components/Form/AppEditInput";
-import ImagePicker from "@/components/Profile/ImagePicker";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isLoading } from "expo-font";
@@ -38,8 +37,10 @@ import AppFab from "@/components/misc/AppFab";
 import Chip from "@/components/misc/Chip";
 import AppBottomSheetModal from "@/components/modals/AppBottomSheetModal";
 import LoadingOverlay from "@/components/modals/LoadingOverlay";
-import { Avatar } from "react-native-gifted-chat";
+
 import Wrapper from "@/components/layout/Wrapper";
+import ImagePickerWidget from "@/components/widgets/ImagePickerWidget";
+import Avatar from "@/components/misc/Avatar";
 
 const HouseCreate = () => {
 	const [houseName, setHouseName] = useState("");
@@ -152,7 +153,7 @@ const HouseCreate = () => {
 	return (
 		<Wrapper>
 			<LoadingOverlay isVisible={createHouseMutation.isPending} />
-			<ImagePicker
+			<ImagePickerWidget
 				onPress={() => {
 					console.log("TODO UPLOAD IMAGE");
 				}}

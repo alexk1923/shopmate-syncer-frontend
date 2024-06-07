@@ -1,8 +1,6 @@
 import * as React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 
-import RestyleText from "@/components/RestyleText";
-import RestyleBox from "@/components/RestyleBox";
 import { Link } from "expo-router";
 
 export default function PaginationDotsExample() {

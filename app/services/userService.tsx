@@ -45,19 +45,20 @@ export const UserService = {
 		}
 	},
 
-	updateUser: async (
-		userId: number,
-		firstName?: string | null,
-		lastName?: string | null,
-		birthday?: Date | null
-	): Promise<User> => {
+	updateUser: async (updateArgs: {
+		userId: number;
+		firstName?: string | null;
+		lastName?: string | null;
+		birthday?: Date | null;
+		profilePicture?: string;
+	}): Promise<User> => {
 		try {
 			const token = await getToken();
-			console.log("my user id is:" + userId);
+			console.log("my user id is:" + updateArgs.userId);
 
 			const response = await axios.patch<User>(
-				`${API_URL}/users/${userId}`,
-				{ firstName, lastName, birthday },
+				`${API_URL}/users/${updateArgs.userId}`,
+				{ ...updateArgs },
 				{
 					headers: { Authorization: `Bearer ${token}` },
 				}
@@ -92,6 +93,31 @@ export const UserService = {
 				// Handle known error (e.g., API returned an error response)
 				throw new Error(
 					error.response.data.message || "Failed to fetch user data"
+				);
+			} else {
+				// Handle unexpected errors (e.g., network issues)
+				throw new Error("An unexpected error occurred");
+			}
+		}
+	},
+
+	uploadImage: async (image: string): Promise<any> => {
+		try {
+			const token = await getToken();
+
+			const response = await axios.post<any>(
+				`${API_URL}/upload`,
+				{ image },
+				{
+					headers: { Authorization: `Bearer ${token}` },
+				}
+			);
+			return response.data;
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				// Handle known error (e.g., API returned an error response)
+				throw new Error(
+					error.response.data.message || "Failed to upliad image"
 				);
 			} else {
 				// Handle unexpected errors (e.g., network issues)

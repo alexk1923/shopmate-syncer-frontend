@@ -93,7 +93,10 @@ const Login = () => {
 	});
 
 	function onSubmit(data: FormData) {
+		console.log("====================================");
+		console.log("Trying to login");
 		console.log(data);
+		console.log("====================================");
 		loginMutation.mutate({ username: data.username, password: data.password });
 	}
 

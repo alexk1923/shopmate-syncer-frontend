@@ -47,6 +47,7 @@ const ChatConversation = () => {
 	return (
 		<>
 			<Wrapper>
+				<Text>user cht</Text>
 				<GiftedChat
 					messages={messages}
 					// @ts-ignore

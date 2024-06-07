@@ -1,8 +1,22 @@
 import UserConversation from "@/components/chat/UserConversation";
 import RestyleBox from "@/components/layout/RestyleBox";
+import AppButton from "@/components/misc/AppButton";
 import { router, useNavigation } from "expo-router";
 import React, { useState, useCallback, useEffect } from "react";
+import {
+	ActivityIndicator,
+	Button,
+	Image,
+	StyleSheet,
+	Text,
+	View,
+} from "react-native";
+
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
+import * as ImagePicker from "expo-image-picker";
+import Wrapper from "@/components/layout/Wrapper";
+
+import { useUpload } from "@/app/hooks/useUpload";
 
 const ChatList = () => {
 	const [messages, setMessages] = useState<IMessage[]>([]);
@@ -66,14 +80,86 @@ const ChatList = () => {
 		},
 	];
 
+	const [image, setImage] = useState<ImagePicker.ImagePickerAsset | null>(null);
+
+	const pickImage = async () => {
+		const result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			allowsEditing: true,
+			aspect: [1, 1], // Set aspect ratio for circular crop
+			quality: 1,
+			base64: true,
+		});
+
+		console.log("my upload result is:");
+
+		if (!result.canceled) {
+			console.log(result.assets[0].base64);
+			setImage(result.assets[0]);
+		}
+	};
+
+	const { uploadMutation } = useUpload();
+
+	const handleUpload = () => {
+		if (image) {
+			uploadMutation.mutate({
+				image: "data:image/jpeg;base64," + image.base64,
+				successCallback: (uploadDetails) => {
+					console.log(uploadDetails);
+				},
+			});
+		}
+	};
+
+	useEffect(() => {
+		console.log("====================================");
+		console.log("Upload mutatin");
+		console.log(uploadMutation.data);
+
+		console.log("====================================");
+	}, [uploadMutation.data]);
+
 	return (
-		<RestyleBox backgroundColor='mainBackground'>
-			<UserConversation
+		<Wrapper>
+			<Text>user chat</Text>
+			<View style={styles.container}>
+				<Button title='Pick an image from camera roll' onPress={pickImage} />
+				{image && (
+					<Image
+						source={{ uri: "data:image/jpeg;base64," + image.base64 }}
+						style={styles.image}
+					/>
+				)}
+
+				<AppButton
+					title={"upload file"}
+					onPress={handleUpload}
+					variant={"filled"}
+				/>
+				{/* <Text>Image base64 i : {image?.base64}</Text> */}
+				{uploadMutation.isPending && <ActivityIndicator />}
+				{uploadMutation.isError && <Text>{uploadMutation.error.message}</Text>}
+			</View>
+			{/* <UserConversation
 				conversations={conversations}
 				onSelect={(username: string) => {}}
-			/>
-		</RestyleBox>
+			/> */}
+		</Wrapper>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	image: {
+		width: 200,
+		height: 200,
+		borderRadius: 100,
+	},
+});
 
 export default ChatList;

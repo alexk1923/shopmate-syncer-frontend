@@ -80,7 +80,7 @@ function RootLayoutNav() {
 						}}
 					/>
 					<Stack.Screen
-						name='introduction/Introduction'
+						name='introduction'
 						options={{
 							headerShown: false,
 							animation: "fade",

@@ -65,7 +65,8 @@
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-toggle-element": "^2.0.1",
     "react-native-web": "^0.19.11",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "expo-image-picker": "~15.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

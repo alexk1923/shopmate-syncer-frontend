@@ -31,7 +31,7 @@ import { AccountSetupInput } from "@/constants/types/AuthTypes";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useAuthStore } from "../store/useUserStore";
 import IntroScreen from "@/app/IntroScreen";
-import ImagePicker from "@/components/Profile/ImagePicker";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { UserService } from "../services/userService";
 import { string } from "prop-types";
@@ -40,6 +40,8 @@ import RestyleText from "@/components/layout/RestyleText";
 import Wrapper from "@/components/layout/Wrapper";
 import AppButton from "@/components/misc/AppButton";
 import LoadingOverlay from "@/components/modals/LoadingOverlay";
+import AccountSetup from "./AccountSetup";
+import { useUser } from "../hooks/useUser";
 
 export default function PaginationDotsExample() {
 	const navigation = useNavigation();
@@ -54,15 +56,13 @@ export default function PaginationDotsExample() {
 	const userId = useAuthStore((state) => state.userId);
 	const setUser = useAuthStore((state) => state.setUser);
 
-	const { data, isLoading, error } = useQuery<User | null>({
-		queryKey: ["user", userId],
-		queryFn: async () => {
-			const user = await UserService.getUserById(userId as number);
-			setUser(user);
-			return user;
-		},
-		enabled: userId !== null,
-	});
+	const { userQuery } = useUser(user?.id || null);
+
+	useEffect(() => {
+		if (userQuery.data) {
+			setUser(userQuery.data);
+		}
+	}, [userQuery.data]);
 
 	const screens = [
 		{
@@ -134,12 +134,6 @@ export default function PaginationDotsExample() {
 	];
 	const [accountSetup, setAccountSetup] = useState(false);
 
-	useEffect(() => {
-		if (data?.firstName === null || data?.lastName === null) {
-			setAccountSetup(true);
-		}
-	}, [data]);
-
 	// Add an effect to prevent default back navigation
 	useEffect(() => {
 		navigation.addListener("beforeRemove", (e) => {
@@ -155,18 +149,18 @@ export default function PaginationDotsExample() {
 	const queryClient = useQueryClient();
 	const accountSetupMutation = useMutation({
 		mutationFn: async ({ firstName, lastName }: UpdateUserType) => {
-			if (data) {
-				const user = await UserService.updateUser(
-					data?.id,
+			if (userQuery.data) {
+				const user = await UserService.updateUser({
+					userId: userQuery.data.id,
 					firstName,
-					lastName
-				);
+					lastName,
+				});
 				return user;
 			}
 			return null;
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["user", data?.id] });
+			queryClient.invalidateQueries({ queryKey: ["user", user?.id] });
 			setAccountSetup(false);
 			ref.current?.setPage(1);
 			console.log("Update successfully");
@@ -177,21 +171,6 @@ export default function PaginationDotsExample() {
 			console.log(error);
 		},
 	});
-
-	function onSubmit(formData: AccountSetupInput) {
-		console.log(formData);
-		accountSetupMutation.mutate({
-			firstName: formData.firstName,
-			lastName: formData.lastName,
-		});
-	}
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-		resetField,
-	} = useForm<AccountSetupInput>();
-	const handleFormSubmit = handleSubmit(onSubmit);
 
 	const inputRange = [0, screens.length + 1];
 	const scrollX = Animated.add(
@@ -223,106 +202,56 @@ export default function PaginationDotsExample() {
 		[]
 	);
 
-	const inputs = [
-		{
-			id: 1,
-			placeholder: "First Name",
-			inputKey: "firstName",
-			rules: { required: "First Name is required" },
-			iconName: "user-pen",
-		},
-		{
-			id: 2,
-			placeholder: "Last Name",
-			inputKey: "lastName",
-			rules: { required: "Last Name is required" },
-			iconName: "user-pen",
-		},
-	];
-
 	const uploadImage = () => {};
 
 	return (
 		<SafeAreaView testID='safe-area-view' style={styles.flex}>
-			<LoadingOverlay isVisible={isLoading || accountSetupMutation.isPending} />
-			{!accountSetup ? (
-				<>
-					<PagerView
-						initialPage={0}
-						testID='pager-view'
-						ref={ref}
-						style={styles.PagerView}
-						onPageScroll={onPageScroll}
-						onPageSelected={(e) => {
-							if (e.nativeEvent.position === 0) {
-								// setAccountSetup(false);
+			<LoadingOverlay
+				isVisible={userQuery.isLoading || accountSetupMutation.isPending}
+			/>
+
+			<>
+				<PagerView
+					initialPage={0}
+					testID='pager-view'
+					ref={ref}
+					style={styles.PagerView}
+					onPageScroll={onPageScroll}
+					onPageSelected={(e) => {
+						if (e.nativeEvent.position === 0) {
+							// setAccountSetup(false);
+						}
+					}}
+				>
+					{screens.map((d) => (
+						<IntroScreen
+							title={d.title}
+							key={d.key}
+							SvgComponent={d.SvgComponent}
+							description={d.description}
+							ExtraComponent={
+								d.ExtraComponent === undefined ? <></> : d.ExtraComponent()
 							}
-						}}
-					>
-						{screens.map((d) => (
-							<IntroScreen
-								title={d.title}
-								key={d.key}
-								SvgComponent={d.SvgComponent}
-								description={d.description}
-								ExtraComponent={
-									d.ExtraComponent === undefined ? <></> : d.ExtraComponent()
-								}
-							/>
-						))}
-					</PagerView>
-					<View style={styles.dotsContainer}>
-						<View style={styles.dotContainer}>
-							<SlidingDot
-								testID={"sliding-dot"}
-								marginHorizontal={3}
-								data={screens}
-								dotStyle={{ backgroundColor: theme.colors.secondary }}
-								slidingIndicatorStyle={{
-									backgroundColor: theme.colors.primary,
-								}}
-								//@ts-ignore
-								scrollX={scrollX}
-								dotSize={12}
-							/>
-						</View>
-					</View>
-				</>
-			) : (
-				<View key={1}>
-					<Wrapper>
-						<RestyleText variant='header' color='primary'>
-							Setup your account
-						</RestyleText>
-
-						<ImagePicker onPress={() => {}} />
-
-						<RestyleBox>
-							{inputs.map((input) => {
-								return (
-									<AppTextInput
-										// @ts-ignore
-										control={control}
-										errors={errors}
-										placeholder={input.placeholder}
-										inputKey={input.inputKey}
-										rules={input.rules}
-										iconName={input.iconName}
-										key={input.id}
-									/>
-								);
-							})}
-						</RestyleBox>
-						<AppButton
-							variant='filled'
-							title='Done'
-							onPress={() => {
-								handleFormSubmit();
-							}}
 						/>
-					</Wrapper>
+					))}
+				</PagerView>
+				<View style={styles.dotsContainer}>
+					<View style={styles.dotContainer}>
+						<SlidingDot
+							testID={"sliding-dot"}
+							marginHorizontal={3}
+							data={screens}
+							dotStyle={{ backgroundColor: theme.colors.secondary }}
+							slidingIndicatorStyle={{
+								backgroundColor: theme.colors.primary,
+							}}
+							//@ts-ignore
+							scrollX={scrollX}
+							dotSize={12}
+						/>
+					</View>
 				</View>
-			)}
+			</>
 		</SafeAreaView>
 	);
 }

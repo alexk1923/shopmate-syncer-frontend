@@ -11,6 +11,7 @@ import AppButton from "@/components/misc/AppButton";
 const Index = () => {
 	const { darkMode } = useDarkLightTheme();
 	const initializeAuth = useAuthStore((state) => state.initializeAuth);
+	const user = useAuthStore((state) => state.user);
 	const navigation = useNavigation();
 	const appStateChangeRef = useRef(false);
 
@@ -20,7 +21,11 @@ const Index = () => {
 			console.log("state is" + state);
 
 			if (state === "active") {
-				router.navigate("/(tabs)/Home");
+				if (!user?.firstName || !user.lastName) {
+					router.navigate("introduction/AccountSetup");
+				} else {
+					router.navigate("/(tabs)/Home");
+				}
 			}
 		});
 

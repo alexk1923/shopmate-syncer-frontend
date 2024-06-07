@@ -24,6 +24,22 @@ const Home = () => {
 	});
 
 	useEffect(() => {
+		console.log("====================================");
+		console.log("Trying to get");
+		console.log(data?.firstName);
+		console.log("si");
+
+		console.log(data?.lastName);
+
+		console.log("====================================");
+		if (data) {
+			if (!data?.firstName || !data?.lastName) {
+				router.push("/introduction/Introduction");
+			}
+		}
+	}, [data]);
+
+	useEffect(() => {
 		const backAction = () => {
 			if (!navigation.canGoBack()) {
 				// Alert.alert("Hold on!", "Are you sure you want to exit the app?", [
