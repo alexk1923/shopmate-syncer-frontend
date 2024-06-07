@@ -29,6 +29,9 @@ import { UserService } from "./services/userService";
 import RestyleBox from "@/components/layout/RestyleBox";
 import RestyleText from "@/components/layout/RestyleText";
 import AppButton from "@/components/misc/AppButton";
+import { useHouse } from "./hooks/useHouse";
+import { HouseService } from "./services/houseService";
+import { useHouseStore } from "./store/useHouseStore";
 type FormData = {
 	username: string;
 	password: string;
@@ -36,11 +39,7 @@ type FormData = {
 
 const Login = () => {
 	const { currentTheme } = useDarkLightTheme();
-	const [showPassword, setShowPassword] = useState(false);
-	const { isKeyboardVisible } = useKeyboardVisible();
-	const setUser = useAuthStore((state) => state.setUser);
-	// const token = useAuthStore((state) => state.token);
-	const navigation = useNavigation();
+
 	const {
 		control,
 		handleSubmit,
@@ -48,18 +47,13 @@ const Login = () => {
 		resetField,
 	} = useForm<FormData>();
 	const handleFormSubmit = handleSubmit(onSubmit);
+
+	const user = useAuthStore((state) => state.user);
+	const setUser = useAuthStore((state) => state.setUser);
 	const setUserId = useAuthStore((state) => state.setUserId);
+	const setHouse = useHouseStore((state) => state.setHouse);
+
 	const queryClient = useQueryClient();
-	// const getUserQuery = useQuery({
-	// 	queryKey: ["user", userId],
-	// 	queryFn: async () => {
-	// 		if (userId) {
-	// 			const user = await UserService.getUserById(userId);
-	// 			setUser(user);
-	// 		}
-	// 	},
-	// 	enabled: userId !== null,
-	// });
 
 	const loginMutation = useMutation({
 		mutationFn: ({ username, password }: LoginInput) =>
@@ -82,7 +76,7 @@ const Login = () => {
 					}
 				},
 			});
-			// setUserId(data.id);
+
 			router.push("introduction/Introduction");
 		},
 		onError: (err) => {

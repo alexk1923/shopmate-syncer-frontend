@@ -52,7 +52,7 @@ export const useAuthStore = create<AuthState>()(
 								get().user?.firstName === null ||
 								get().user?.lastName === null
 							) {
-								router.replace("introduction");
+								router.replace("introduction/Introduction");
 							} else {
 								router.replace("(tabs)/Home");
 							}

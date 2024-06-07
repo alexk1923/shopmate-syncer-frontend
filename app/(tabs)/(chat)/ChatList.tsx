@@ -112,14 +112,6 @@ const ChatList = () => {
 		}
 	};
 
-	useEffect(() => {
-		console.log("====================================");
-		console.log("Upload mutatin");
-		console.log(uploadMutation.data);
-
-		console.log("====================================");
-	}, [uploadMutation.data]);
-
 	return (
 		<Wrapper>
 			<Text>user chat</Text>
@@ -145,6 +137,11 @@ const ChatList = () => {
 				conversations={conversations}
 				onSelect={(username: string) => {}}
 			/> */}
+			<AppButton
+				title={"Go to invite"}
+				onPress={() => router.navigate("/pages/HouseInvite")}
+				variant={"filled"}
+			/>
 		</Wrapper>
 	);
 };

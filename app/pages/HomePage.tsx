@@ -16,7 +16,7 @@ import { RowMap, SwipeListView } from "react-native-swipe-list-view";
 import { Product } from "@/constants/types/ProductTypes";
 import { useAuthStore } from "../store/useUserStore";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ItemService } from "../services/itemService";
 
 import { getExpiryDays } from "../utils/getExpiryDays";
@@ -41,6 +41,9 @@ import RestyleText from "@/components/layout/RestyleText";
 import Wrapper from "@/components/layout/Wrapper";
 import Avatar from "@/components/misc/Avatar";
 import { useItems } from "../hooks/useItems";
+import { useHouse } from "../hooks/useHouse";
+import { HouseService } from "../services/houseService";
+import { useHouseStore } from "../store/useHouseStore";
 Font.loadAsync(MaterialIcons.font);
 
 export default function HomePage(this: any) {
@@ -61,6 +64,21 @@ export default function HomePage(this: any) {
 		router.navigate("/login");
 		return <></>;
 	}
+
+	const setHouse = useHouseStore((state) => state.setHouse);
+	const { houseQuery } = useHouse(currentUser.houseId);
+	const queryClient = useQueryClient();
+
+	queryClient.prefetchQuery({
+		queryKey: ["user", currentUser.houseId],
+		queryFn: async () => {
+			if (currentUser.houseId) {
+				const house = await HouseService.getHouseById(currentUser.houseId);
+				setHouse(house);
+				return house;
+			}
+		},
+	});
 
 	const { data, isLoading, error } = useQuery({
 		queryKey: ["foods", currentUser?.houseId],
@@ -133,7 +151,7 @@ export default function HomePage(this: any) {
 	}, [foodQuery.data]);
 
 	const checkExistingSchedule = () => {
-		if (shoppingSchedule) {
+		if (shoppingSchedule && shoppingSchedule.shoppingDate) {
 			const existingSchedule = shoppingScheduleQuery.data?.find(
 				(shoppingEvent) => {
 					console.log(

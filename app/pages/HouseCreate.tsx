@@ -157,6 +157,7 @@ const HouseCreate = () => {
 				onPress={() => {
 					console.log("TODO UPLOAD IMAGE");
 				}}
+				uploadedImageUri={null}
 			/>
 			<AppEditInput
 				label={"House name"}

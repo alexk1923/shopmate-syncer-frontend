@@ -77,30 +77,6 @@ export const UserService = {
 		}
 	},
 
-	addUserToHouse: async (userId: number, houseId: number): Promise<User> => {
-		try {
-			const token = await getToken();
-			const response = await axios.post<User>(
-				`${API_URL}/houses/${houseId}/members`,
-				{ userId },
-				{
-					headers: { Authorization: `Bearer ${token}` },
-				}
-			);
-			return response.data;
-		} catch (error) {
-			if (axios.isAxiosError(error) && error.response) {
-				// Handle known error (e.g., API returned an error response)
-				throw new Error(
-					error.response.data.message || "Failed to fetch user data"
-				);
-			} else {
-				// Handle unexpected errors (e.g., network issues)
-				throw new Error("An unexpected error occurred");
-			}
-		}
-	},
-
 	uploadImage: async (image: string): Promise<any> => {
 		try {
 			const token = await getToken();

@@ -10,6 +10,10 @@ import RestyleBox from "@/components/layout/RestyleBox";
 import RestyleText from "@/components/layout/RestyleText";
 import Wrapper from "@/components/layout/Wrapper";
 import AppButton from "@/components/misc/AppButton";
+import LoadingOverlay from "@/components/modals/LoadingOverlay";
+import { useHouse } from "../hooks/useHouse";
+import { useAuthStore } from "../store/useUserStore";
+import { router } from "expo-router";
 
 const ScanQRCode = () => {
 	const [scanned, setScanned] = useState(false);
@@ -22,15 +26,24 @@ const ScanQRCode = () => {
 	const [cameraRef, setCameraRef] = useState(null);
 	const { currentTheme } = useDarkLightTheme();
 	const [photo, setPhoto] = useState(null);
+	const [barcodeLoading, setBarcodeLoading] = useState(false);
+	const { joinHouseMutation } = useHouse(null);
+	const user = useAuthStore((state) => state.user);
+
+	if (!user?.id) {
+		router.navigate("/Login");
+		return;
+	}
 
 	useEffect(() => {
-		console.log(permission);
-	}, []);
+		if (joinHouseMutation.data) {
+			console.log("navigare catre home");
 
-	useEffect(() => {
-		if (photo) {
+			router.replace("(tabs)/Home");
 		}
-	}, [photo]);
+	}, [joinHouseMutation.data]);
+
+	useEffect(() => {}, [barcode]);
 
 	if (!permission) {
 		// Camera permissions are still loading.
@@ -72,32 +85,38 @@ const ScanQRCode = () => {
 			justifyContent='center'
 			paddingBottom='xl'
 		>
-			<CameraView
-				style={styles.camera}
-				// @ts-ignore
-				ref={(ref) => setCameraRef(ref)}
-				facing={facing as CameraType}
-				barcodeScannerSettings={{
-					barcodeTypes: ["qr"],
-				}}
-				onBarcodeScanned={(scanningResult) => {
-					console.log(scanningResult);
-					setBarcode(scanningResult.data);
-				}}
-			>
-				<LottieAnimation
-					animationName={ANIMATIONS.QR_SCANNER}
-					style={{ width: "100%" }}
-				/>
+			<LoadingOverlay isVisible={joinHouseMutation.isPending} />
 
-				<RestyleText
-					variant='header'
-					textAlign='center'
-					style={{ color: "white" }}
+			{!barcode && (
+				<CameraView
+					style={styles.camera}
+					// @ts-ignore
+					ref={(ref) => setCameraRef(ref)}
+					facing={facing as CameraType}
+					barcodeScannerSettings={{
+						barcodeTypes: ["qr"],
+					}}
+					onBarcodeScanned={(scanningResult) => {
+						setBarcodeLoading(true);
+						joinHouseMutation.mutate({
+							userId: user?.id,
+							houseId: Number(scanningResult.data),
+						});
+						setBarcode(scanningResult.data);
+					}}
 				>
-					{barcode ? "Loading..." : "Scan QR"}
-				</RestyleText>
-			</CameraView>
+					<LottieAnimation
+						animationName={ANIMATIONS.QR_SCANNER}
+						style={{ width: "100%" }}
+					/>
+
+					<RestyleText
+						variant='header'
+						textAlign='center'
+						style={{ color: "white" }}
+					></RestyleText>
+				</CameraView>
+			)}
 		</RestyleBox>
 	);
 };
