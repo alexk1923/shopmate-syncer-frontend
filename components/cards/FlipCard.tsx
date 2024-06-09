@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
 	runOnUI,
@@ -12,13 +12,24 @@ import AppBottomSheetModal from "../modals/AppBottomSheetModal";
 import { Product } from "@/constants/types/ProductTypes";
 import ProductCardEdit from "../Products/ProductCardEdit";
 import ProductCard from "../Products/ProductCard";
+import { ExternalItem, Item } from "@/constants/types/ItemTypes";
+import RestyleBox from "../layout/RestyleBox";
+import RestyleText from "../layout/RestyleText";
 
 const FlipCard = (props: {
-	foundProduct: Product;
+	foundExternalItem: ExternalItem | null;
+	foundProduct: Item | null;
 	frontComponent: React.ReactNode;
 	backComponent: React.ReactNode;
+	onCancel: () => void;
 }) => {
-	const { frontComponent, backComponent, foundProduct } = props;
+	const {
+		frontComponent,
+		backComponent,
+		foundProduct,
+		foundExternalItem,
+		onCancel,
+	} = props;
 	const [isFlipped, setIsFlipped] = useState(false);
 	const { currentTheme } = useDarkLightTheme();
 
@@ -50,6 +61,13 @@ const FlipCard = (props: {
 		console.log("clicked");
 	};
 
+	useEffect(() => {
+		console.log("my external item is:");
+		console.log(foundExternalItem?.product.stores);
+
+		console.log(foundExternalItem?.product.store_tags);
+	}, [foundExternalItem]);
+
 	return (
 		<>
 			<Animated.View
@@ -60,7 +78,32 @@ const FlipCard = (props: {
 					!isFlipped && { zIndex: 1 },
 				]}
 			>
-				<ProductCard foundProduct={foundProduct} onConfirm={onAnimate} />
+				{!foundProduct && !foundExternalItem && (
+					<Text>nu am gasit nici nicni</Text>
+				)}
+
+				{foundProduct && (
+					<ProductCard
+						foundProduct={{
+							name: foundProduct.name,
+							image: foundProduct.image,
+							barcode: foundProduct.barcode,
+						}}
+						onConfirm={onAnimate}
+					/>
+				)}
+				{foundExternalItem && (
+					<ProductCard
+						foundProduct={{
+							name:
+								foundExternalItem.product.generic_name ||
+								foundExternalItem.product.product_name,
+							image: foundExternalItem.product.image_url,
+							barcode: foundExternalItem.code,
+						}}
+						onConfirm={onAnimate}
+					/>
+				)}
 			</Animated.View>
 
 			<Animated.View
@@ -71,7 +114,25 @@ const FlipCard = (props: {
 					isFlipped && { zIndex: 1 },
 				]}
 			>
-				<ProductCardEdit foundProduct={foundProduct} onSubmit={onAnimate} />
+				{foundProduct && (
+					<ProductCardEdit
+						editProduct={foundProduct}
+						onSubmit={onAnimate}
+						onCancel={onCancel}
+					/>
+				)}
+				{foundExternalItem && (
+					<ProductCardEdit
+						editProduct={{
+							name: foundExternalItem.product.generic_name,
+							image: foundExternalItem.product.image_url,
+							barcode: foundExternalItem.code,
+							storeName: foundExternalItem.product.stores,
+						}}
+						onSubmit={onAnimate}
+						onCancel={onCancel}
+					/>
+				)}
 			</Animated.View>
 		</>
 	);

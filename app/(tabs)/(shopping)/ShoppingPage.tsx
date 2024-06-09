@@ -16,12 +16,16 @@ import RestyleText from "@/components/layout/RestyleText";
 import Separator from "@/components/layout/Separator";
 import Wrapper from "@/components/layout/Wrapper";
 import AppButton from "@/components/misc/AppButton";
+import { useHouse } from "@/app/hooks/useHouse";
+import { useHouseStore } from "@/app/store/useHouseStore";
 
 const ShoppingPage = () => {
 	const { darkMode, setDarkMode } = useDarkLightTheme();
 	const Text = createText<Theme>();
 	const Box = createBox<Theme>();
 	const removeUser = useAuthStore((state) => state.removeUser);
+	const removeHouse = useHouseStore((state) => state.removeHouse);
+
 	const navigation = useNavigation();
 	const { currentTheme } = useDarkLightTheme();
 
@@ -88,6 +92,7 @@ const ShoppingPage = () => {
 					title={"Logout"}
 					onPress={() => {
 						removeUser();
+						removeHouse();
 						router.replace("/");
 					}}
 					variant={"filled"}

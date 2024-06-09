@@ -43,7 +43,7 @@ export default function IntroductionLayoutNav() {
 				<Stack.Screen
 					name='Introduction'
 					options={{
-						title: "Shopping Page",
+						title: "Introduction",
 						headerShown: true,
 						animation: "fade",
 					}}

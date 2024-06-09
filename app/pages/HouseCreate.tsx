@@ -41,10 +41,11 @@ import LoadingOverlay from "@/components/modals/LoadingOverlay";
 import Wrapper from "@/components/layout/Wrapper";
 import ImagePickerWidget from "@/components/widgets/ImagePickerWidget";
 import Avatar from "@/components/misc/Avatar";
+import { string } from "prop-types";
 
 const HouseCreate = () => {
 	const [houseName, setHouseName] = useState("");
-
+	const [image, setImage] = useState<string | null>(null);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [openSearch, setOpenSearch] = useState(false);
 	const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
@@ -66,7 +67,8 @@ const HouseCreate = () => {
 		}: {
 			name: string;
 			defaultMembers: string[];
-		}) => HouseService.createHouse(name, defaultMembers),
+			image: string | null;
+		}) => HouseService.createHouse(name, defaultMembers, image),
 		onSuccess: () => {
 			setSuccess(true);
 			queryClient.invalidateQueries({ queryKey: ["user", user?.id] });
@@ -142,6 +144,7 @@ const HouseCreate = () => {
 			createHouseMutation.mutate({
 				name: houseName,
 				defaultMembers: defaultMembers,
+				image,
 			});
 		}
 	};
@@ -153,12 +156,7 @@ const HouseCreate = () => {
 	return (
 		<Wrapper>
 			<LoadingOverlay isVisible={createHouseMutation.isPending} />
-			<ImagePickerWidget
-				onPress={() => {
-					console.log("TODO UPLOAD IMAGE");
-				}}
-				uploadedImageUri={null}
-			/>
+			<ImagePickerWidget uploadedImageUri={image} setImage={setImage} />
 			<AppEditInput
 				label={"House name"}
 				placeholder={"e.g. My House"}
@@ -224,7 +222,6 @@ const HouseCreate = () => {
 						<AppBottomSheetModal
 							onClose={() => {
 								setOpenSearch(false);
-								console.log("opensearch fakse");
 							}}
 						>
 							<AppEditInput

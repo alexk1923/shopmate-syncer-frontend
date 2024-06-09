@@ -5,6 +5,7 @@ import {
 	Pressable,
 	StyleProp,
 	TouchableOpacity,
+	ActivityIndicator,
 } from "react-native";
 import {
 	VariantProps,
@@ -30,6 +31,7 @@ type Props = {
 	onPress: () => void;
 	variant: "filled" | "outline";
 	fullWidth?: boolean;
+	loading?: boolean;
 	style?: StyleProp<ViewStyle>;
 };
 
@@ -38,7 +40,14 @@ const ButtonContainer = createRestyleComponent<ButtonProps, Theme>(
 	LinearGradient
 );
 
-const AppButton = ({ onPress, title, variant, fullWidth, style }: Props) => {
+const AppButton = ({
+	onPress,
+	title,
+	variant,
+	fullWidth,
+	loading = false,
+	style,
+}: Props) => {
 	const { currentTheme } = useDarkLightTheme();
 
 	return (
@@ -68,15 +77,21 @@ const AppButton = ({ onPress, title, variant, fullWidth, style }: Props) => {
 				style={{ ...styles.appButtonContainer, ...StyleSheet.flatten(style) }}
 				onPress={onPress}
 			> */}
-				<RestyleText
-					color={variant === "filled" ? "lightText" : "primary"}
-					textAlign='center'
-					fontWeight='bold'
-					textTransform='uppercase'
-					variant='buttonSmall'
-				>
-					{title}
-				</RestyleText>
+
+				{loading ? (
+					<ActivityIndicator />
+				) : (
+					<RestyleText
+						color={variant === "filled" ? "lightText" : "primary"}
+						textAlign='center'
+						fontWeight='bold'
+						textTransform='uppercase'
+						variant='buttonSmall'
+					>
+						{title}
+					</RestyleText>
+				)}
+
 				{/* </ButtonContainer> */}
 			</LinearGradient>
 		</TouchableOpacity>

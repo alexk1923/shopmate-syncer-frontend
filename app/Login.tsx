@@ -77,7 +77,7 @@ const Login = () => {
 				},
 			});
 
-			router.push("introduction/Introduction");
+			router.push("introduction");
 		},
 		onError: (err) => {
 			console.log("Error login");

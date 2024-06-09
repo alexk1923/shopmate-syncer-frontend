@@ -4,40 +4,26 @@ import HomePage from "../pages/HomePage";
 import NoHomeScreen from "../pages/NoHomeJoined";
 import { router, useNavigation } from "expo-router";
 import { Alert, BackHandler } from "react-native";
-import { CommonActions } from "@react-navigation/native";
-import { useQuery } from "@tanstack/react-query";
-import { UserService } from "../services/userService";
+
+import { useUser } from "../hooks/useUser";
+import LoadingOverlay from "@/components/modals/LoadingOverlay";
 
 const Home = () => {
 	const navigation = useNavigation();
-	const userId = useAuthStore((state) => state.userId);
-	const setUser = useAuthStore((state) => state.setUser);
+	const user = useAuthStore((state) => state.user);
 
-	const { data, isLoading, error } = useQuery<User | null>({
-		queryKey: ["user", userId],
-		queryFn: async () => {
-			const user = await UserService.getUserById(userId as number);
-			setUser(user);
-			return user;
-		},
-		enabled: userId !== null,
-	});
+	const { userQuery } = useUser(user?.id ?? null);
 
 	useEffect(() => {
-		console.log("====================================");
-		console.log("Trying to get");
-		console.log(data?.firstName);
-		console.log("si");
+		console.log("userQuery made!");
 
-		console.log(data?.lastName);
-
-		console.log("====================================");
-		if (data) {
-			if (!data?.firstName || !data?.lastName) {
-				router.push("/introduction/Introduction");
+		if (userQuery.data) {
+			if (!userQuery.data.firstName || !userQuery.data.lastName) {
+				console.log("nu am first name sau last name, e naspa");
+				router.push("/introduction");
 			}
 		}
-	}, [data]);
+	}, [userQuery.data]);
 
 	useEffect(() => {
 		const backAction = () => {
@@ -59,9 +45,11 @@ const Home = () => {
 		return () => backHandler.remove();
 	}, []);
 
-	console.log("data is" + data);
+	if (!userQuery.data || userQuery.isLoading) {
+		return <LoadingOverlay isVisible={userQuery.isLoading} />;
+	}
 
-	return data?.houseId ? <HomePage /> : <NoHomeScreen />;
+	return userQuery.data.houseId ? <HomePage /> : <NoHomeScreen />;
 };
 
 export default Home;

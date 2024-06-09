@@ -16,9 +16,6 @@ import { useAuthStore } from "../store/useUserStore";
 import { router } from "expo-router";
 
 const ScanQRCode = () => {
-	const [scanned, setScanned] = useState(false);
-	const [inviteCode, setInviteCode] = useState("");
-
 	const [facing, setFacing] = useState("back");
 	const [permission, requestPermission] = useCameraPermissions();
 	const [barcode, setBarcode] = useState("");
@@ -27,6 +24,7 @@ const ScanQRCode = () => {
 	const { currentTheme } = useDarkLightTheme();
 	const [photo, setPhoto] = useState(null);
 	const [barcodeLoading, setBarcodeLoading] = useState(false);
+
 	const { joinHouseMutation } = useHouse(null);
 	const user = useAuthStore((state) => state.user);
 
@@ -38,8 +36,7 @@ const ScanQRCode = () => {
 	useEffect(() => {
 		if (joinHouseMutation.data) {
 			console.log("navigare catre home");
-
-			router.replace("(tabs)/Home");
+			router.navigate("(tabs)/Home");
 		}
 	}, [joinHouseMutation.data]);
 

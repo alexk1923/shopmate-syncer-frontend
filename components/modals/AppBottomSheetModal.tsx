@@ -8,20 +8,27 @@ import {
 import { useDarkLightTheme } from "../ThemeContext";
 import { backgroundColor } from "@shopify/restyle";
 import AppButton from "../misc/AppButton";
+import { string } from "prop-types";
 
 const AppBottomSheetModal = ({
+	initialSnapPoint = "70%",
+	finalSnapPoint = "90%",
 	children,
 	onClose,
+	showDoneButton = true,
 }: {
+	initialSnapPoint?: string;
+	finalSnapPoint?: string;
 	children: React.ReactNode;
 	onClose: () => void;
+	showDoneButton?: boolean;
 }) => {
 	const { currentTheme } = useDarkLightTheme();
 	// ref
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
 	// variables
-	const snapPoints = useMemo(() => ["70%", "90%"], []);
+	const snapPoints = useMemo(() => [initialSnapPoint, finalSnapPoint], []);
 
 	// callbacks
 	const handlePresentModalPress = useCallback(() => {
@@ -76,11 +83,14 @@ const AppBottomSheetModal = ({
 					]}
 				>
 					{children}
-					<AppButton
-						title={"Done"}
-						onPress={handleCloseModal}
-						variant={"filled"}
-					/>
+
+					{showDoneButton && (
+						<AppButton
+							title={"Done"}
+							onPress={handleCloseModal}
+							variant={"filled"}
+						/>
+					)}
 				</BottomSheetView>
 			</BottomSheetModal>
 		</View>

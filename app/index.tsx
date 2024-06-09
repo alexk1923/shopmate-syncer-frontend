@@ -21,7 +21,7 @@ const Index = () => {
 			console.log("state is" + state);
 
 			if (state === "active") {
-				if (!user?.firstName || !user.lastName) {
+				if (!user?.firstName || !user?.lastName) {
 					router.navigate("introduction/AccountSetup");
 				} else {
 					router.navigate("/(tabs)/Home");

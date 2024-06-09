@@ -4,14 +4,20 @@ export const getExpiryDays = (expiryDate: Date) => {
 	const formatedExpiryDate = new Date(expiryDate);
 
 	let diffDays = 0;
-	if (formatedExpiryDate < today) {
-		diffDays =
-			-1 *
-			(Math.round(Math.abs((+formatedExpiryDate - +new Date()) / oneDay)) + 1);
+
+	if (
+		formatedExpiryDate.toLocaleDateString() === new Date().toLocaleDateString()
+	) {
+		return 0;
 	}
 
-	diffDays =
-		Math.round(Math.abs((+new Date() - +formatedExpiryDate) / oneDay)) + 1;
+	if (formatedExpiryDate < today) {
+		diffDays = Math.round((+new Date() - +formatedExpiryDate) / oneDay) * -1;
+	} else {
+		diffDays = Math.round(
+			Math.abs((+new Date() - +formatedExpiryDate) / oneDay)
+		);
+	}
 
 	return diffDays;
 };

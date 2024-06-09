@@ -5,9 +5,10 @@ import { Product } from "@/constants/types/ProductTypes";
 import RestyleBox from "../layout/RestyleBox";
 import RestyleText from "../layout/RestyleText";
 import AppButton from "../misc/AppButton";
+import { ExternalItem, Item } from "@/constants/types/ItemTypes";
 
 const ProductCard = (props: {
-	foundProduct: Product;
+	foundProduct: { name: string; image: string; barcode: string };
 	onConfirm: () => void;
 }) => {
 	const { foundProduct, onConfirm } = props;
@@ -47,8 +48,16 @@ const ProductCard = (props: {
 					<RestyleText variant='header' color='primary' textAlign='center'>
 						{foundProduct.name}
 					</RestyleText>
+
 					<RestyleText variant='subheader' color='primary' textAlign='center'>
-						Product is already in the database. Edit or confirm it to save entry
+						Product found! 😁
+					</RestyleText>
+
+					<RestyleText textAlign='center' color='text' variant='body'>
+						Scanned barcode:{" "}
+						<RestyleText color='primary' variant='bodyBold'>
+							{foundProduct.barcode}
+						</RestyleText>
 					</RestyleText>
 
 					<RestyleBox flexDirection='row' gap='m' justifyContent='center'>

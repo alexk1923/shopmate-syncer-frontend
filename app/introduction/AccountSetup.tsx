@@ -14,8 +14,10 @@ import { router } from "expo-router";
 import { useAuthStore } from "../store/useUserStore";
 import { useUser } from "../hooks/useUser";
 import { useUpload } from "../hooks/useUpload";
+import { useIsFocused } from "@react-navigation/native";
 
 const AccountSetup = () => {
+	const isFocused = useIsFocused();
 	const [image, setImage] = useState<string | null>(null);
 	const { useInfoSetupMutation } = useUpload();
 	function onSubmit(formData: AccountSetupInput) {
@@ -38,16 +40,12 @@ const AccountSetup = () => {
 	const { userQuery } = useUser(userId);
 
 	useEffect(() => {
-		console.log("my user query is:");
-		console.log(userQuery.data);
+		if (!isFocused) {
+			return;
+		}
 
-		if (
-			userQuery.data &&
-			(userQuery.data.firstName || userQuery.data.lastName)
-		) {
-			console.log("e bine aicisa");
-
-			router.navigate("/introduction/Introduction");
+		if (userQuery.data && userQuery.data.firstName && userQuery.data.lastName) {
+			router.navigate("/(tabs)/(shopping)/ShoppingPage");
 		}
 	}, [userQuery.data]);
 
@@ -68,31 +66,13 @@ const AccountSetup = () => {
 		},
 	];
 
-	const pickImage = async () => {
-		console.log("imi dau pick image");
-
-		const result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			allowsEditing: true,
-			aspect: [1, 1], // Set aspect ratio for circular crop
-			quality: 1,
-			base64: true,
-		});
-
-		console.log("my upload result is:");
-
-		if (!result.canceled) {
-			setImage(`data:image/jpeg;base64,${result.assets[0].base64}`);
-		}
-	};
-
 	return (
 		<Wrapper>
 			<RestyleText variant='header' color='primary'>
 				Setup your account
 			</RestyleText>
 
-			<ImagePickerWidget onPress={pickImage} uploadedImageUri={image ?? null} />
+			<ImagePickerWidget setImage={setImage} uploadedImageUri={image ?? null} />
 
 			<RestyleBox>
 				{inputs.map((input) => {

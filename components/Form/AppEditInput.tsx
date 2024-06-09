@@ -21,6 +21,7 @@ type InputProps = {
 	autocomplete?: TextInputProps["autoComplete"];
 	defaultValue?: string;
 	value: string;
+	editable?: boolean;
 	onChangeText: (val: any) => void;
 };
 
@@ -29,11 +30,12 @@ const AppInput = (props: InputProps) => {
 		label,
 		placeholder,
 		autocomplete,
-		iconName,
+		iconName = "pencil",
 		iconColor,
-		iconSize,
+		iconSize = 24,
 		defaultValue,
 		value,
+		editable,
 		onChangeText,
 	} = props;
 	const { currentTheme } = useDarkLightTheme();
@@ -57,6 +59,7 @@ const AppInput = (props: InputProps) => {
 								: currentTheme.colors.text,
 						},
 					]}
+					editable={editable ?? true}
 					autoComplete={autocomplete}
 					defaultValue={defaultValue}
 					value={value}

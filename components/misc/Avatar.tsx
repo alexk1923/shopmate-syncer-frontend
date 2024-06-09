@@ -1,6 +1,7 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import RestyleBox from "../layout/RestyleBox";
+import { useDarkLightTheme } from "../ThemeContext";
 
 type AvatarProps = {
 	uri: string | null;
@@ -12,6 +13,7 @@ type AvatarProps = {
 const Avatar = (props: AvatarProps) => {
 	const { uri, firstName, lastName, status } = props;
 	const [dotColor, setDotColor] = useState<"green" | "gray">("gray");
+	const { currentTheme } = useDarkLightTheme();
 
 	useEffect(() => {
 		if (status === "online") {
@@ -23,7 +25,13 @@ const Avatar = (props: AvatarProps) => {
 	return (
 		<RestyleBox alignItems='center'>
 			{uri ? (
-				<Image source={{ uri }} style={styles.profilePic} />
+				<Image
+					source={{ uri }}
+					style={[
+						styles.profilePic,
+						{ borderColor: currentTheme.colors.primary },
+					]}
+				/>
 			) : (
 				<RestyleBox
 					backgroundColor='primary'
@@ -32,7 +40,10 @@ const Avatar = (props: AvatarProps) => {
 					borderRadius={25}
 					justifyContent='center'
 					alignItems='center'
-					style={styles.profilePic}
+					style={[
+						styles.profilePic,
+						{ borderColor: currentTheme.colors.primary },
+					]}
 				>
 					<Text style={{ color: "white" }}>
 						{firstName && lastName ? firstName[0] + lastName[0] : "User"}
@@ -65,7 +76,8 @@ const styles = StyleSheet.create({
 		borderRadius: 25,
 		position: "relative",
 		borderWidth: 2,
-		borderColor: "white",
+
 		overflow: "visible",
+		objectFit: "contain",
 	},
 });

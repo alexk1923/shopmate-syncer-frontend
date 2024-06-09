@@ -44,6 +44,7 @@ import { useItems } from "../hooks/useItems";
 import { useHouse } from "../hooks/useHouse";
 import { HouseService } from "../services/houseService";
 import { useHouseStore } from "../store/useHouseStore";
+import { useUser } from "../hooks/useUser";
 Font.loadAsync(MaterialIcons.font);
 
 export default function HomePage(this: any) {
@@ -64,32 +65,6 @@ export default function HomePage(this: any) {
 		router.navigate("/login");
 		return <></>;
 	}
-
-	const setHouse = useHouseStore((state) => state.setHouse);
-	const { houseQuery } = useHouse(currentUser.houseId);
-	const queryClient = useQueryClient();
-
-	queryClient.prefetchQuery({
-		queryKey: ["user", currentUser.houseId],
-		queryFn: async () => {
-			if (currentUser.houseId) {
-				const house = await HouseService.getHouseById(currentUser.houseId);
-				setHouse(house);
-				return house;
-			}
-		},
-	});
-
-	const { data, isLoading, error } = useQuery({
-		queryKey: ["foods", currentUser?.houseId],
-		queryFn: async () => {
-			if (!currentUser || !currentUser.houseId) {
-				throw new Error("User or houseId is not defined");
-			}
-			const foodList = await ItemService.getFoodList(currentUser.houseId);
-			return foodList;
-		},
-	});
 
 	const { foodQuery } = useItems();
 
@@ -144,12 +119,6 @@ export default function HomePage(this: any) {
 		);
 	};
 
-	useEffect(() => {
-		console.log("====================================");
-		console.log(foodQuery.data);
-		console.log("====================================");
-	}, [foodQuery.data]);
-
 	const checkExistingSchedule = () => {
 		if (shoppingSchedule && shoppingSchedule.shoppingDate) {
 			const existingSchedule = shoppingScheduleQuery.data?.find(
@@ -174,8 +143,6 @@ export default function HomePage(this: any) {
 	};
 
 	useEffect(() => {
-		console.log("S-a apelat din useeffect bai frate");
-
 		if (shoppingSchedule && shoppingSchedule.shoppingDate) {
 			const schedule = checkExistingSchedule();
 
@@ -223,8 +190,8 @@ export default function HomePage(this: any) {
 				);
 			});
 
-			const remainingDays = sorted.map(
-				(schedule) => getExpiryDays(schedule.shoppingDate) - 1
+			const remainingDays = sorted.map((schedule) =>
+				getExpiryDays(schedule.shoppingDate)
 			);
 
 			if (remainingDays[0] === 0) {

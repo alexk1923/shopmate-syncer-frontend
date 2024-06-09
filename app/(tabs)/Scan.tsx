@@ -1,6 +1,7 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useCallback, useMemo, useState } from "react";
 import {
+	ActivityIndicator,
 	Button,
 	Image,
 	StyleSheet,
@@ -23,6 +24,7 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import {
 	GestureHandlerRootView,
+	ScrollView,
 	TextInput,
 } from "react-native-gesture-handler";
 
@@ -38,6 +40,12 @@ import RestyleBox from "@/components/layout/RestyleBox";
 import RestyleText from "@/components/layout/RestyleText";
 import Wrapper from "@/components/layout/Wrapper";
 import AppButton from "@/components/misc/AppButton";
+import { ExternalItem, Item } from "@/constants/types/ItemTypes";
+import { useItems } from "../hooks/useItems";
+import LottieAnimation from "@/components/common/LottieAnimation";
+import { ANIMATIONS } from "@/constants/assets";
+import LoadingOverlay from "@/components/modals/LoadingOverlay";
+import ProductCardEdit from "@/components/Products/ProductCardEdit";
 
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
@@ -94,49 +102,41 @@ export default function Scan() {
 	const { currentTheme } = useDarkLightTheme();
 	const [photo, setPhoto] = useState(null);
 	const user = useAuthStore((state) => state.user);
-	const { data, isLoading, error } = useQuery({
-		queryKey: ["foods", user?.houseId],
-		queryFn: async () => {
-			if (!user || !user.houseId) {
-				throw new Error("User or houseId is not defined");
-			}
-			const foodList = await ItemService.getFoodList(user.houseId);
-			return foodList;
-		},
-	});
-	const [foundProduct, setFoundProduct] = useState<Food | null>(null);
-
+	const { itemQuery } = useItems();
+	const [foundProduct, setFoundProduct] = useState<Item | null>(null);
+	const [newProduct, setNewProduct] = useState(false);
 	// ref
 	const bottomSheetRef = useRef<BottomSheet>(null);
 
+	const externalItemsQuery = useQuery({
+		queryKey: ["externalItems"],
+		queryFn: async () => {
+			console.log("api items");
+
+			const apiItems = await ItemService.getExternalApiItems(barcode);
+			console.log("my api items:");
+			console.log(apiItems.product.product_name);
+			console.log(apiItems.product.image_url);
+			return apiItems;
+
+			// setExternalItems(apiItems);
+		},
+		enabled: barcode !== "",
+	});
+
 	useEffect(() => {
-		if (photo) {
-			if (data) {
-				for (let item of data) {
-					console.log(item.item.barcode + "vs" + barcode);
-
-					if (item.item.barcode === barcode) {
-						console.log("yes");
-
-						setFoundProduct(item);
-						break;
-					}
+		itemQuery.refetch();
+		if (photo && itemQuery.data) {
+			for (let item of itemQuery.data) {
+				console.log(item.barcode + "vs" + barcode);
+				if (item.barcode === barcode) {
+					console.log("yes");
+					setFoundProduct(item);
+					return;
 				}
 			}
 		}
-	}, [photo]);
-
-	// callbacks
-	const handleSheetChanges = useCallback((index: number) => {
-		console.log("handleSheetChanges", index);
-	}, []);
-	const takePicture = async () => {
-		if (cameraRef) {
-			// @ts-ignore
-			const photo = await cameraRef.takePictureAsync();
-			setPhoto(photo.uri); // Save the photo URI to display later
-		}
-	};
+	}, [barcode]);
 
 	useEffect(() => {
 		if (permission && permission.granted) {
@@ -166,154 +166,177 @@ export default function Scan() {
 		return <View />;
 	}
 
-	// if (!permission.granted) {
-	// 	// Camera permissions are not granted yet.
-	// 	return (
-	// 		<View style={styles.container}>
-	// 			<Text style={{ textAlign: "center" }}>
-	// 				We need your permission to show the camera
-	// 			</Text>
+	if (!permission.granted) {
+		// Camera permissions are not granted yet.
+		return (
+			<View style={styles.container}>
+				<Text style={{ textAlign: "center" }}>
+					We need your permission to show the camera
+				</Text>
 
-	// 			<Button onPress={requestPermission} title='grant permission' />
-	// 		</View>
-	// 	);
-	// }
+				<Button onPress={requestPermission} title='grant permission' />
+			</View>
+		);
+	}
+	if (tutorial) {
+		return (
+			<Wrapper style={{ justifyContent: "flex-end" }}>
+				<RestyleBox justifyContent='center' gap='s'>
+					<ControllingAnimationProgress
+						// @ts-ignore
+						animationFile={tutorialInfo[tutorialStep].animation}
+					/>
+					<RestyleText variant='subheader' color='text'>
+						{tutorialInfo.at(tutorialStep)?.str}
+					</RestyleText>
+					<AppButton
+						title={tutorialInfo.at(tutorialStep)?.buttonStr || "next"}
+						onPress={() => {
+							if (tutorialStep === 0) {
+								requestPermission();
+							} else {
+								setTutorial(false);
+								setTutorialStep((prev) => prev + 1);
+							}
+						}}
+						variant={"filled"}
+					/>
+				</RestyleBox>
+			</Wrapper>
+		);
+	}
+
+	if (barcode) {
+		if (itemQuery.isLoading || externalItemsQuery.isLoading) {
+			return (
+				<LoadingOverlay
+					isVisible={itemQuery.isLoading || externalItemsQuery.isLoading}
+				/>
+			);
+		}
+
+		if (!foundProduct && !externalItemsQuery.data && !newProduct) {
+			return (
+				<Wrapper style={{ justifyContent: "center" }}>
+					<LottieAnimation
+						animationName={ANIMATIONS.NOT_FOUND}
+						style={{ height: "30%" }}
+					/>
+					<RestyleText variant='header' textAlign='center' color='primary'>
+						Product not found
+					</RestyleText>
+					<RestyleBox
+						flexDirection='row'
+						alignItems='center'
+						justifyContent='center'
+						gap='m'
+					>
+						<AppButton
+							title='Add'
+							variant='filled'
+							onPress={() => {
+								setNewProduct(true);
+							}}
+						></AppButton>
+						<AppButton
+							title='Back'
+							variant='outline'
+							onPress={() => {
+								setPhoto(null);
+								setBarcode("");
+							}}
+						></AppButton>
+					</RestyleBox>
+					<RestyleText textAlign='center' color='text' variant='body'>
+						Scanned barcode:{" "}
+						<RestyleText color='primary' variant='bodyBold'>
+							{barcode}
+						</RestyleText>
+					</RestyleText>
+				</Wrapper>
+			);
+		}
+
+		if (newProduct) {
+			return (
+				// <Text>add new product</Text>
+				<ProductCardEdit
+					editProduct={{
+						name: "",
+						image: null,
+						isFood: false,
+						barcode,
+						storeName: "",
+					}}
+					onSubmit={() => {}}
+					onCancel={() => {
+						setBarcode("");
+						setNewProduct(false);
+					}}
+				/>
+			);
+		}
+
+		return (
+			<FlipCard
+				frontComponent={<></>}
+				backComponent={<></>}
+				foundProduct={foundProduct}
+				foundExternalItem={externalItemsQuery.data ?? null}
+				onCancel={() => setBarcode("")}
+			/>
+		);
+	}
 
 	return (
 		<>
-			{tutorial ? (
-				<Wrapper style={{ justifyContent: "flex-end" }}>
-					<RestyleBox justifyContent='center' gap='s'>
-						<ControllingAnimationProgress
-							// @ts-ignore
-							animationFile={tutorialInfo[tutorialStep].animation}
-						/>
-						<RestyleText variant='subheader' color='text'>
-							{tutorialInfo.at(tutorialStep)?.str}
-						</RestyleText>
-						<AppButton
-							title={tutorialInfo.at(tutorialStep)?.buttonStr || "next"}
-							onPress={() => {
-								if (tutorialStep === 0) {
-									requestPermission();
-								} else {
-									setTutorial(false);
-									setTutorialStep((prev) => prev + 1);
-								}
-							}}
-							variant={"filled"}
-						/>
-					</RestyleBox>
-				</Wrapper>
-			) : (
-				<RestyleBox
-					height={"100%"}
-					width={"100%"}
-					backgroundColor='mainBackground'
-					justifyContent='center'
-					paddingBottom='xl'
-					gap='m'
+			<RestyleBox
+				height={"100%"}
+				width={"100%"}
+				backgroundColor='mainBackground'
+				justifyContent='center'
+				paddingBottom='xl'
+				gap='m'
+			>
+				<CameraView
+					style={styles.camera}
+					// @ts-ignore
+					ref={(ref) => setCameraRef(ref)}
+					facing={facing as CameraType}
+					barcodeScannerSettings={{
+						barcodeTypes: ["ean13", "ean8"],
+					}}
+					onBarcodeScanned={async (scanningResult) => {
+						if (barcode === "") {
+							setBarcode(scanningResult.data);
+						}
+					}}
+					enableTorch={enableTorch}
 				>
-					<RestyleBox width='100%'>
-						<RestyleText variant='header' textAlign='center' color='text'>
+					<RestyleBox alignSelf='center' backgroundColor='transparent'>
+						<RestyleText
+							variant='header'
+							textAlign='center'
+							style={{
+								color: "white",
+								zIndex: 1,
+
+								textAlign: "center",
+							}}
+						>
 							Scan product
 						</RestyleText>
 					</RestyleBox>
 
-					{photo === null ? (
-						<CameraView
-							style={styles.camera}
-							// @ts-ignore
-							ref={(ref) => setCameraRef(ref)}
-							facing={facing as CameraType}
-							barcodeScannerSettings={{
-								barcodeTypes: ["ean13", "ean8"],
-							}}
-							onBarcodeScanned={async (scanningResult) => {
-								if (barcode === "") {
-									console.log(scanningResult);
-									setBarcode(scanningResult.data);
-									await takePicture();
-								}
-							}}
-							enableTorch={enableTorch}
-						>
-							<View style={styles.buttonContainer}>
-								<Fab
-									iconName='flash'
-									onPress={() => setEnableTorch((prev) => !prev)}
-								/>
-								<Fab iconName={"camera-reverse"} onPress={toggleCameraFacing} />
-							</View>
-						</CameraView>
-					) : foundProduct ? (
-						<FlipCard
-							frontComponent={<></>}
-							backComponent={
-								<RestyleBox backgroundColor='primary'>
-									<RestyleText>We did it</RestyleText>
-								</RestyleBox>
-							}
-							foundProduct={{
-								tags: foundProduct.tags,
-								id: foundProduct.id,
-								expiryDate: foundProduct.expiryDate,
-								...foundProduct.item,
-							}}
+					<View style={styles.buttonContainer}>
+						<Fab
+							iconName='flash'
+							onPress={() => setEnableTorch((prev) => !prev)}
 						/>
-					) : (
-						<>
-							<RestyleText variant='bodyBold' textAlign='center'>
-								Product not found
-							</RestyleText>
-							<AppButton
-								title='Add'
-								variant='filled'
-								onPress={() => {}}
-							></AppButton>
-							<AppButton
-								title='Back'
-								variant='outline'
-								onPress={() => {
-									setPhoto(null);
-									setBarcode("");
-								}}
-							></AppButton>
-						</>
-					)}
-
-					{photo === null && (
-						<RestyleBox backgroundColor='mainBackground'>
-							<RestyleText
-								variant='subheader'
-								fontWeight='bold'
-								textAlign='center'
-								color='text'
-							>
-								Scanned code:
-							</RestyleText>
-							<RestyleText textAlign='center' color='primary' fontWeight='bold'>
-								{barcode}
-							</RestyleText>
-
-							<View
-								style={{
-									flexDirection: "row",
-									gap: theme.spacing.m,
-									justifyContent: "center",
-								}}
-							>
-								<AppButton title='OK' onPress={takePicture} variant='filled' />
-								<AppButton
-									title='Retry'
-									onPress={() => setPhoto(null)}
-									variant='outline'
-								/>
-							</View>
-						</RestyleBox>
-					)}
-				</RestyleBox>
-			)}
+						<Fab iconName={"camera-reverse"} onPress={toggleCameraFacing} />
+					</View>
+				</CameraView>
+			</RestyleBox>
 		</>
 	);
 }
@@ -322,9 +345,9 @@ const styles = StyleSheet.create({
 	container: {},
 	camera: {
 		flex: 1,
-		// height: 400,
+		paddingTop: theme.spacing.m,
 		width: "100%",
-		justifyContent: "flex-end",
+		justifyContent: "space-between",
 	},
 	buttonContainer: {
 		flexDirection: "row",

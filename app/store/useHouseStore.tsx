@@ -6,7 +6,7 @@ import { House } from "@/constants/types/HouseTypes";
 interface HouseState {
 	house: House | null;
 	setHouse: (newHouse: House) => void;
-	removeHouse: (id: number) => void;
+	removeHouse: () => void;
 }
 
 export const useHouseStore = create<HouseState>()(
@@ -17,7 +17,7 @@ export const useHouseStore = create<HouseState>()(
 				setHouse: async (newHouse: House) => {
 					set({ house: newHouse });
 				},
-				removeHouse: (id: number) => set({ house: null }),
+				removeHouse: () => set({ house: null }),
 			}),
 			{
 				name: "house-storage",

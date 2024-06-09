@@ -1,8 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ItemService } from "../services/itemService";
 import { useAuthStore } from "../store/useUserStore";
+import { AddItemAsFoodType, AddItemType } from "@/constants/types/ItemTypes";
 
 export const useItems = () => {
+	const queryClient = useQueryClient();
 	const user = useAuthStore((state) => state.user);
 
 	const itemQuery = useQuery({
@@ -27,5 +29,24 @@ export const useItems = () => {
 		},
 	});
 
-	return { itemQuery, foodQuery };
+	const addItemMutation = useMutation({
+		mutationKey: ["addItem"],
+		mutationFn: async (newItem: AddItemType | AddItemAsFoodType) => {
+			const uploadedPhoto = newItem.image
+				? await ItemService.uploadImage(newItem.image)
+				: null;
+			console.log("photo uploaded at this url" + uploadedPhoto?.secure_url);
+
+			const item = await ItemService.addItem({
+				...newItem,
+				image: uploadedPhoto?.secure_url ?? null,
+			});
+			return item;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["items"] });
+		},
+	});
+
+	return { itemQuery, foodQuery, addItemMutation };
 };

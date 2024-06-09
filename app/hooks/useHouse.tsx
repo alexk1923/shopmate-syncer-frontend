@@ -27,18 +27,11 @@ export const useHouse = (houseId: number | null) => {
 			userId: number;
 			houseId: number;
 		}) => {
-			const unk = await HouseService.addUserToHouse(userId, houseId);
-			console.log("unk is:");
-
-			console.log(unk);
-
-			return unk;
+			const house = await HouseService.addUserToHouse(userId, houseId);
+			return house;
 		},
 		onSuccess: (data, variables) => {
-			console.log("mutatie succes");
-			console.log(data);
-
-			queryClient.invalidateQueries({ queryKey: ["house", variables.userId] });
+			queryClient.invalidateQueries({ queryKey: ["user", variables.userId] });
 		},
 	});
 

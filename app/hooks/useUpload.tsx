@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../store/useUserStore";
 
 import { UserService } from "../services/userService";
+import { ItemService } from "../services/itemService";
 
 export const useUpload = () => {
 	const queryClient = useQueryClient();
@@ -17,9 +18,7 @@ export const useUpload = () => {
 			image: string;
 			successCallback: (uploadDetails: any) => void;
 		}) => {
-			const result = await UserService.uploadImage(image);
-			console.log("my result is");
-			console.log(result);
+			const result = await ItemService.uploadImage(image);
 
 			return result;
 		},
@@ -40,9 +39,7 @@ export const useUpload = () => {
 			lastName: string;
 		}) => {
 			if (image) {
-				const result = await UserService.uploadImage(image);
-				console.log("my result is");
-				console.log(result);
+				const result = await ItemService.uploadImage(image);
 
 				return result;
 			}
@@ -52,7 +49,7 @@ export const useUpload = () => {
 		onSuccess: async (uploadDetails, variables) => {
 			if (currentUser) {
 				console.log("upload details is:");
-				console.log(uploadDetails.secure_url);
+				console.log(uploadDetails?.secure_url);
 
 				let updateFields = {
 					userId: currentUser?.id,

@@ -91,10 +91,7 @@ const ChatList = () => {
 			base64: true,
 		});
 
-		console.log("my upload result is:");
-
 		if (!result.canceled) {
-			console.log(result.assets[0].base64);
 			setImage(result.assets[0]);
 		}
 	};

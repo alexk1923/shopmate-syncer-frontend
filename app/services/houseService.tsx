@@ -30,17 +30,15 @@ export const HouseService = {
 
 	createHouse: async (
 		name: string,
-		defaultMembers: string[]
+		defaultMembers: string[],
+		image: string | null
 	): Promise<House> => {
 		try {
-			console.log(name);
-			console.log(defaultMembers);
-			// return null;
 			const token = await getToken();
 
 			const response = await axios.post<House>(
 				`${API_URL}/houses`,
-				{ name, defaultMembers },
+				{ name, defaultMembers, image },
 				{
 					headers: { Authorization: `Bearer ${token}` },
 				}
@@ -62,7 +60,6 @@ export const HouseService = {
 	getHouseById: async (id: number): Promise<House> => {
 		try {
 			const token = await getToken();
-			console.log("trhing to get house with id of " + id);
 
 			const response = await axios.get<House>(
 				`${API_URL}/houses/${id}`,
@@ -71,9 +68,6 @@ export const HouseService = {
 					headers: { Authorization: `Bearer ${token}` },
 				}
 			);
-
-			console.log("my response for house is:");
-			console.log(response.data);
 
 			return response.data;
 		} catch (error) {

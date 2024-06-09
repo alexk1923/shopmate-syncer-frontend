@@ -12,9 +12,6 @@ const HouseInvite = () => {
 	const house = useHouseStore((state) => state.house);
 	const { width } = useWindowDimensions();
 
-	console.log("My house from invite is:");
-	console.log(house);
-
 	return (
 		<Wrapper>
 			<RestyleText color='primary' variant='header'>
@@ -29,11 +26,14 @@ const HouseInvite = () => {
 							firstName={member.firstName}
 							lastName={member.lastName}
 						/>
-						<RestyleText fontWeight='bold'> {member.username}</RestyleText>
+						<RestyleText fontWeight='bold' color='text'>
+							{" "}
+							{member.username}
+						</RestyleText>
 					</RestyleBox>
 				))}
 			</RestyleBox>
-			<RestyleText variant='subheader'>
+			<RestyleText variant='subheader' color='text'>
 				Use the QR code to invite your roomies
 			</RestyleText>
 			<RestyleBox style={{ alignItems: "center", flex: 1 }}>

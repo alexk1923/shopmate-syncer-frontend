@@ -23,22 +23,18 @@ const AppFab = (props: AppFabProps) => {
 	const { size, backgroundColor, onPress, iconName, iconColor } = props;
 
 	return (
-		<RestyleBox
-			width={size}
-			height={size}
-			justifyContent='center'
-			alignItems='center'
-			borderRadius={90}
-			style={{ backgroundColor }}
-		>
-			<GestureHandlerRootView
-				style={{ justifyContent: "center", alignItems: "center" }}
+		<TouchableOpacity onPress={onPress}>
+			<RestyleBox
+				width={size}
+				height={size}
+				justifyContent='center'
+				alignItems='center'
+				borderRadius={90}
+				style={{ backgroundColor }}
 			>
-				<TouchableOpacity onPress={onPress}>
-					<FontAwesome6 name={iconName} size={size * 0.5} color={iconColor} />
-				</TouchableOpacity>
-			</GestureHandlerRootView>
-		</RestyleBox>
+				<FontAwesome6 name={iconName} size={size * 0.5} color={iconColor} />
+			</RestyleBox>
+		</TouchableOpacity>
 	);
 };
 

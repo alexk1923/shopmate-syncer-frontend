@@ -39,10 +39,6 @@ const NoHomeScreen = () => {
 		}).start();
 	}, []);
 
-	useEffect(() => {
-		console.log("Current routes:", navigation.getState().routes);
-	}, []);
-
 	return (
 		user && (
 			<Wrapper>

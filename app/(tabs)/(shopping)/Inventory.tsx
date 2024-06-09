@@ -58,15 +58,19 @@ const Inventory = () => {
 		},
 	});
 
-	const filterByExpiryStatus = (food: Food) => {
+	const filterByExpiryStatus = (item: Item) => {
+		if (item.isFood === false || !item.food) {
+			return true;
+		}
+
 		switch (filter.expiredStatus) {
 			case EXPIRY_STATUS.ALL:
 				return true;
 			case EXPIRY_STATUS.NON_EXPIRED:
-				const expiryDate1 = getExpiryDays(food.expiryDate);
+				const expiryDate1 = getExpiryDays(item.food.expiryDate);
 				return expiryDate1 > 0;
 			case EXPIRY_STATUS.EXPIRED:
-				const expiryDate2 = getExpiryDays(food.expiryDate);
+				const expiryDate2 = getExpiryDays(item.food.expiryDate);
 				return expiryDate2 < 0;
 			default:
 				return true;

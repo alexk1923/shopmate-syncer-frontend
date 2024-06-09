@@ -46,8 +46,10 @@ const Register = () => {
 			}, 8000);
 		},
 		onError: (err) => {
-			console.log("Error login");
+			console.log("Error register");
 			console.log(err);
+			console.log(err.message);
+
 			resetField("password");
 			resetField("confirmPassword");
 		},
