@@ -47,3 +47,33 @@ export const verifyToken = async (token: string) => {
 	});
 	return response.data;
 };
+
+export const addNotificationsToken = async (
+	userId: number,
+	token: string,
+	notificationToken: string
+) => {
+	try {
+		const response = await axios.patch(
+			`${API_URL}/notificationToken/${userId}`,
+			{
+				notificationToken,
+			},
+			{
+				headers: { Authorization: `Bearer ${token}` },
+			}
+		);
+		return response.data;
+	} catch (error) {
+		if (axios.isAxiosError(error) && error.response) {
+			// Handle known error (e.g., API returned an error response)
+			console.error(error.message);
+			throw new Error(
+				error.response.data.message || "Failed to set the notification token"
+			);
+		} else {
+			// Handle unexpected errors (e.g., network issues)
+			throw new Error("An unexpected error occurred");
+		}
+	}
+};

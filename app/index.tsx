@@ -8,12 +8,35 @@ import RestyleBox from "@/components/layout/RestyleBox";
 import RestyleText from "@/components/layout/RestyleText";
 import Wrapper from "@/components/layout/Wrapper";
 import AppButton from "@/components/misc/AppButton";
+
+import * as Notifications from "expo-notifications";
+
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: false,
+	}),
+});
+
 const Index = () => {
 	const { darkMode } = useDarkLightTheme();
 	const initializeAuth = useAuthStore((state) => state.initializeAuth);
 	const user = useAuthStore((state) => state.user);
 	const navigation = useNavigation();
 	const appStateChangeRef = useRef(false);
+
+	useEffect(() => {
+		const subscription = Notifications.addNotificationReceivedListener(
+			(notification) => {
+				console.log("Received notification: ", notification);
+			}
+		);
+
+		return () => {
+			subscription.remove();
+		};
+	}, []);
 
 	// Register the app resume event listener
 	useEffect(() => {

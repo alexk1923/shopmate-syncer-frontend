@@ -21,7 +21,11 @@
 				"foregroundImage": "./assets/images/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
 			},
-			"softwareKeyboardLayoutMode": "pan"
+			"softwareKeyboardLayoutMode": "pan",
+			"permissions": [
+				"android.permission.CAMERA",
+				"android.permission.RECORD_AUDIO"
+			]
 		},
 		"web": {
 			"bundler": "metro",
@@ -48,6 +52,17 @@
 		"experiments": {
 			"typedRoutes": true
 		},
-		"packagerOpts": { "url": "http://localhost:3000" }
+		"packagerOpts": {
+			"url": "http://localhost:3000"
+		},
+		"extra": {
+			"router": {
+				"origin": false
+			},
+			"eas": {
+				"projectId": "65ef0229-4912-4e00-ae23-a778314f2261"
+			}
+		},
+		"owner": "alexk1923"
 	}
 }

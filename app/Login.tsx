@@ -32,6 +32,7 @@ import AppButton from "@/components/misc/AppButton";
 import { useHouse } from "./hooks/useHouse";
 import { HouseService } from "./services/houseService";
 import { useHouseStore } from "./store/useHouseStore";
+import { NotificationService } from "./services/notificationService";
 type FormData = {
 	username: string;
 	password: string;
@@ -61,6 +62,10 @@ const Login = () => {
 		onSuccess: async (data) => {
 			setToken(data.token);
 			setUserId(data.id);
+			NotificationService.registerForPushNotificationsAsync(
+				data.id,
+				data.token
+			);
 			// const user = await UserService.getUserById(data.id);
 			// setUser(user);
 			queryClient.prefetchQuery({

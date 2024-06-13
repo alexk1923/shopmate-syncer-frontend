@@ -9,4 +9,4 @@
 
 // console.log("my api: " + api);
 
-export const API_URL = "https://rnxys-141-85-144-146.a.free.pinggy.link/api";
+export const API_URL = "https://rnpcr-141-85-144-130.a.free.pinggy.link/api";
