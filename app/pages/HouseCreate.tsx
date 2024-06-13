@@ -133,7 +133,7 @@ const HouseCreate = () => {
 						},
 						style: "cancel",
 					},
-					{ text: "OK", onPress: () => console.log("OK Pressed") },
+					{ text: "OK" },
 				]
 			);
 		}

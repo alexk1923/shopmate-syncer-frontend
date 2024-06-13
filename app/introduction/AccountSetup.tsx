@@ -21,7 +21,6 @@ const AccountSetup = () => {
 	const [image, setImage] = useState<string | null>(null);
 	const { useInfoSetupMutation } = useUpload();
 	function onSubmit(formData: AccountSetupInput) {
-		console.log(formData);
 		useInfoSetupMutation.mutate({
 			image: image,
 			firstName: formData.firstName,
@@ -45,7 +44,7 @@ const AccountSetup = () => {
 		}
 
 		if (userQuery.data && userQuery.data.firstName && userQuery.data.lastName) {
-			router.navigate("/(tabs)/(shopping)/ShoppingPage");
+			router.navigate("/(tabs)/Home");
 		}
 	}, [userQuery.data]);
 

@@ -10,8 +10,9 @@ import { ExternalItem, Item } from "@/constants/types/ItemTypes";
 const ProductCard = (props: {
 	foundProduct: { name: string; image: string; barcode: string };
 	onConfirm: () => void;
+	onCancel: () => void;
 }) => {
-	const { foundProduct, onConfirm } = props;
+	const { foundProduct, onConfirm, onCancel } = props;
 	const [pickDate, setPickDate] = useState(false);
 
 	return (
@@ -61,7 +62,7 @@ const ProductCard = (props: {
 					</RestyleText>
 
 					<RestyleBox flexDirection='row' gap='m' justifyContent='center'>
-						<AppButton title='Cancel' variant='outline' onPress={() => {}} />
+						<AppButton title='Cancel' variant='outline' onPress={onCancel} />
 						<AppButton
 							title='Next'
 							variant='filled'

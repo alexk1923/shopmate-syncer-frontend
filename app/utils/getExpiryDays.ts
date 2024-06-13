@@ -1,3 +1,5 @@
+import { parseISO, differenceInDays } from "date-fns";
+
 export const getExpiryDays = (expiryDate: Date) => {
 	const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 	const today = new Date();
@@ -11,13 +13,16 @@ export const getExpiryDays = (expiryDate: Date) => {
 		return 0;
 	}
 
+	diffDays = Math.round((+today - +formatedExpiryDate) / oneDay) * -1;
 	if (formatedExpiryDate < today) {
-		diffDays = Math.round((+new Date() - +formatedExpiryDate) / oneDay) * -1;
-	} else {
-		diffDays = Math.round(
-			Math.abs((+new Date() - +formatedExpiryDate) / oneDay)
-		);
+		diffDays *= -1;
 	}
+
+	console.log("my expiry date is:");
+	console.log(expiryDate);
+	console.log("vs.");
+	console.log(today);
+	console.log(" => au ramas" + diffDays + " zile");
 
 	return diffDays;
 };

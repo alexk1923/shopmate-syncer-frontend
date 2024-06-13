@@ -27,7 +27,6 @@ export const ShoppingScheduleService = {
 		} catch (error) {
 			if (axios.isAxiosError(error) && error.response) {
 				// Handle known error (e.g., API returned an error response)
-				console.log(error.response.data);
 
 				throw new Error(
 					error.response.data.message || "Failed to get shopping list"

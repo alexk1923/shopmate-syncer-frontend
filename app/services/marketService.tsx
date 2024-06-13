@@ -21,7 +21,6 @@ export const MarketService = {
 		} catch (error) {
 			if (axios.isAxiosError(error) && error.response) {
 				// Handle known error (e.g., API returned an error response)
-				console.log(error.response);
 
 				throw new Error(
 					error.response.data.message || "Failed to get store list"
@@ -53,7 +52,6 @@ export const MarketService = {
 		} catch (error) {
 			if (axios.isAxiosError(error) && error.response) {
 				// Handle known error (e.g., API returned an error response)
-				console.log(error.response);
 
 				throw new Error(error.response.data.message || "Failed to add store");
 			} else {

@@ -46,7 +46,6 @@ export const useShoppingSchedule = () => {
 			);
 		},
 		onSuccess: () => {
-			console.log("Shopping Schedule mutation success!");
 			queryClient.invalidateQueries({ queryKey: ["shopping-schedule"] });
 		},
 	});
@@ -57,7 +56,6 @@ export const useShoppingSchedule = () => {
 			await ShoppingScheduleService.deleteShoppingSchedule(scheduleId);
 		},
 		onSuccess: () => {
-			console.log("Shopping Schedule mutation success!");
 			queryClient.invalidateQueries({ queryKey: ["shopping-schedule"] });
 		},
 	});

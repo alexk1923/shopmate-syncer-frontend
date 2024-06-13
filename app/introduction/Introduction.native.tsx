@@ -141,11 +141,6 @@ export default function PaginationDotsExample() {
 		});
 	}, [navigation]);
 
-	useEffect(() => {
-		console.log(positionAnimatedValue);
-		console.log(scrollOffsetAnimatedValue);
-	}, [positionAnimatedValue, scrollOffsetAnimatedValue]);
-
 	const queryClient = useQueryClient();
 	const accountSetupMutation = useMutation({
 		mutationFn: async ({ firstName, lastName }: UpdateUserType) => {
@@ -163,13 +158,8 @@ export default function PaginationDotsExample() {
 			queryClient.invalidateQueries({ queryKey: ["user", user?.id] });
 			setAccountSetup(false);
 			ref.current?.setPage(1);
-			console.log("Update successfully");
 		},
-		onError: (error) => {
-			console.log("here is the error:");
-
-			console.log(error);
-		},
+		onError: (error) => {},
 	});
 
 	const inputRange = [0, screens.length + 1];

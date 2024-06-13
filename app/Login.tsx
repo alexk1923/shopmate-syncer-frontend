@@ -59,9 +59,6 @@ const Login = () => {
 		mutationFn: ({ username, password }: LoginInput) =>
 			login(username, password),
 		onSuccess: async (data) => {
-			console.log(data);
-			console.log("Success");
-
 			setToken(data.token);
 			setUserId(data.id);
 			// const user = await UserService.getUserById(data.id);
@@ -80,17 +77,13 @@ const Login = () => {
 			router.push("introduction");
 		},
 		onError: (err) => {
-			console.log("Error login");
-			console.log(err);
+			console.error("Error login");
+			console.error(err);
 			resetField("password");
 		},
 	});
 
 	function onSubmit(data: FormData) {
-		console.log("====================================");
-		console.log("Trying to login");
-		console.log(data);
-		console.log("====================================");
 		loginMutation.mutate({ username: data.username, password: data.password });
 	}
 

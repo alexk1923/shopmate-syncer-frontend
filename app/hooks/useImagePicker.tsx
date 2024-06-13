@@ -30,6 +30,8 @@ export const useImagePicker = () => {
 		const result = await ImagePicker.launchCameraAsync({
 			allowsEditing: true,
 			aspect: [1, 1],
+			presentationStyle:
+				ImagePicker.UIImagePickerPresentationStyle.CURRENT_CONTEXT,
 			quality: 0.5,
 			base64: true,
 			cameraType: ImagePicker.CameraType.front,

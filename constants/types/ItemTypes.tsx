@@ -1,4 +1,5 @@
 import { Food } from "./FoodTypes";
+import { Store } from "./StoreTypes";
 
 export type FilterParams = {
 	filter: FilterType;
@@ -39,6 +40,7 @@ export type Item = {
 	barcode: string;
 	boughtById: number;
 	food: Food | null;
+	store: Store;
 };
 
 export type FoodItem = Omit<Item, "food" | "isFood"> & {

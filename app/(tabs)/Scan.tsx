@@ -18,23 +18,12 @@ import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { theme } from "@/theme";
 import { CameraType } from "expo-camera/build/legacy/Camera.types";
 import { useDarkLightTheme } from "@/components/ThemeContext";
-import BottomSheet, {
-	BottomSheetSectionList,
-	BottomSheetView,
-} from "@gorhom/bottom-sheet";
-import {
-	GestureHandlerRootView,
-	ScrollView,
-	TextInput,
-} from "react-native-gesture-handler";
+import BottomSheet from "@gorhom/bottom-sheet";
 
-import DashboardPage from "./DashboardPage";
-
-import { Product, fetchedFood } from "@/constants/types/ProductTypes";
 import { useQuery } from "@tanstack/react-query";
 import { ItemService } from "../services/itemService";
 import { useAuthStore } from "../store/useUserStore";
-import { Food } from "@/constants/types/FoodTypes";
+
 import FlipCard from "@/components/cards/FlipCard";
 import RestyleBox from "@/components/layout/RestyleBox";
 import RestyleText from "@/components/layout/RestyleText";
@@ -46,6 +35,7 @@ import LottieAnimation from "@/components/common/LottieAnimation";
 import { ANIMATIONS } from "@/constants/assets";
 import LoadingOverlay from "@/components/modals/LoadingOverlay";
 import ProductCardEdit from "@/components/Products/ProductCardEdit";
+import { router } from "expo-router";
 
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
@@ -105,14 +95,30 @@ export default function Scan() {
 	const { itemQuery } = useItems();
 	const [foundProduct, setFoundProduct] = useState<Item | null>(null);
 	const [newProduct, setNewProduct] = useState(false);
-	// ref
-	const bottomSheetRef = useRef<BottomSheet>(null);
+	const [previousSearchFinished, setPreviousSearchFinished] = useState(false);
+	const [reset, setReset] = useState(0);
+	const [externalItem, setExternalItem] = useState<ExternalItem | null>(null);
+
+	const handleResetScan = () => {
+		setTutorial(true);
+		setBarcode("");
+		setPreviousSearchFinished(false);
+		setNewProduct(false);
+		setExternalItem(null);
+		setFoundProduct(null);
+		if (permission && permission.granted) {
+			setTutorialStep(1);
+			return;
+		}
+
+		setTutorialStep(0);
+
+		// router.replace("/(tabs)/Home");
+	};
 
 	const externalItemsQuery = useQuery({
 		queryKey: ["externalItems"],
 		queryFn: async () => {
-			console.log("api items");
-
 			const apiItems = await ItemService.getExternalApiItems(barcode);
 			console.log("my api items:");
 			console.log(apiItems.product.product_name);
@@ -121,22 +127,35 @@ export default function Scan() {
 
 			// setExternalItems(apiItems);
 		},
-		enabled: barcode !== "",
+		enabled: barcode !== "" && previousSearchFinished === true && !foundProduct,
 	});
 
 	useEffect(() => {
-		itemQuery.refetch();
-		if (photo && itemQuery.data) {
-			for (let item of itemQuery.data) {
-				console.log(item.barcode + "vs" + barcode);
-				if (item.barcode === barcode) {
-					console.log("yes");
-					setFoundProduct(item);
-					return;
-				}
+		if (externalItemsQuery.data) {
+			setExternalItem(externalItemsQuery.data);
+		}
+	}, [externalItemsQuery.data]);
+	useEffect(() => {
+		let found = false;
+		console.log("New barcode is: " + barcode);
+		if (itemQuery.data) {
+			const previousProduct = itemQuery.data.find(
+				(prevItem) => prevItem.barcode === barcode
+			);
+			console.log(`my previous product is: ${previousProduct}`);
+
+			if (previousProduct) {
+				setFoundProduct(previousProduct);
 			}
+			setPreviousSearchFinished(true);
 		}
 	}, [barcode]);
+
+	// useEffect(() => {
+	// 	if (previousSearchFinished === false) {
+	// 		setPreviousSearchFinished(true);
+	// 	}
+	// }, [foundProduct]);
 
 	useEffect(() => {
 		if (permission && permission.granted) {
@@ -215,7 +234,7 @@ export default function Scan() {
 			);
 		}
 
-		if (!foundProduct && !externalItemsQuery.data && !newProduct) {
+		if (!foundProduct && !externalItem && !newProduct) {
 			return (
 				<Wrapper style={{ justifyContent: "center" }}>
 					<LottieAnimation
@@ -232,18 +251,19 @@ export default function Scan() {
 						gap='m'
 					>
 						<AppButton
-							title='Add'
-							variant='filled'
-							onPress={() => {
-								setNewProduct(true);
-							}}
-						></AppButton>
-						<AppButton
 							title='Back'
 							variant='outline'
 							onPress={() => {
 								setPhoto(null);
 								setBarcode("");
+								setReset((prev) => prev + 1);
+							}}
+						></AppButton>
+						<AppButton
+							title='Add'
+							variant='filled'
+							onPress={() => {
+								setNewProduct(true);
 							}}
 						></AppButton>
 					</RestyleBox>
@@ -266,26 +286,36 @@ export default function Scan() {
 						image: null,
 						isFood: false,
 						barcode,
-						storeName: "",
+						store: { id: null, name: null, address: null },
 					}}
 					onSubmit={() => {}}
-					onCancel={() => {
-						setBarcode("");
-						setNewProduct(false);
-					}}
+					onCancel={handleResetScan}
 				/>
 			);
 		}
 
-		return (
-			<FlipCard
-				frontComponent={<></>}
-				backComponent={<></>}
-				foundProduct={foundProduct}
-				foundExternalItem={externalItemsQuery.data ?? null}
-				onCancel={() => setBarcode("")}
-			/>
-		);
+		if (foundProduct) {
+			return (
+				<FlipCard
+					key={foundProduct?.id}
+					frontComponent={<></>}
+					backComponent={<></>}
+					foundProduct={foundProduct}
+					foundExternalItem={null}
+					onCancel={handleResetScan}
+				/>
+			);
+		} else if (previousSearchFinished) {
+			return (
+				<FlipCard
+					frontComponent={<></>}
+					backComponent={<></>}
+					foundProduct={null}
+					foundExternalItem={externalItem ?? null}
+					onCancel={handleResetScan}
+				/>
+			);
+		}
 	}
 
 	return (

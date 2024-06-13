@@ -19,7 +19,6 @@ import { useAuthStore } from "../store/useUserStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ItemService } from "../services/itemService";
 
-import { getExpiryDays } from "../utils/getExpiryDays";
 import { DateData } from "react-native-calendars";
 
 import {
@@ -45,6 +44,7 @@ import { useHouse } from "../hooks/useHouse";
 import { HouseService } from "../services/houseService";
 import { useHouseStore } from "../store/useHouseStore";
 import { useUser } from "../hooks/useUser";
+import { differenceInDays, startOfToday } from "date-fns";
 Font.loadAsync(MaterialIcons.font);
 
 export default function HomePage(this: any) {
@@ -61,7 +61,6 @@ export default function HomePage(this: any) {
 		useState<ShoppingSchedule | null>(null);
 
 	if (currentUser === null) {
-		console.log("Current user is null");
 		router.navigate("/login");
 		return <></>;
 	}
@@ -124,15 +123,15 @@ export default function HomePage(this: any) {
 			const existingSchedule = shoppingScheduleQuery.data?.find(
 				(shoppingEvent) => {
 					console.log(
-						new Date(shoppingEvent.shoppingDate).toISOString() +
+						new Date(shoppingEvent.shoppingDate).toUTCString() +
 							"vs." +
-							new Date(shoppingSchedule?.shoppingDate).toISOString()
+							new Date(shoppingSchedule?.shoppingDate).toUTCString()
 					);
 
 					return (
 						shoppingSchedule.shoppingDate &&
-						new Date(shoppingEvent.shoppingDate).toISOString() ===
-							new Date(shoppingSchedule?.shoppingDate).toISOString()
+						new Date(shoppingEvent.shoppingDate).toUTCString() ===
+							new Date(shoppingSchedule?.shoppingDate).toUTCString()
 					);
 				}
 			);
@@ -184,15 +183,18 @@ export default function HomePage(this: any) {
 
 	const sortShoppingScheduleByDate = useCallback(() => {
 		if (shoppingScheduleQuery.data) {
-			const sorted = shoppingScheduleQuery.data.sort((ss1, ss2) => {
-				return (
-					getExpiryDays(ss1.shoppingDate) - getExpiryDays(ss2.shoppingDate)
-				);
-			});
-
-			const remainingDays = sorted.map((schedule) =>
-				getExpiryDays(schedule.shoppingDate)
+			const sorted = shoppingScheduleQuery.data.sort((ss1, ss2) =>
+				differenceInDays(ss1.shoppingDate, ss2.shoppingDate)
 			);
+
+			const remainingDays = sorted
+				.filter(
+					(schedule) =>
+						differenceInDays(schedule.shoppingDate, startOfToday()) >= 0
+				)
+				.map((schedule) =>
+					differenceInDays(schedule.shoppingDate, startOfToday())
+				);
 
 			if (remainingDays[0] === 0) {
 				return "Today";
@@ -302,10 +304,8 @@ export default function HomePage(this: any) {
 						</RestyleText>
 
 						<SwipeListView
-							data={foodQuery.data?.sort(
-								(a, b) =>
-									getExpiryDays(a.food.expiryDate) -
-									getExpiryDays(b.food.expiryDate)
+							data={foodQuery.data?.sort((a, b) =>
+								differenceInDays(a.food.expiryDate, b.food.expiryDate)
 							)}
 							renderItem={(product) => (
 								<ProductExpiryItem

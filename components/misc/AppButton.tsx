@@ -51,7 +51,7 @@ const AppButton = ({
 	const { currentTheme } = useDarkLightTheme();
 
 	return (
-		<TouchableOpacity onPress={onPress}>
+		<TouchableOpacity onPress={onPress} disabled={loading}>
 			<LinearGradient
 				colors={
 					variant === "filled"

@@ -21,8 +21,7 @@ import {
 } from "@/constants/types/ItemTypes";
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Food } from "@/constants/types/FoodTypes";
-import { getExpiryDays } from "@/app/utils/getExpiryDays";
+
 import ProductExpiryItem from "@/components/Products/ProductExpiryItem";
 import SwipeListMenu from "@/components/common/SwipeListMenu";
 import RestyleBox from "@/components/layout/RestyleBox";
@@ -30,6 +29,8 @@ import RestyleText from "@/components/layout/RestyleText";
 import Separator from "@/components/layout/Separator";
 import Wrapper from "@/components/layout/Wrapper";
 import AppFab from "@/components/misc/AppFab";
+import { theme } from "@/theme";
+import { differenceInDays, startOfToday } from "date-fns";
 
 const Inventory = () => {
 	const user = useAuthStore((state) => state.user);
@@ -67,28 +68,37 @@ const Inventory = () => {
 			case EXPIRY_STATUS.ALL:
 				return true;
 			case EXPIRY_STATUS.NON_EXPIRED:
-				const expiryDate1 = getExpiryDays(item.food.expiryDate);
+				const expiryDate1 = differenceInDays(
+					item.food.expiryDate,
+					startOfToday()
+				);
 				return expiryDate1 > 0;
 			case EXPIRY_STATUS.EXPIRED:
-				const expiryDate2 = getExpiryDays(item.food.expiryDate);
+				const expiryDate2 = differenceInDays(
+					item.food.expiryDate,
+					startOfToday()
+				);
 				return expiryDate2 < 0;
 			default:
 				return true;
 		}
 	};
 
-	const sortByFn = (item1: Item | Food, item2: Item | Food) => {
+	const sortByFn = (item1: Item, item2: Item) => {
 		switch (filter.sortBy) {
 			case SORTING_TYPE.EXPIRY_DATE:
-				return +(item1 as Food).expiryDate - +(item2 as Food).expiryDate;
-			case SORTING_TYPE.ALPHABETICALLY:
-				if ((item1 as Item).name && (item2 as Item).name) {
-					return (item1 as Item).name.localeCompare((item2 as Item).name);
-				} else {
-					return (item1 as Food).item.name.localeCompare(
-						(item2 as Food).item.name
-					);
+				if (
+					item1.isFood === false ||
+					item2.isFood === false ||
+					!item1.food ||
+					!item2.food
+				) {
+					return 0;
 				}
+				return differenceInDays(item1.food.expiryDate, item2.food.expiryDate);
+			case SORTING_TYPE.ALPHABETICALLY:
+				return item1.name.localeCompare(item2.name);
+
 			default:
 				return 0;
 		}
@@ -187,17 +197,14 @@ const Inventory = () => {
 
 			<SwipeListView
 				data={
-					filter.isFood
-						? filter.sortingOrder === SORTING_ORDER.ASCENDING
-							? foodQuery.data?.filter(filterByExpiryStatus).sort(sortByFn)
-							: foodQuery.data
-									?.filter(filterByExpiryStatus)
-									.sort(sortByFn)
-									.reverse()
-						: filter.sortingOrder === SORTING_ORDER.ASCENDING
-						? itemQuery.data?.sort(sortByFn)
-						: itemQuery.data?.sort(sortByFn).reverse()
+					filter.sortingOrder === SORTING_ORDER.ASCENDING
+						? itemQuery.data?.filter(filterByExpiryStatus).sort(sortByFn)
+						: itemQuery.data
+								?.filter(filterByExpiryStatus)
+								.sort(sortByFn)
+								.reverse()
 				}
+				contentContainerStyle={{ gap: theme.spacing.s }}
 				renderItem={(product) => (
 					<ProductExpiryItem
 						key={product.item.key}

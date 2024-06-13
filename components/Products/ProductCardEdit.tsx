@@ -59,7 +59,11 @@ type ItemEditType = {
 	tags?: FoodCategory[];
 	isFood?: boolean;
 	barcode: string;
-	storeName: string;
+	store: {
+		id: number | null;
+		name: string | null;
+		address: string | null;
+	};
 };
 
 type EditableFields = {
@@ -104,7 +108,11 @@ const ProductCardEdit = (props: {
 		isFood: editProduct.isFood ?? false,
 		quantity: 1,
 		image: editProduct.image,
-		store: { id: null, name: editProduct.storeName ?? "", address: "" },
+		store: {
+			id: editProduct.store.id ?? null,
+			name: editProduct.store.name ?? "",
+			address: editProduct.store.name ?? "",
+		},
 	});
 
 	const updateTags = (tagKey: string) => {
@@ -261,7 +269,7 @@ const ProductCardEdit = (props: {
 				>
 					<RestyleBox flexDirection='row' gap='s' alignItems='center'>
 						<RestyleText variant='label'>
-							{!editFields.isFood ? `Non-Food ` : `Food 🍔 `}
+							{!editFields.isFood ? `Food` : `Food 🍔 `}
 						</RestyleText>
 
 						<ToggleButton

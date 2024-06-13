@@ -48,8 +48,6 @@ const ScanQRCode = () => {
 	}
 
 	if (!permission.canAskAgain && permission.status === "denied") {
-		console.log(permission);
-
 		return (
 			<View>
 				<RestyleText variant='subheader' color='error'>
@@ -60,8 +58,6 @@ const ScanQRCode = () => {
 	}
 
 	if (!permission?.granted) {
-		// Camera permissions are still loading.
-		console.log(permission);
 		// requestPermission();
 		return (
 			<Wrapper style={{ justifyContent: "center" }}>

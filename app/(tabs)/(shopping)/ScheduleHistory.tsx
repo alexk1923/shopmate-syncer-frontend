@@ -30,8 +30,6 @@ const ScheduleHistory = () => {
 	useEffect(() => {
 		if (shoppingScheduleQuery.data) {
 			const grouped = groupByDate(shoppingScheduleQuery.data);
-			console.log("grouped is:");
-			console.log(grouped);
 
 			setGroupedSchedules(grouped);
 		}
@@ -87,7 +85,9 @@ const ScheduleHistory = () => {
 								size={24}
 								color={currentTheme.colors.primary}
 							/>
-							<RestyleText variant='subheader'>{date}</RestyleText>
+							<RestyleText variant='subheader' color='text'>
+								{date}
+							</RestyleText>
 						</RestyleBox>
 
 						{scheduleList.map((schedule) => (
@@ -99,10 +99,10 @@ const ScheduleHistory = () => {
 							>
 								<RestyleBox flexDirection='row' gap='m'>
 									<RestyleBox>
-										<RestyleText variant='body' fontWeight='bold'>
+										<RestyleText variant='body' fontWeight='bold' color='text'>
 											{schedule.title}
 										</RestyleText>
-										<RestyleText>{`Added by ${schedule.createdBy.firstName} ${schedule.createdBy.lastName}`}</RestyleText>
+										<RestyleText color='text'>{`Added by ${schedule.createdBy.firstName} ${schedule.createdBy.lastName}`}</RestyleText>
 									</RestyleBox>
 								</RestyleBox>
 								<TouchableOpacity onPress={() => handleRemove(schedule.id)}>

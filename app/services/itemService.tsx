@@ -66,7 +66,8 @@ export const ItemService = {
 		} catch (error) {
 			if (axios.isAxiosError(error) && error.response) {
 				// Handle known error (e.g., API returned an error response)
-				console.log(error.response);
+				console.log("external items result:");
+				console.log(error.response.data);
 
 				throw new Error(
 					error.response.data.message || "Failed to get food list"
@@ -92,7 +93,7 @@ export const ItemService = {
 		} catch (error) {
 			if (axios.isAxiosError(error) && error.response) {
 				// Handle known error (e.g., API returned an error response)
-				console.log(error.response);
+				console.log(error.response.data);
 
 				throw new Error(
 					error.response.data.message || "Failed to get food list"

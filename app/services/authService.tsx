@@ -12,8 +12,6 @@ export const login = async (username: string, password: string) => {
 			password,
 		});
 
-		console.log("The response is:");
-		console.log(response.data);
 		await AsyncStorage.setItem("userToken", response.data.token);
 		return response.data;
 	} catch (error) {

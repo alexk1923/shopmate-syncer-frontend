@@ -9,23 +9,8 @@ import { FoodTagKey } from "@/constants/types/ProductTypes";
 import RestyleBox from "../layout/RestyleBox";
 
 const FoodTag = (props: { name: FoodTagKey; size?: number }) => {
-	const [imagePath, setImagePath] = useState<string>("");
 	const size = props.size ?? 24;
 
-	useEffect(() => {
-		// Dynamically import the image based on the name
-		const importImage = async () => {
-			try {
-				const image = `@/assets/images/foodIcons/${props.name}.png`;
-				setImagePath(image);
-			} catch (error) {
-				console.error("Failed to load image:", error);
-				setImagePath("");
-			}
-		};
-
-		importImage();
-	}, []);
 	return (
 		FOOD_TAG_INFO[props.name] && (
 			<RestyleBox style={[styles.foodImage, { width: size, height: size }]}>

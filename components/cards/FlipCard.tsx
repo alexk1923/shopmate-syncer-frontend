@@ -33,6 +33,16 @@ const FlipCard = (props: {
 	const [isFlipped, setIsFlipped] = useState(false);
 	const { currentTheme } = useDarkLightTheme();
 
+	useEffect(() => {
+		console.log("====================================");
+		console.log("My flip card:");
+		console.log(foundProduct?.name ?? "nu avem found product");
+		console.log(
+			foundExternalItem?.product.product_name ?? "nu avem niciun found external"
+		);
+		console.log("====================================");
+	}, []);
+
 	const rotationF = useSharedValue(0);
 	const rotationB = useSharedValue(180);
 	const frontStyle = useAnimatedStyle(() => {
@@ -57,16 +67,17 @@ const FlipCard = (props: {
 		setIsFlipped(true);
 	};
 
-	const onSubmit = () => {
-		console.log("clicked");
-	};
-
 	useEffect(() => {
 		console.log("my external item is:");
-		console.log(foundExternalItem?.product.stores);
+		console.log(foundExternalItem?.product.product_name);
 
-		console.log(foundExternalItem?.product.store_tags);
+		console.log(foundExternalItem?.product.image_url);
 	}, [foundExternalItem]);
+
+	const handleSubmitEdit = () => {
+		onAnimate();
+		onCancel();
+	};
 
 	return (
 		<>
@@ -90,6 +101,7 @@ const FlipCard = (props: {
 							barcode: foundProduct.barcode,
 						}}
 						onConfirm={onAnimate}
+						onCancel={onCancel}
 					/>
 				)}
 				{foundExternalItem && (
@@ -102,6 +114,7 @@ const FlipCard = (props: {
 							barcode: foundExternalItem.code,
 						}}
 						onConfirm={onAnimate}
+						onCancel={onCancel}
 					/>
 				)}
 			</Animated.View>
@@ -116,20 +129,28 @@ const FlipCard = (props: {
 			>
 				{foundProduct && (
 					<ProductCardEdit
-						editProduct={foundProduct}
-						onSubmit={onAnimate}
+						editProduct={{
+							...foundProduct,
+						}}
+						onSubmit={handleSubmitEdit}
 						onCancel={onCancel}
 					/>
 				)}
 				{foundExternalItem && (
 					<ProductCardEdit
 						editProduct={{
-							name: foundExternalItem.product.generic_name,
+							name:
+								foundExternalItem.product.generic_name ||
+								foundExternalItem.product.product_name,
 							image: foundExternalItem.product.image_url,
 							barcode: foundExternalItem.code,
-							storeName: foundExternalItem.product.stores,
+							store: {
+								id: null,
+								name: foundExternalItem.product.stores,
+								address: null,
+							},
 						}}
-						onSubmit={onAnimate}
+						onSubmit={handleSubmitEdit}
 						onCancel={onCancel}
 					/>
 				)}

@@ -79,7 +79,7 @@ const ImagePickerWidget = ({
 							alignItems: "center",
 							top: "-20%",
 							left: "60%",
-							borderRadius: 25,
+							borderRadius: 30,
 						}}
 						onPress={() => setOpenActionModal(true)}
 					>
@@ -88,7 +88,7 @@ const ImagePickerWidget = ({
 								width: 50,
 								height: 50,
 								backgroundColor: "gray",
-								borderRadius: 25,
+								borderRadius: 90,
 								borderWidth: 1,
 								borderColor: "white",
 								justifyContent: "center",
