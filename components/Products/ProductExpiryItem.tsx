@@ -31,7 +31,6 @@ const ProductExpiryItem = ({ product }: { product: Item }) => {
 				startOfToday()
 			);
 			if (diffDays < 0) {
-				setExpiryColor(timeColors.darkRed);
 				setDiffDays(diffDays);
 			} else {
 				setDiffDays(diffDays);
