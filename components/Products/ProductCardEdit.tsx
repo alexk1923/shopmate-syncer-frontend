@@ -111,7 +111,7 @@ const ProductCardEdit = (props: {
 		store: {
 			id: editProduct.store.id ?? null,
 			name: editProduct.store.name ?? "",
-			address: editProduct.store.name ?? "",
+			address: editProduct.store.address ?? "",
 		},
 	});
 
@@ -246,11 +246,19 @@ const ProductCardEdit = (props: {
 					editable={false}
 				/>
 
-				<RestyleBox flexDirection='row' alignItems='center' gap='s'>
+				<RestyleBox
+					flexDirection='row'
+					alignItems='center'
+					gap='s'
+					maxWidth={"90%"}
+				>
 					<RestyleText variant='label' color='gray'>
 						Store:
 					</RestyleText>
-					<RestyleText color='primary'>{`${editFields.store.name}, ${editFields.store.address}`}</RestyleText>
+					<RestyleText
+						color='primary'
+						numberOfLines={1}
+					>{`${editFields.store.name}, ${editFields.store.address}`}</RestyleText>
 					<AppFab
 						size={30}
 						onPress={() => {

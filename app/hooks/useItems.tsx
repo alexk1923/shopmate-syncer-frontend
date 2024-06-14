@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ItemService } from "../services/itemService";
 import { useAuthStore } from "../store/useUserStore";
 import { AddItemAsFoodType, AddItemType } from "@/constants/types/ItemTypes";
+import { UploadService } from "../services/imageService";
 
 export const useItems = () => {
 	const queryClient = useQueryClient();
@@ -10,6 +11,7 @@ export const useItems = () => {
 	const itemQuery = useQuery({
 		queryKey: ["items", user?.houseId],
 		queryFn: async () => {
+			console.log("executing item query fn...");
 			if (!user || !user.houseId) {
 				throw new Error("User or houseId is not defined");
 			}
@@ -33,7 +35,7 @@ export const useItems = () => {
 		mutationKey: ["addItem"],
 		mutationFn: async (newItem: AddItemType | AddItemAsFoodType) => {
 			const uploadedPhoto = newItem.image
-				? await ItemService.uploadImage(newItem.image)
+				? await UploadService.uploadImage(newItem.image)
 				: null;
 			console.log("photo uploaded at this url" + uploadedPhoto?.secure_url);
 

@@ -63,6 +63,7 @@ export const useAuthStore = create<AuthState>()(
 									throw new Error("Network error");
 								}
 
+								console.error(error.response);
 								// Remove token only if it is unauthorized
 								if (error.response.status === 401) {
 									set({ user: null, token: null });

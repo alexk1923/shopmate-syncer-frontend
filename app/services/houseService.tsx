@@ -2,6 +2,7 @@ import axios from "axios";
 import { API_URL } from "../api/config";
 import { getToken } from "../store/asyncStorage";
 import { House } from "@/constants/types/HouseTypes";
+import { UploadService } from "./imageService";
 
 export const HouseService = {
 	addUserToHouse: async (userId: number, houseId: number): Promise<User> => {
@@ -35,10 +36,16 @@ export const HouseService = {
 	): Promise<House> => {
 		try {
 			const token = await getToken();
+			console.info("Creating house...");
+
+			let imageUrl = null;
+			if (image) {
+				imageUrl = (await UploadService.uploadImage(image)).secure_url;
+			}
 
 			const response = await axios.post<House>(
 				`${API_URL}/houses`,
-				{ name, defaultMembers, image },
+				{ name, defaultMembers, image: imageUrl },
 				{
 					headers: { Authorization: `Bearer ${token}` },
 				}
@@ -48,7 +55,7 @@ export const HouseService = {
 			if (axios.isAxiosError(error) && error.response) {
 				// Handle known error (e.g., API returned an error response)
 				throw new Error(
-					error.response.data.message || "Failed to fetch user data"
+					error.response.data.message || "Failed to create house"
 				);
 			} else {
 				// Handle unexpected errors (e.g., network issues)

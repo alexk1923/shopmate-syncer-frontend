@@ -110,8 +110,18 @@ const HouseCreate = () => {
 	};
 
 	const handleCreateHouse = () => {
-		let mutate = true;
+		let mutate = false;
 		console.log(user);
+
+		if (user?.houseId === null && selectedUsers.length > 0) {
+			let defaultMembers = [...selectedUsers.map((user) => user.username)];
+			defaultMembers.push(user?.username);
+			createHouseMutation.mutate({
+				name: houseName,
+				defaultMembers: defaultMembers,
+				image,
+			});
+		}
 
 		if (user?.houseId !== null) {
 			Alert.alert(
@@ -133,19 +143,23 @@ const HouseCreate = () => {
 						},
 						style: "cancel",
 					},
-					{ text: "OK" },
+					{
+						text: "OK",
+						onPress: () => {
+							let defaultMembers = [
+								...selectedUsers.map((user) => user.username),
+							];
+							defaultMembers.push(user?.username);
+
+							createHouseMutation.mutate({
+								name: houseName,
+								defaultMembers: defaultMembers,
+								image,
+							});
+						},
+					},
 				]
 			);
-		}
-
-		if (mutate) {
-			let defaultMembers = [...selectedUsers.map((user) => user.username)];
-			defaultMembers.push(user?.username);
-			createHouseMutation.mutate({
-				name: houseName,
-				defaultMembers: defaultMembers,
-				image,
-			});
 		}
 	};
 

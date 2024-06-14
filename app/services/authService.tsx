@@ -16,7 +16,7 @@ export const login = async (username: string, password: string) => {
 		return response.data;
 	} catch (error) {
 		if (axios.isAxiosError(error)) {
-			console.log(error.response);
+			console.log(error);
 
 			if (!error.response) {
 				throw new Error("Network error");

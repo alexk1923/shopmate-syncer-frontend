@@ -41,7 +41,9 @@ export const NotificationService = {
 				}
 				console.info("Generating token...");
 
-				notificationToken = (await Notifications.getExpoPushTokenAsync()).data;
+				notificationToken = (
+					await Notifications.getExpoPushTokenAsync({ projectId })
+				).data;
 				console.log("expo push token is: " + notificationToken);
 			} catch (error) {
 				console.error("my error from notifications: ");

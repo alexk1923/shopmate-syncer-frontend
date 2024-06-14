@@ -9,12 +9,13 @@ export const useImagePicker = () => {
 				mediaTypes: ImagePicker.MediaTypeOptions.Images,
 				allowsEditing: true,
 				aspect: [1, 1], // Set aspect ratio for circular crop
-				quality: 1,
+				quality: 0.5,
 				base64: true,
 			});
 
 			if (!result.canceled) {
 				const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`;
+
 				return base64Image;
 			}
 

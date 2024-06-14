@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/useUserStore";
 
 import { UserService } from "../services/userService";
 import { ItemService } from "../services/itemService";
+import { UploadService } from "../services/imageService";
 
 export const useUpload = () => {
 	const queryClient = useQueryClient();
@@ -18,7 +19,7 @@ export const useUpload = () => {
 			image: string;
 			successCallback: (uploadDetails: any) => void;
 		}) => {
-			const result = await ItemService.uploadImage(image);
+			const result = await UploadService.uploadImage(image);
 
 			return result;
 		},
@@ -39,8 +40,7 @@ export const useUpload = () => {
 			lastName: string;
 		}) => {
 			if (image) {
-				const result = await ItemService.uploadImage(image);
-
+				const result = await UploadService.uploadImage(image);
 				return result;
 			}
 

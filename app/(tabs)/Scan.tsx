@@ -95,14 +95,13 @@ export default function Scan() {
 	const { itemQuery } = useItems();
 	const [foundProduct, setFoundProduct] = useState<Item | null>(null);
 	const [newProduct, setNewProduct] = useState(false);
-	const [previousSearchFinished, setPreviousSearchFinished] = useState(false);
+
 	const [reset, setReset] = useState(0);
 	const [externalItem, setExternalItem] = useState<ExternalItem | null>(null);
 
 	const handleResetScan = () => {
 		setTutorial(true);
 		setBarcode("");
-		setPreviousSearchFinished(false);
 		setNewProduct(false);
 		setExternalItem(null);
 		setFoundProduct(null);
@@ -119,25 +118,21 @@ export default function Scan() {
 	const externalItemsQuery = useQuery({
 		queryKey: ["externalItems"],
 		queryFn: async () => {
+			console.log("fetching external items...");
 			const apiItems = await ItemService.getExternalApiItems(barcode);
 			console.log("my api items:");
 			console.log(apiItems.product.product_name);
 			console.log(apiItems.product.image_url);
+			setExternalItem(apiItems);
 			return apiItems;
-
-			// setExternalItems(apiItems);
 		},
-		enabled: barcode !== "" && previousSearchFinished === true && !foundProduct,
+
+		enabled: barcode !== "",
 	});
 
 	useEffect(() => {
-		if (externalItemsQuery.data) {
-			setExternalItem(externalItemsQuery.data);
-		}
-	}, [externalItemsQuery.data]);
-	useEffect(() => {
-		let found = false;
 		console.log("New barcode is: " + barcode);
+
 		if (itemQuery.data) {
 			const previousProduct = itemQuery.data.find(
 				(prevItem) => prevItem.barcode === barcode
@@ -147,15 +142,8 @@ export default function Scan() {
 			if (previousProduct) {
 				setFoundProduct(previousProduct);
 			}
-			setPreviousSearchFinished(true);
 		}
 	}, [barcode]);
-
-	// useEffect(() => {
-	// 	if (previousSearchFinished === false) {
-	// 		setPreviousSearchFinished(true);
-	// 	}
-	// }, [foundProduct]);
 
 	useEffect(() => {
 		if (permission && permission.granted) {
@@ -197,6 +185,7 @@ export default function Scan() {
 			</View>
 		);
 	}
+
 	if (tutorial) {
 		return (
 			<Wrapper style={{ justifyContent: "flex-end" }}>
@@ -226,10 +215,10 @@ export default function Scan() {
 	}
 
 	if (barcode) {
-		if (itemQuery.isLoading || externalItemsQuery.isLoading) {
+		if (itemQuery.isLoading || externalItemsQuery.isFetching) {
 			return (
 				<LoadingOverlay
-					isVisible={itemQuery.isLoading || externalItemsQuery.isLoading}
+					isVisible={itemQuery.isLoading || externalItemsQuery.isFetching}
 				/>
 			);
 		}
@@ -244,6 +233,7 @@ export default function Scan() {
 					<RestyleText variant='header' textAlign='center' color='primary'>
 						Product not found
 					</RestyleText>
+
 					<RestyleBox
 						flexDirection='row'
 						alignItems='center'
@@ -297,7 +287,6 @@ export default function Scan() {
 		if (foundProduct) {
 			return (
 				<FlipCard
-					key={foundProduct?.id}
 					frontComponent={<></>}
 					backComponent={<></>}
 					foundProduct={foundProduct}
@@ -305,17 +294,17 @@ export default function Scan() {
 					onCancel={handleResetScan}
 				/>
 			);
-		} else if (previousSearchFinished) {
-			return (
-				<FlipCard
-					frontComponent={<></>}
-					backComponent={<></>}
-					foundProduct={null}
-					foundExternalItem={externalItem ?? null}
-					onCancel={handleResetScan}
-				/>
-			);
 		}
+
+		return (
+			<FlipCard
+				frontComponent={<></>}
+				backComponent={<></>}
+				foundProduct={null}
+				foundExternalItem={externalItem ?? null}
+				onCancel={handleResetScan}
+			/>
+		);
 	}
 
 	return (
