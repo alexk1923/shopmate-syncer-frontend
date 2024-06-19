@@ -5,15 +5,18 @@ import { createJSONStorage, devtools, persist } from "zustand/middleware";
 import { API_URL } from "../api/config";
 import { getToken, removeToken } from "./asyncStorage";
 import { router } from "expo-router";
+import { Subscription } from "expo-notifications";
 // import type {} from "@redux-devtools/extension"; // required for devtools typing
 
 interface AuthState {
 	user: User | null;
 	token: string | null;
 	userId: number | null;
+	notificationSubscription: Subscription | null;
 	setUserId: (userId: number) => void;
 	setUser: (user: User) => void;
 	setToken: (token: string) => void;
+	setNotificationSubscription: (subscription: Subscription) => void;
 	removeUser: () => void;
 	initializeAuth: () => void;
 }
@@ -25,6 +28,7 @@ export const useAuthStore = create<AuthState>()(
 				user: null,
 				token: null,
 				userId: null,
+				notificationSubscription: null,
 				setUserId: (userId: number) => set({ userId: userId }),
 				setUser: (fetchedUser: User) => set({ user: fetchedUser }),
 				removeUser: () => {
@@ -35,6 +39,9 @@ export const useAuthStore = create<AuthState>()(
 				},
 				setToken: (token: string) => {
 					set({ token });
+				},
+				setNotificationSubscription: (subscription: Subscription) => {
+					set({ notificationSubscription: subscription });
 				},
 				initializeAuth: async () => {
 					const token = await getToken();

@@ -76,14 +76,14 @@ function RootLayoutNav() {
 						name='index'
 						options={{
 							headerShown: false,
-							animation: "fade",
+							animation: "slide_from_left",
 						}}
 					/>
 					<Stack.Screen
 						name='introduction'
 						options={{
 							headerShown: false,
-							animation: "fade",
+							animation: "slide_from_left",
 							headerBackButtonMenuEnabled: false,
 						}}
 					/>
@@ -91,7 +91,7 @@ function RootLayoutNav() {
 						name='(tabs)'
 						options={{
 							headerShown: false,
-							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
+							animation: Platform.OS === "ios" ? "ios" : "slide_from_left",
 							headerBackButtonMenuEnabled: false,
 						}}
 					/>
@@ -100,14 +100,14 @@ function RootLayoutNav() {
 						name='Login'
 						options={{
 							headerShown: false,
-							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
+							animation: Platform.OS === "ios" ? "ios" : "slide_from_right",
 						}}
 					/>
 					<Stack.Screen
 						name='Register'
 						options={{
 							headerShown: false,
-							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
+							animation: Platform.OS === "ios" ? "ios" : "slide_from_right",
 						}}
 					/>
 
@@ -115,7 +115,7 @@ function RootLayoutNav() {
 						name='pages/HouseScanQR'
 						options={{
 							title: "Join House",
-							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
+							animation: Platform.OS === "ios" ? "ios" : "slide_from_right",
 						}}
 					/>
 
@@ -123,7 +123,39 @@ function RootLayoutNav() {
 						name='pages/HouseCreate'
 						options={{
 							title: "Create House",
-							animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
+							animation: Platform.OS === "ios" ? "ios" : "slide_from_right",
+						}}
+					/>
+
+					<Stack.Screen
+						name='pages/LanguageSelect'
+						options={{
+							title: "Language",
+							animation: Platform.OS === "ios" ? "ios" : "fade",
+						}}
+					/>
+
+					<Stack.Screen
+						name='pages/HouseInvite'
+						options={{
+							title: "House Invitation",
+							animation: Platform.OS === "ios" ? "ios" : "ios",
+						}}
+					/>
+
+					<Stack.Screen
+						name='pages/HouseEdit'
+						options={{
+							title: "Edit house",
+							animation: Platform.OS === "ios" ? "ios" : "ios",
+						}}
+					/>
+
+					<Stack.Screen
+						name='pages/ProfileEdit'
+						options={{
+							title: "Edit profile",
+							animation: Platform.OS === "ios" ? "ios" : "ios",
 						}}
 					/>
 

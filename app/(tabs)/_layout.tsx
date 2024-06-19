@@ -59,6 +59,7 @@ export default function TabLayout() {
 							name='Home'
 							options={{
 								title: "Home",
+								headerShown: false,
 								tabBarIcon: ({ color }) => (
 									<FontAwesome6 name='house' size={24} color={color} />
 								),
@@ -106,22 +107,23 @@ export default function TabLayout() {
 								),
 							}}
 						/>
-						<Tabs.Screen
-							name='(chat)'
-							options={{
-								title: "Chat",
-								headerShown: false,
-								tabBarIcon: ({ color }) => (
-									<MaterialIcons name='chat-bubble' size={24} color={color} />
-								),
-							}}
-						/>
+
 						<Tabs.Screen
 							name='DashboardPage'
 							options={{
 								title: "Dashboard",
 								tabBarIcon: ({ color }) => (
 									<FontAwesome6 name='chart-column' size={24} color={color} />
+								),
+							}}
+						/>
+						<Tabs.Screen
+							name='(settings)'
+							options={{
+								title: "Settings",
+								headerShown: false,
+								tabBarIcon: ({ color }) => (
+									<FontAwesome6 name='gear' size={24} color={color} />
 								),
 							}}
 						/>

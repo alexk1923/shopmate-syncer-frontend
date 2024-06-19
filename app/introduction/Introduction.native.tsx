@@ -192,8 +192,6 @@ export default function PaginationDotsExample() {
 		[]
 	);
 
-	const uploadImage = () => {};
-
 	return (
 		<SafeAreaView testID='safe-area-view' style={styles.flex}>
 			<LoadingOverlay

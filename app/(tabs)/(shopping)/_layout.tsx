@@ -46,6 +46,9 @@ export default function ShoppingLayoutNav() {
 						title: "Shopping Page",
 						headerShown: true,
 						animation: "fade",
+						statusBarTranslucent: true,
+						statusBarHidden: true,
+						statusBarColor: "red",
 					}}
 				/>
 				<Stack.Screen

@@ -60,7 +60,7 @@ const ImagePickerWidget = ({
 	const { width, height } = useWindowDimensions();
 
 	return (
-		<RestyleBox style={containerStyle} marginTop='m'>
+		<RestyleBox style={containerStyle} marginTop='m' height={height * 0.25}>
 			{uploadedImageUri ? (
 				<>
 					<Image

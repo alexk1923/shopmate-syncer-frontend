@@ -23,8 +23,6 @@ const ShoppingPage = () => {
 	const { darkMode, setDarkMode } = useDarkLightTheme();
 	const Text = createText<Theme>();
 	const Box = createBox<Theme>();
-	const removeUser = useAuthStore((state) => state.removeUser);
-	const removeHouse = useHouseStore((state) => state.removeHouse);
 
 	const navigation = useNavigation();
 	const { currentTheme } = useDarkLightTheme();
@@ -82,21 +80,6 @@ const ShoppingPage = () => {
 						image={IMAGES.HISTORY}
 					/>
 				</RestyleBox>
-
-				<Button
-					onPress={() => setDarkMode(!darkMode)}
-					title='Change dark mode'
-				></Button>
-
-				<AppButton
-					title={"Logout"}
-					onPress={() => {
-						removeUser();
-						removeHouse();
-						router.replace("/");
-					}}
-					variant={"filled"}
-				/>
 			</Box>
 		</Wrapper>
 	);

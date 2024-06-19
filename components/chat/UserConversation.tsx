@@ -32,7 +32,7 @@ const UserConversation = ({
 		<TouchableOpacity
 			onPress={() => {
 				router.push({
-					pathname: `/(tabs)/(chat)/${user.username}`,
+					pathname: `/(tabs)/(settings)/${user.username}`,
 					params: {
 						id: user.id,
 						firstName: user.firstName,

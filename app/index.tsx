@@ -23,6 +23,11 @@ const Index = () => {
 	const { darkMode } = useDarkLightTheme();
 	const initializeAuth = useAuthStore((state) => state.initializeAuth);
 	const user = useAuthStore((state) => state.user);
+
+	const setNotificationSubscription = useAuthStore(
+		(state) => state.setNotificationSubscription
+	);
+
 	const navigation = useNavigation();
 	const appStateChangeRef = useRef(false);
 
@@ -32,6 +37,8 @@ const Index = () => {
 				console.log("Received notification: ", notification);
 			}
 		);
+
+		setNotificationSubscription(subscription);
 
 		return () => {
 			subscription.remove();

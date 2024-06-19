@@ -25,7 +25,7 @@ type InputProps = {
 	onChangeText: (val: any) => void;
 };
 
-const AppInput = (props: InputProps) => {
+const AppEditInput = (props: InputProps) => {
 	const {
 		label,
 		placeholder,
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
 		paddingRight: theme.spacing.m,
 	},
 });
-export default AppInput;
+export default AppEditInput;

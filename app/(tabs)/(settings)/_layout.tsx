@@ -11,7 +11,7 @@ import {
 	useDarkLightTheme,
 } from "@/components/ThemeContext";
 import { Image, Platform, StyleSheet, Text } from "react-native";
-import { User } from "react-native-gifted-chat";
+
 import { AppUser } from "@/constants/types";
 
 import { RouteProp } from "@react-navigation/native";
@@ -24,7 +24,7 @@ export {
 
 export const unstable_settings = {
 	// Ensure that reloading on `/modal` keeps a back button present.
-	initialRouteName: "(chat)/ChatList",
+	initialRouteName: "(settings)/Settings",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -60,7 +60,7 @@ type ChatRouteType = {
 // 	};
 // };
 
-export default function ChatLayoutNav() {
+export default function SettingsLayoutNav() {
 	const { currentTheme } = useDarkLightTheme();
 
 	return (
@@ -76,43 +76,18 @@ export default function ChatLayoutNav() {
 					headerStyle: {
 						backgroundColor: currentTheme.colors.cardBackground,
 					},
-					// headerShown: true,
+					headerShown: false,
 				}}
 			>
 				<Stack.Screen
-					name='ChatList'
+					name='Settings'
 					options={{
-						title: "Chat",
-						headerShown: true,
+						title: "Settings",
+
 						animation: "fade",
 					}}
-				/>
-				<Stack.Screen
-					name='[userChat]'
-					// @ts-ignore
-					options={({ route }: ChatRouteType) => ({
-						title:
-							route.params.firstName + " " + route.params.lastName ||
-							"Conversation",
-						headerShown: true,
-						animation: Platform.OS === "ios" ? "ios" : "fade_from_bottom",
-						headerBackTitleVisible: true,
-					})}
 				/>
 			</Stack>
 		</ThemeProvider>
 	);
 }
-
-const styles = StyleSheet.create({
-	profilePic: {
-		width: 50,
-		height: 50,
-		borderRadius: 25,
-		// right: 20,
-		position: "relative",
-		borderWidth: 2,
-		borderColor: "white",
-		overflow: "visible",
-	},
-});

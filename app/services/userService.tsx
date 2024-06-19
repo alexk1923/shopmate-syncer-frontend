@@ -24,7 +24,9 @@ export const UserService = {
 	getUserById: async (userId: number): Promise<User> => {
 		try {
 			const token = await getToken();
+			console.log(token);
 			const response = await axios.get<User>(`${API_URL}/users/${userId}`, {
+				timeout: 7000,
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			return response.data;
