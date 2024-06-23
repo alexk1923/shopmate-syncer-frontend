@@ -31,7 +31,16 @@ export const useItems = (userId: number | null) => {
 			if (!user || !user.houseId) {
 				throw new Error("User or houseId is not defined");
 			}
-			const foodList = await ItemService.getFoodList(user.houseId);
+			const foodList = await ItemService.getItemsByHouse(
+				user.houseId,
+				"expiryDate"
+			);
+
+			console.log("====================================");
+			console.log("the food list for user with houseId:");
+			console.log(foodList);
+
+			console.log("====================================");
 			return foodList;
 		},
 	});
@@ -68,5 +77,25 @@ export const useItems = (userId: number | null) => {
 		},
 	});
 
-	return { itemQuery, foodQuery, addItemMutation, infiniteScrollItems };
+	const recommendationQuery = useQuery({
+		queryKey: ["recommendations", user?.houseId],
+		queryFn: async () => {
+			if (!user || !user.houseId) {
+				throw new Error("User or houseId is not defined");
+			}
+			const recommendationItems = await ItemService.getSimilarUsersItems(
+				user.houseId,
+				1
+			);
+			return recommendationItems;
+		},
+	});
+
+	return {
+		itemQuery,
+		foodQuery,
+		addItemMutation,
+		infiniteScrollItems,
+		recommendationQuery,
+	};
 };

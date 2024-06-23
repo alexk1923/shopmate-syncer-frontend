@@ -11,15 +11,22 @@ import {
 } from "@/constants/types/ItemTypes";
 
 export const ItemService = {
-	getItemsByHouse: async (houseId: number): Promise<Item[]> => {
+	getItemsByHouse: async (
+		houseId: number,
+		sortBy?: string
+	): Promise<Item[]> => {
 		try {
+			console.log("====================================");
+			console.log("The get items by house for houseId: " + houseId);
+			console.log("====================================");
 			const token = await getToken();
-			const response = await axios.get<Item[]>(
-				`${API_URL}/items?houseId=${houseId}`,
-				{
-					headers: { Authorization: `Bearer ${token}` },
-				}
-			);
+			const url = sortBy
+				? `${API_URL}/items/house/${houseId}?sortBy=${sortBy}`
+				: `${API_URL}/items/house/${houseId}`;
+
+			const response = await axios.get<Item[]>(url, {
+				headers: { Authorization: `Bearer ${token}` },
+			});
 			return response.data;
 		} catch (error) {
 			if (axios.isAxiosError(error) && error.response) {

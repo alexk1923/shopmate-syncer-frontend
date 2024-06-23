@@ -304,9 +304,13 @@ export default function HomePage(this: any) {
 						</RestyleText>
 
 						<SwipeListView
-							data={foodQuery.data?.sort((a, b) =>
-								differenceInDays(a.food.expiryDate, b.food.expiryDate)
-							)}
+							data={foodQuery.data
+								?.filter((f) => f.food)
+								.sort((a, b) =>
+									a.food && b.food
+										? differenceInDays(a.food.expiryDate, b.food.expiryDate)
+										: a.id
+								)}
 							renderItem={(product) => (
 								<ProductExpiryItem
 									key={product.item.key}

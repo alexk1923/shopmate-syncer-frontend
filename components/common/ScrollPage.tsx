@@ -22,12 +22,18 @@ import Animated, {
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
 import RestyleBox from "../layout/RestyleBox";
+import { Item as ItemType } from "@/constants/types/ItemTypes";
+import { IMAGES } from "@/constants/assets";
 
 const PAGE_HEIGHT = 100;
 // const DATA = ["alexk1923", "claudiububatu", "andreidragomirAAAAAAAAAAAAA"];
 
-function ScrollPage(props: { data: any[] }) {
+function ScrollPage(props: { data: ItemType[] }) {
 	const { data } = props;
+
+	console.log("the data is:");
+	console.log(data);
+
 	const { width: pageWidth, height } = useWindowDimensions();
 
 	const r = React.useRef<ICarouselInstance>(null);
@@ -35,7 +41,7 @@ function ScrollPage(props: { data: any[] }) {
 	const [loop, setLoop] = React.useState(false);
 
 	return (
-		<GestureHandlerRootView style={{ height: 50 }}>
+		<GestureHandlerRootView style={{ height: height * 0.15 }}>
 			<RestyleBox>
 				<Carousel
 					key={`${loop}`}
@@ -45,8 +51,8 @@ function ScrollPage(props: { data: any[] }) {
 						justifyContent: "center",
 						borderBottomWidth: 1,
 						borderBottomColor: "#0071fa",
-						width: 200,
-						height: 50,
+						width: "100%",
+						height: height * 0.15,
 						// margin: 100,
 						overflow: "hidden",
 						// flex: 1,
@@ -78,12 +84,13 @@ export default ScrollPage;
 
 interface Props {
 	animationValue: Animated.SharedValue<number>;
-	itemData: FoodTagKey;
+	itemData: ItemType;
 	onPress?: () => void;
 }
 
 const Item: React.FC<Props> = (props) => {
 	const { animationValue, itemData, onPress } = props;
+	const { height } = useWindowDimensions();
 
 	useEffect(() => {
 		console.log(FOOD_TAG_INFO[itemData]);
@@ -146,8 +153,15 @@ const Item: React.FC<Props> = (props) => {
 				]}
 			>
 				<Animated.Image
-					source={FOOD_TAG_INFO[itemData].uri}
-					style={styles.profilePic}
+					source={{ uri: itemData.image ?? IMAGES.DEFAULT_ITEM }}
+					style={[
+						styles.profilePic,
+						{
+							width: height * 0.1,
+							height: height * 0.1,
+							borderRadius: height * 0.05,
+						},
+					]}
 				/>
 
 				<Animated.Text
@@ -155,7 +169,9 @@ const Item: React.FC<Props> = (props) => {
 					numberOfLines={1}
 					ellipsizeMode='tail'
 				>
-					{FOOD_TAG_INFO[itemData].name}
+					{/* {FOOD_TAG_INFO[itemData].name}
+					 */}
+					{itemData.name}
 				</Animated.Text>
 			</Animated.View>
 		</Pressable>
@@ -164,10 +180,6 @@ const Item: React.FC<Props> = (props) => {
 
 const styles = StyleSheet.create({
 	profilePic: {
-		width: 25,
-		height: 25,
-		borderRadius: 25,
-		// right: 20,
 		position: "relative",
 		borderWidth: 2,
 		borderColor: "white",

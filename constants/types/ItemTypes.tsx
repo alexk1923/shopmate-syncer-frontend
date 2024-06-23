@@ -38,6 +38,7 @@ export type Item = {
 	houseId: number;
 	storeId: number;
 	barcode: string;
+	boughtBy: User;
 	boughtById: number;
 	food: Food | null;
 	store: Store;
