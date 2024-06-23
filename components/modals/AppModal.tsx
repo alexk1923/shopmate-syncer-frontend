@@ -13,10 +13,12 @@ type AppModalProps = {
 	modalVisible: boolean;
 	onModalClose: () => void;
 	title: string;
+	ImageBottomModal?: React.ReactNode;
 };
 
 const AppModal = (props: AppModalProps) => {
-	const { children, modalVisible, onModalClose, title } = props;
+	const { ImageBottomModal, children, modalVisible, onModalClose, title } =
+		props;
 	const { currentTheme } = useDarkLightTheme();
 	return (
 		<Modal
@@ -25,6 +27,7 @@ const AppModal = (props: AppModalProps) => {
 			onRequestClose={onModalClose}
 			visible={modalVisible}
 		>
+			{ImageBottomModal}
 			<View style={styles.flexContainer}>
 				<RestyleBox
 					style={styles.childrenContainer}
@@ -48,7 +51,6 @@ const AppModal = (props: AppModalProps) => {
 					{children}
 				</RestyleBox>
 			</View>
-			<StatusBar style='auto' />
 		</Modal>
 	);
 };
@@ -60,6 +62,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(0,0,0,0.4)",
 		height: "100%",
 		width: "100%",
+		zIndex: -1,
 	},
 
 	childrenContainer: {

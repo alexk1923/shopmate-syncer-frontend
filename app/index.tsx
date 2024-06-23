@@ -19,16 +19,13 @@ Notifications.setNotificationHandler({
 	}),
 });
 
-const Index = () => {
+const App = () => {
 	const { darkMode } = useDarkLightTheme();
 	const initializeAuth = useAuthStore((state) => state.initializeAuth);
 	const user = useAuthStore((state) => state.user);
-
 	const setNotificationSubscription = useAuthStore(
 		(state) => state.setNotificationSubscription
 	);
-
-	const navigation = useNavigation();
 	const appStateChangeRef = useRef(false);
 
 	useEffect(() => {
@@ -51,10 +48,16 @@ const Index = () => {
 			console.log("state is" + state);
 
 			if (state === "active") {
+				if (!user) {
+					console.log("here");
+					return;
+				}
 				if (!user?.firstName || !user?.lastName) {
-					router.navigate("introduction/AccountSetup");
+					router.navigate("introduction/Introduction");
+				} else if (!user.houseId) {
+					router.navigate("pages/NoHomeJoined");
 				} else {
-					router.navigate("/(tabs)/Home");
+					router.navigate("(tabs)/Home");
 				}
 			}
 		});
@@ -65,6 +68,8 @@ const Index = () => {
 	}, []);
 
 	useEffect(() => {
+		console.log("Initialising auth");
+
 		initializeAuth();
 	}, [appStateChangeRef.current]);
 
@@ -128,4 +133,4 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 	},
 });
-export default Index;
+export default App;

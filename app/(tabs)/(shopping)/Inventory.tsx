@@ -43,7 +43,7 @@ const Inventory = () => {
 			if (!user || !user.houseId) {
 				throw new Error("User or houseId is not defined");
 			}
-			const itemList = await ItemService.getItemList(user.houseId);
+			const itemList = await ItemService.getItemsByHouse(user.houseId);
 			return itemList;
 		},
 	});

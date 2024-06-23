@@ -12,4 +12,5 @@ export const ANIMATIONS = {
 	QR_SCANNER: require("@/assets/animations/qr_scanner.json"),
 	HISTORY: require("@/assets/animations/history.json"),
 	NOT_FOUND: require("@/assets/animations/not_found.json"),
+	NO_HOUSE: require("@/assets/animations/no_house.json"),
 };

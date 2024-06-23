@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import {
 	BackgroundColorProps,
 	ResponsiveValue,
@@ -17,10 +17,12 @@ type AppFabProps = {
 	iconName: string;
 	iconColor: string;
 	backgroundColor: string;
+	IconComponent?: React.ReactNode;
 };
 
 const AppFab = (props: AppFabProps) => {
-	const { size, backgroundColor, onPress, iconName, iconColor } = props;
+	const { size, backgroundColor, onPress, iconName, iconColor, IconComponent } =
+		props;
 
 	return (
 		<TouchableOpacity onPress={onPress}>
@@ -32,7 +34,11 @@ const AppFab = (props: AppFabProps) => {
 				borderRadius={90}
 				style={{ backgroundColor }}
 			>
-				<FontAwesome6 name={iconName} size={size * 0.5} color={iconColor} />
+				{IconComponent ? (
+					IconComponent
+				) : (
+					<FontAwesome6 name={iconName} size={size * 0.5} color={iconColor} />
+				)}
 			</RestyleBox>
 		</TouchableOpacity>
 	);

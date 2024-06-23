@@ -11,7 +11,7 @@ import {
 } from "@/constants/types/ItemTypes";
 
 export const ItemService = {
-	getItemList: async (houseId: number): Promise<Item[]> => {
+	getItemsByHouse: async (houseId: number): Promise<Item[]> => {
 		try {
 			const token = await getToken();
 			const response = await axios.get<Item[]>(
@@ -82,6 +82,11 @@ export const ItemService = {
 	addItem: async (newItem: AddItemType | AddItemAsFoodType): Promise<Item> => {
 		try {
 			const token = await getToken();
+			const theBody = { ...newItem };
+
+			console.log("the body:");
+			console.log(theBody);
+
 			const response = await axios.post<Item>(
 				`${API_URL}/items`,
 				{ ...newItem },
@@ -97,6 +102,55 @@ export const ItemService = {
 
 				throw new Error(
 					error.response.data.message || "Failed to get food list"
+				);
+			} else {
+				// Handle unexpected errors (e.g., network issues)
+				throw new Error("An unexpected error occurred");
+			}
+		}
+	},
+
+	getAllItems: async (page: number): Promise<Item[]> => {
+		try {
+			const token = await getToken();
+			const response = await axios.get<Item[]>(
+				`${API_URL}/items?page=${page}&pageSize=${5}`,
+				{
+					headers: { Authorization: `Bearer ${token}` },
+				}
+			);
+			return response.data;
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				// Handle known error (e.g., API returned an error response)
+				throw new Error(
+					error.response.data.message || "Failed to get all items"
+				);
+			} else {
+				// Handle unexpected errors (e.g., network issues)
+				throw new Error("An unexpected error occurred");
+			}
+		}
+	},
+
+	getSimilarUsersItems: async (
+		userId: number,
+		page: number
+	): Promise<Item[]> => {
+		try {
+			const token = await getToken();
+			const response = await axios.get<Item[]>(
+				`${API_URL}/recommendations/users/${userId}?page=${page}&pageSize=${5}`,
+				{
+					headers: { Authorization: `Bearer ${token}` },
+				}
+			);
+			return response.data;
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				// Handle known error (e.g., API returned an error response)
+				throw new Error(
+					error.response.data.message || "Failed to get all items"
 				);
 			} else {
 				// Handle unexpected errors (e.g., network issues)

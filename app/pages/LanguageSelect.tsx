@@ -17,7 +17,7 @@ const LanguageSelect = () => {
 	return (
 		<GestureHandlerRootView>
 			<Wrapper>
-				<RestyleText variant='body'>
+				<RestyleText variant='body' color='text'>
 					Choose one from the languages available below. We are adding more in
 					future updates!
 				</RestyleText>
@@ -52,7 +52,6 @@ const LanguageSelect = () => {
 						</TouchableOpacity>
 					)}
 					keyExtractor={(item) => String(item.id)}
-					ItemSeparatorComponent={<Separator color={"red"} />}
 				/>
 			</Wrapper>
 		</GestureHandlerRootView>

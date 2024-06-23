@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { HouseService } from "../services/houseService";
 import { useHouseStore } from "../store/useHouseStore";
+import { number } from "prop-types";
 
 export const useHouse = (houseId: number | null) => {
 	const queryClient = useQueryClient();
@@ -47,5 +48,47 @@ export const useHouse = (houseId: number | null) => {
 		enabled: houseId !== null,
 	});
 
-	return { houseQuery, joinHouseMutation, getHouseQuery };
+	const updateHouseMutation = useMutation({
+		mutationKey: ["houseUpdate"],
+		mutationFn: async ({
+			houseId,
+			name,
+			image,
+		}: {
+			houseId: number;
+			name: string;
+			image: string | null;
+		}) => {
+			const house = await HouseService.updateHouse(houseId, name, image);
+			return house;
+		},
+		onSuccess: (data, variables) => {
+			queryClient.invalidateQueries({ queryKey: ["house", variables.houseId] });
+		},
+	});
+
+	const removeUserFromHouse = useMutation({
+		mutationKey: ["houseLeave"],
+		mutationFn: async ({
+			houseId,
+			userId,
+		}: {
+			houseId: number;
+			userId: number;
+		}) => {
+			const result = await HouseService.removeUserFromHouse(userId, houseId);
+			return result;
+		},
+		onSuccess: (data, variables) => {
+			queryClient.invalidateQueries({ queryKey: ["user", variables.userId] });
+		},
+	});
+
+	return {
+		houseQuery,
+		joinHouseMutation,
+		getHouseQuery,
+		updateHouseMutation,
+		removeUserFromHouse,
+	};
 };

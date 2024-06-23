@@ -9,6 +9,8 @@ import { Food } from "@/constants/types/FoodTypes";
 import FoodTag from "../misc/FoodTag";
 import { Item } from "@/constants/types/ItemTypes";
 import { differenceInDays, startOfToday } from "date-fns";
+import { Product } from "@/constants/types/ProductTypes";
+import AppFab from "../misc/AppFab";
 
 const timeColors = {
 	darkRed: "#510202",
@@ -17,8 +19,25 @@ const timeColors = {
 	green: "#06b820",
 };
 
-const ProductExpiryItem = ({ product }: { product: Item }) => {
-	const { name, quantity, image } = product;
+type ProductExpiryItemProps = {
+	product: Item;
+	wishlistView: boolean;
+	wished: boolean;
+	setWished: (newProduct: {
+		name: string;
+		image: string;
+		isFood: boolean;
+		food: Food | null;
+	}) => void;
+};
+
+const ProductExpiryItem = ({
+	product,
+	wishlistView,
+	wished,
+	setWished,
+}: ProductExpiryItemProps) => {
+	const { name, quantity, image, barcode } = product;
 
 	const [expiryColor, setExpiryColor] = useState(timeColors.green);
 	const [diffDays, setDiffDays] = useState(0);
@@ -61,7 +80,7 @@ const ProductExpiryItem = ({ product }: { product: Item }) => {
 			<RestyleBox
 				style={{
 					flexDirection: "row",
-					alignItems: "center",
+					alignItems: "flex-start",
 					gap: theme.spacing.s,
 				}}
 				maxWidth={"60%"}
@@ -84,6 +103,13 @@ const ProductExpiryItem = ({ product }: { product: Item }) => {
 					>
 						{name} (x {quantity})
 					</RestyleText>
+					<RestyleText
+						variant='smallLabel'
+						// style={{ maxWidth: "100%" }}
+						numberOfLines={1}
+					>
+						{barcode}
+					</RestyleText>
 
 					{product.food && product.food.tags && (
 						<RestyleBox flexDirection='row'>
@@ -95,26 +121,44 @@ const ProductExpiryItem = ({ product }: { product: Item }) => {
 					)}
 				</RestyleBox>
 			</RestyleBox>
-			{product.food && product.food.expiryDate && (
-				<RestyleBox alignItems='flex-end'>
-					<RestyleText
-						fontWeight='bold'
-						variant='body'
-						color={diffDays < 0 ? "error" : "text"}
-						style={diffDays < 0 ? { color: expiryColor } : {}}
-						textAlign='right'
-					>
-						{diffDays < 0 ? "Expired" : "Expiring"}
-					</RestyleText>
-					<RestyleBox>
-						<RestyleText style={{ color: expiryColor }}>
-							{diffDays < 0
-								? `${-1 * diffDays} days ago`
-								: `in ${diffDays} days`}
+
+			{product.food &&
+				product.food.expiryDate &&
+				(wishlistView ? (
+					<AppFab
+						size={32}
+						onPress={() =>
+							setWished({
+								name,
+								image,
+								isFood: product.isFood,
+								food: product.food,
+							})
+						}
+						iconName={"heart"}
+						iconColor={"red"}
+						backgroundColor={"white"}
+					/>
+				) : (
+					<RestyleBox alignItems='flex-end'>
+						<RestyleText
+							fontWeight='bold'
+							variant='body'
+							color={diffDays < 0 ? "error" : "text"}
+							style={diffDays < 0 ? { color: expiryColor } : {}}
+							textAlign='right'
+						>
+							{diffDays < 0 ? "Expired" : "Expiring"}
 						</RestyleText>
+						<RestyleBox>
+							<RestyleText style={{ color: expiryColor }}>
+								{diffDays < 0
+									? `${-1 * diffDays} days ago`
+									: `in ${diffDays} days`}
+							</RestyleText>
+						</RestyleBox>
 					</RestyleBox>
-				</RestyleBox>
-			)}
+				))}
 		</RestyleBox>
 		// <></>
 	);

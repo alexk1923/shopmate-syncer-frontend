@@ -7,9 +7,11 @@ import React, { useEffect, useRef } from "react";
 import {
 	Animated,
 	Easing,
+	FlatList,
 	Image,
 	Platform,
 	StyleSheet,
+	TouchableOpacity,
 	View,
 } from "react-native";
 import { useAuthStore } from "../store/useUserStore";
@@ -20,13 +22,55 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import RestyleText from "@/components/layout/RestyleText";
 import Wrapper from "@/components/layout/Wrapper";
 import AppButton from "@/components/misc/AppButton";
+import RestyleBox from "@/components/layout/RestyleBox";
+import SettingsItem, { SettingsType } from "@/components/common/SettingsItem";
+import LottieAnimation from "@/components/common/LottieAnimation";
+import { ANIMATIONS } from "@/constants/assets";
+import { useHouseStore } from "../store/useHouseStore";
 
-const NoHomeScreen = () => {
-	const { currentTheme } = useDarkLightTheme();
+const NoHouseScreen = () => {
+	const { currentTheme, darkMode, setDarkMode } = useDarkLightTheme();
+	const removeUser = useAuthStore((state) => state.removeUser);
+	const removeHouse = useHouseStore((state) => state.removeHouse);
+
+	const settingsData: SettingsType[] = [
+		{
+			id: 1,
+			title: "Language",
+			icon: "globe",
+			showOption: true,
+			onPress: () => router.navigate("pages/LanguageSelect"),
+		},
+		{
+			id: 2,
+			title: "Edit profile",
+			icon: "user-large",
+			onPress: () => router.navigate("pages/ProfileEdit"),
+		},
+
+		{
+			id: 5,
+			title: "Dark mode",
+			icon: "moon",
+			toggle: true,
+			value: darkMode,
+			onPress: () => setDarkMode(!darkMode),
+		},
+
+		{
+			id: 6,
+			title: "Logout",
+			icon: "arrow-right-from-bracket",
+			onPress: () => {
+				removeUser();
+				removeHouse();
+				router.replace("/");
+			},
+		},
+	];
+
 	const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 	const user = useAuthStore().user;
-
-	const navigation = useNavigation();
 
 	const animationProgress = useRef(new Animated.Value(0));
 
@@ -39,6 +83,10 @@ const NoHomeScreen = () => {
 		}).start();
 	}, []);
 
+	const renderItem = ({ item }: { item: SettingsType }) => (
+		<SettingsItem item={item} />
+	);
+
 	return (
 		user && (
 			<Wrapper>
@@ -49,38 +97,52 @@ const NoHomeScreen = () => {
 					username={user.username}
 				/>
 
-				{Platform.OS === "ios" ? (
-					<></>
-				) : (
-					<AnimatedLottieView
-						source={require("@/assets/animations/no_house.json")}
-						progress={animationProgress.current}
-						style={{ width: "100%", height: "50%" }}
-						// autoPlay
+				<RestyleBox gap='s'>
+					<RestyleText variant='label'>Quick settings</RestyleText>
+					<FlatList
+						data={settingsData}
+						renderItem={({ item }: { item: SettingsType }) =>
+							item.toggle ? (
+								renderItem({ item })
+							) : (
+								<TouchableOpacity
+									onPress={item.onPress}
+									style={{ width: "100%" }}
+								>
+									{renderItem({ item })}
+								</TouchableOpacity>
+							)
+						}
+						keyExtractor={(item) => String(item.id)}
+						style={{ flexGrow: 0 }}
 					/>
-				)}
+				</RestyleBox>
 
-				<RestyleText variant='subheader' color='primary' textAlign='center'>
-					No house joined yet.
-				</RestyleText>
-
-				<AppButton
-					title={"Join"}
-					onPress={() => {
-						router.navigate("pages/HouseScanQR");
-					}}
-					variant={"outline"}
-				/>
-				<AppButton
-					title={"Create"}
-					onPress={() => {
-						router.push("/pages/HouseCreate");
-					}}
-					variant={"filled"}
-				/>
+				<RestyleBox flex={1}>
+					<LottieAnimation animationName={ANIMATIONS.NO_HOUSE} />
+					<RestyleText variant='subheader' color='primary' textAlign='center'>
+						No house joined yet.
+					</RestyleText>
+					<RestyleBox flexDirection='row' gap='m' justifyContent='center'>
+						<AppButton
+							title={"Join"}
+							onPress={() => {
+								router.navigate("pages/HouseScanQR");
+							}}
+							variant={"outline"}
+						/>
+						<AppButton
+							title={"Create"}
+							onPress={() => {
+								router.push("/pages/HouseCreate");
+							}}
+							variant={"filled"}
+						/>
+					</RestyleBox>
+				</RestyleBox>
 			</Wrapper>
 		)
 	);
 };
 
-export default NoHomeScreen;
+export default NoHouseScreen;

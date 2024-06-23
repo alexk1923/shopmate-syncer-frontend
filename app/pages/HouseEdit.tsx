@@ -6,9 +6,16 @@ import Wrapper from "@/components/layout/Wrapper";
 import { useHouseStore } from "../store/useHouseStore";
 import ImagePickerWidget from "@/components/widgets/ImagePickerWidget";
 import AppButton from "@/components/misc/AppButton";
+import { useHouse } from "../hooks/useHouse";
+import { useAuthStore } from "../store/useUserStore";
+import LoadingOverlay from "@/components/modals/LoadingOverlay";
 
 const HouseEdit = () => {
+	const user = useAuthStore((state) => state.user);
 	const house = useHouseStore((state) => state.house);
+	const { updateHouseMutation, removeUserFromHouse } = useHouse(
+		house?.id ?? null
+	);
 	const [image, setImage] = useState(house?.image ?? null);
 	const [name, setName] = useState(house?.name ?? "");
 
@@ -21,12 +28,29 @@ const HouseEdit = () => {
 				value={name}
 				onChangeText={setName}
 			/>
+			<LoadingOverlay
+				isVisible={
+					updateHouseMutation.isPending || removeUserFromHouse.isPending
+				}
+			/>
+
 			<AppButton
-				title='Save changes'
+				title='Save'
 				onPress={() => {
-					console.info("@TODO Implement Editing house");
+					updateHouseMutation.mutate({ houseId: house?.id!, name, image });
 				}}
 				variant='outline'
+			/>
+
+			<AppButton
+				title='Leave house'
+				onPress={() => {
+					removeUserFromHouse.mutate({
+						houseId: house?.id!,
+						userId: user?.id!,
+					});
+				}}
+				variant='error'
 			/>
 		</Wrapper>
 	);

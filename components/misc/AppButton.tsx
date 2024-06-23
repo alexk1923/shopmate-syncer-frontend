@@ -29,7 +29,7 @@ type ButtonProps = VariantProps<Theme, "buttonVariants"> & {
 type Props = {
 	title: string;
 	onPress: () => void;
-	variant: "filled" | "outline";
+	variant: "filled" | "outline" | "error";
 	fullWidth?: boolean;
 	loading?: boolean;
 	style?: StyleProp<ViewStyle>;
@@ -49,24 +49,53 @@ const AppButton = ({
 	style,
 }: Props) => {
 	const { currentTheme } = useDarkLightTheme();
+	const getTextColor = () => {
+		switch (variant) {
+			case "filled":
+				return "lightText";
+			case "outline":
+				return "primary";
+			case "error":
+				return "mainBackground";
+			default:
+				return "primary";
+		}
+	};
+
+	const getBgColor = () => {
+		switch (variant) {
+			case "filled":
+				return [
+					currentTheme.colors.lightPrimary,
+					currentTheme.colors.primary,
+					currentTheme.colors.darkPrimary,
+				];
+			case "outline":
+				return ["transparent", "transparent"];
+			case "error":
+				return ["red", currentTheme.colors.error];
+			default:
+				return [
+					currentTheme.colors.lightPrimary,
+					currentTheme.colors.primary,
+					currentTheme.colors.darkPrimary,
+				];
+		}
+	};
 
 	return (
 		<TouchableOpacity onPress={onPress} disabled={loading}>
 			<LinearGradient
-				colors={
-					variant === "filled"
-						? [
-								currentTheme.colors.lightPrimary,
-								currentTheme.colors.primary,
-								currentTheme.colors.darkPrimary,
-						  ]
-						: ["transparent", "transparent"]
-				}
+				colors={getBgColor()}
 				style={[
 					styles.appButtonContainer,
 					variant === "outline" && {
 						borderWidth: 1,
 						borderColor: currentTheme.colors.primary,
+					},
+					variant === "error" && {
+						borderWidth: 1,
+						borderColor: currentTheme.colors.error,
 					},
 
 					StyleSheet.flatten(style),
@@ -82,7 +111,7 @@ const AppButton = ({
 					<ActivityIndicator />
 				) : (
 					<RestyleText
-						color={variant === "filled" ? "lightText" : "primary"}
+						color={getTextColor()}
 						textAlign='center'
 						fontWeight='bold'
 						textTransform='uppercase'

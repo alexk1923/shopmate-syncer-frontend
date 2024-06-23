@@ -16,17 +16,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import ToggleButton from "@/components/misc/ToggleButton";
 import { useHouseStore } from "@/app/store/useHouseStore";
-
-type SettingsType = {
-	id: number;
-	title: string;
-	icon: string;
-	url?: string;
-	toggle?: boolean;
-	showOption?: boolean;
-	value?: boolean;
-	onPress?: () => void;
-};
+import SettingsItem, { SettingsType } from "@/components/common/SettingsItem";
 
 const Settings = () => {
 	const user = useAuthStore((state) => state.user);
@@ -65,60 +55,9 @@ const Settings = () => {
 			onPress: () => setDarkMode(!darkMode),
 		},
 	];
+
 	const renderItem = ({ item }: { item: SettingsType }) => (
-		<RestyleBox
-			backgroundColor='cardBackground'
-			padding='s'
-			borderRadius={5}
-			flexDirection='row'
-			alignItems='center'
-			justifyContent='space-between'
-		>
-			<RestyleBox flexDirection='row' alignItems='center' gap='s'>
-				<RestyleBox
-					width={32}
-					height={32}
-					justifyContent='center'
-					alignItems='center'
-					borderRadius={90}
-					style={{
-						backgroundColor: currentTheme.colors.mainBackground,
-					}}
-				>
-					<FontAwesome6
-						name={item.icon}
-						size={16}
-						color={currentTheme.colors.primary}
-					/>
-				</RestyleBox>
-				<RestyleText color='primary' variant='bodyBold'>
-					{item.title}
-				</RestyleText>
-			</RestyleBox>
-
-			{item.toggle && Object.hasOwn(item, "value") && item.onPress && (
-				<ToggleButton value={item.value ?? false} onPress={item.onPress} />
-			)}
-
-			{item.showOption ? (
-				<RestyleBox flexDirection='row' alignItems='center'>
-					<RestyleText variant='label'>English</RestyleText>
-					<FontAwesome6
-						name='chevron-right'
-						size={24}
-						color={currentTheme.colors.gray}
-					/>
-				</RestyleBox>
-			) : (
-				!item.toggle && (
-					<FontAwesome6
-						name='chevron-right'
-						size={24}
-						color={currentTheme.colors.gray}
-					/>
-				)
-			)}
-		</RestyleBox>
+		<SettingsItem item={item} />
 	);
 	return (
 		<Wrapper>

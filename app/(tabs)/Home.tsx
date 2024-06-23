@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useAuthStore } from "../store/useUserStore";
 import HomePage from "../pages/HomePage";
-import NoHomeScreen from "../pages/NoHomeJoined";
+import NoHouseScreen from "../pages/NoHomeJoined";
 import { router, useNavigation } from "expo-router";
-import { Alert, BackHandler } from "react-native";
+import { Alert, BackHandler, Text } from "react-native";
 
 import { useUser } from "../hooks/useUser";
 import LoadingOverlay from "@/components/modals/LoadingOverlay";
@@ -19,8 +19,7 @@ const Home = () => {
 
 		if (userQuery.data) {
 			if (!userQuery.data.firstName || !userQuery.data.lastName) {
-				console.log("nu am first name sau last name, e naspa");
-				router.push("/introduction");
+				router.push("introduction/Introduction");
 			}
 		}
 	}, [userQuery.data]);
@@ -49,7 +48,12 @@ const Home = () => {
 		return <LoadingOverlay isVisible={userQuery.isLoading} />;
 	}
 
-	return userQuery.data.houseId ? <HomePage /> : <NoHomeScreen />;
+	if (!userQuery.data.houseId) {
+		router.replace("pages/NoHomeJoined");
+		return;
+	}
+
+	return userQuery.data.houseId && <HomePage />;
 };
 
 export default Home;

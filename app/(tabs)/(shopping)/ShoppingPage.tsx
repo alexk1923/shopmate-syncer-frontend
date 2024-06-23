@@ -67,7 +67,7 @@ const ShoppingPage = () => {
 					<SquareCard
 						title={"Wishlist"}
 						animationName={ANIMATIONS.HISTORY}
-						redirect={"/Wishlist"}
+						redirect={"/WishlistPage"}
 						icon={<FontAwesome name='heart' size={24} color='black' />}
 						image={IMAGES.WISHLIST}
 					/>

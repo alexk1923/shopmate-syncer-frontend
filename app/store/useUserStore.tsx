@@ -12,11 +12,15 @@ interface AuthState {
 	user: User | null;
 	token: string | null;
 	userId: number | null;
+	notificationToken: string | null;
 	notificationSubscription: Subscription | null;
+	firstLaunch: boolean;
 	setUserId: (userId: number) => void;
 	setUser: (user: User) => void;
 	setToken: (token: string) => void;
 	setNotificationSubscription: (subscription: Subscription) => void;
+	setNotificationToken: (notificationToken: string) => void;
+	setFirstLaunch: () => void;
 	removeUser: () => void;
 	initializeAuth: () => void;
 }
@@ -29,21 +33,28 @@ export const useAuthStore = create<AuthState>()(
 				token: null,
 				userId: null,
 				notificationSubscription: null,
+				firstLaunch: true,
+				notificationToken: null,
 				setUserId: (userId: number) => set({ userId: userId }),
 				setUser: (fetchedUser: User) => set({ user: fetchedUser }),
 				removeUser: () => {
-					set((state) => {
-						return { user: null, token: null, userId: null };
-					});
+					set({ user: null, token: null, userId: null });
 					removeToken();
 				},
+				setFirstLaunch: () => set({ firstLaunch: false }),
 				setToken: (token: string) => {
 					set({ token });
 				},
 				setNotificationSubscription: (subscription: Subscription) => {
 					set({ notificationSubscription: subscription });
 				},
+				setNotificationToken: (notificationToken) => {
+					set({ notificationToken });
+				},
 				initializeAuth: async () => {
+					if (!get().user) {
+						return;
+					}
 					const token = await getToken();
 
 					if (token) {
@@ -57,11 +68,18 @@ export const useAuthStore = create<AuthState>()(
 
 							if (
 								get().user?.firstName === null ||
-								get().user?.lastName === null
+								get().user?.lastName === null ||
+								get().firstLaunch
 							) {
-								router.replace("introduction/");
+								console.log("navigating to introduction");
+
+								router.navigate("introduction");
+							} else if (!get().user?.houseId) {
+								router.navigate("pages/NoHomeJoined");
 							} else {
-								router.replace("(tabs)/Home");
+								console.log("navigating to Home");
+
+								router.navigate("(tabs)/Home");
 							}
 						} catch (error) {
 							console.error("Token verification failed", error);
@@ -80,6 +98,8 @@ export const useAuthStore = create<AuthState>()(
 								throw error.response.data;
 							}
 						}
+					} else {
+						console.error("No token in the async storage");
 					}
 				},
 			}),

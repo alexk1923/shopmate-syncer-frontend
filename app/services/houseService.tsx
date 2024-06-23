@@ -89,4 +89,65 @@ export const HouseService = {
 			}
 		}
 	},
+
+	updateHouse: async (
+		houseId: number,
+		name: string,
+		image: string | null
+	): Promise<House> => {
+		try {
+			const token = await getToken();
+			console.info("Updating house...");
+			let imageUrl = null;
+			if (image) {
+				console.info("Uploading house photo...");
+				imageUrl = (await UploadService.uploadImage(image)).secure_url;
+			}
+			const response = await axios.patch<House>(
+				`${API_URL}/houses/${houseId}`,
+				{ name, image: imageUrl },
+				{
+					headers: { Authorization: `Bearer ${token}` },
+				}
+			);
+
+			return response.data;
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				// Handle known error (e.g., API returned an error response)
+				throw new Error(
+					error.response.data.message || "Failed to update house"
+				);
+			} else {
+				// Handle unexpected errors (e.g., network issues)
+				throw new Error("An unexpected error occurred");
+			}
+		}
+	},
+
+	removeUserFromHouse: async (houseId: number, userId: number) => {
+		try {
+			const token = await getToken();
+			console.info("Updating house...");
+
+			const response = await axios.delete<House>(
+				`${API_URL}/houses/${houseId}/members/${userId}`,
+				{
+					headers: { Authorization: `Bearer ${token}` },
+				}
+			);
+
+			return response.data;
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				// Handle known error (e.g., API returned an error response)
+				throw new Error(
+					error.response.data.message || "Failed to update house"
+				);
+			} else {
+				// Handle unexpected errors (e.g., network issues)
+				throw new Error("An unexpected error occurred");
+			}
+		}
+	},
 };

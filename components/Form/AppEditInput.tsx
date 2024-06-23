@@ -65,6 +65,7 @@ const AppEditInput = (props: InputProps) => {
 					value={value}
 					onChangeText={onChangeText}
 					onFocus={() => setIsFocused(true)}
+					numberOfLines={5}
 				></TextInput>
 				<FontAwesome6
 					name={iconName}
@@ -80,14 +81,6 @@ const AppEditInput = (props: InputProps) => {
 };
 
 const styles = StyleSheet.create({
-	input: {
-		paddingRight: theme.spacing.m,
-		paddingLeft: theme.spacing.m,
-		fontWeight: "bold",
-		height: "100%",
-		width: "100%",
-		flex: 1,
-	},
 	searchSection: {
 		flexDirection: "row",
 		justifyContent: "space-between",
@@ -97,6 +90,15 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		height: 50,
 	},
+	input: {
+		paddingRight: theme.spacing.m,
+		paddingLeft: theme.spacing.m,
+		fontWeight: "bold",
+		height: "100%",
+		width: "100%",
+		flex: 1,
+	},
+
 	searchIcon: {
 		paddingRight: theme.spacing.m,
 	},

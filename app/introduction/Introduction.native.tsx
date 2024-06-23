@@ -55,6 +55,7 @@ export default function PaginationDotsExample() {
 
 	const userId = useAuthStore((state) => state.userId);
 	const setUser = useAuthStore((state) => state.setUser);
+	const setFirstLaunch = useAuthStore((state) => state.setFirstLaunch);
 
 	const { userQuery } = useUser(user?.id || null);
 
@@ -115,13 +116,26 @@ export default function PaginationDotsExample() {
 						gap: theme.spacing.m,
 					}}
 				>
-					<AppButton title='Join house' variant='outline' onPress={() => {}} />
+					<AppButton
+						title='Join house'
+						variant='outline'
+						onPress={() => {
+							setFirstLaunch();
+							router.push("pages/HouseScanQR");
+						}}
+					/>
 					<RestyleText
 						variant='body'
 						textAlign='center'
 						color='primary'
 						onPress={() => {
-							router.push("(tabs)/Home");
+							setFirstLaunch();
+							if (!user?.houseId) {
+								console.log("nu am casa, nu am casa");
+								router.push("pages/NoHomeJoined");
+							} else {
+								router.push("/(tabs)/Home");
+							}
 						}}
 					>
 						Skip

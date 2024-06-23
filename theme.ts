@@ -98,6 +98,12 @@ export const theme = createTheme({
 			color: "gray",
 		},
 
+		smallLabel: {
+			fontSize: 12,
+			lineHeight: 18,
+			color: "gray",
+		},
+
 		defaults: {},
 	},
 	buttonVariants: {

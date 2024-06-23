@@ -22,6 +22,7 @@ import RestyleText from "../layout/RestyleText";
 import AppFab from "../misc/AppFab";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import ImageBottomModal from "../modals/ImageBottomModal";
 
 const ImagePickerWidget = ({
 	setImage,
@@ -108,66 +109,10 @@ const ImagePickerWidget = ({
 			)}
 
 			{openActionModal && (
-				<GestureHandlerRootView
-					style={{
-						position: "absolute",
-						top: 0,
-						left: 0,
-						right: 0,
-						bottom: 0,
-						backgroundColor: "transparent",
-						height,
-						width,
-						flex: 1,
-						margin: 0,
-						zIndex: 1,
-					}}
-				>
-					<BottomSheetModalProvider>
-						<AppBottomSheetModal
-							initialSnapPoint='40%'
-							finalSnapPoint='40%'
-							onClose={() => setOpenActionModal(false)}
-							showDoneButton={false}
-						>
-							<RestyleText color='text' variant='subheader' textAlign='center'>
-								Choose an action
-							</RestyleText>
-
-							<RestyleBox
-								flexDirection='row'
-								alignItems='center'
-								gap='s'
-								padding='s'
-							>
-								<RestyleBox alignItems='center'>
-									<AppFab
-										size={50}
-										onPress={handleTakePhoto}
-										iconName={"camera"}
-										iconColor={"white"}
-										backgroundColor={currentTheme.colors.primary}
-									/>
-									<RestyleText variant='body' color='text'>
-										Take photo
-									</RestyleText>
-								</RestyleBox>
-								<RestyleBox alignItems='center'>
-									<AppFab
-										size={50}
-										onPress={handleUploadPhoto}
-										iconName={"image"}
-										iconColor={"white"}
-										backgroundColor={currentTheme.colors.primary}
-									/>
-									<RestyleText variant='body' color='text'>
-										Choose from gallery
-									</RestyleText>
-								</RestyleBox>
-							</RestyleBox>
-						</AppBottomSheetModal>
-					</BottomSheetModalProvider>
-				</GestureHandlerRootView>
+				<ImageBottomModal
+					setImage={setImage}
+					setOpenActionModal={setOpenActionModal}
+				/>
 			)}
 		</RestyleBox>
 	);

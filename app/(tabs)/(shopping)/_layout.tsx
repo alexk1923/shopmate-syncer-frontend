@@ -16,7 +16,7 @@ export {
 
 export const unstable_settings = {
 	// Ensure that reloading on `/modal` keeps a back button present.
-	initialRouteName: "ShoppingMode ",
+	initialRouteName: "ShoppingMode",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -33,22 +33,18 @@ export default function ShoppingLayoutNav() {
 					statusBarColor: currentTheme.colors.mainBackground,
 					headerTintColor: currentTheme.colors.primary,
 					navigationBarColor: currentTheme.colors.mainBackground,
-
 					headerStyle: {
 						backgroundColor: currentTheme.colors.cardBackground,
 					},
-					// headerShown: true,
 				}}
 			>
 				<Stack.Screen
 					name='ShoppingPage'
 					options={{
 						title: "Shopping Page",
-						headerShown: true,
+						headerShown: false,
 						animation: "fade",
 						statusBarTranslucent: true,
-						statusBarHidden: true,
-						statusBarColor: "red",
 					}}
 				/>
 				<Stack.Screen
@@ -69,7 +65,7 @@ export default function ShoppingLayoutNav() {
 					}}
 				/>
 				<Stack.Screen
-					name='Wishlist'
+					name='WishlistPage'
 					options={{
 						title: "Wishlist",
 						headerShown: true,

@@ -66,6 +66,7 @@ export const NotificationService = {
 		if (notificationToken) {
 			try {
 				await addNotificationsToken(userId, token, notificationToken);
+				return notificationToken;
 			} catch (err) {
 				console.error(err);
 			}

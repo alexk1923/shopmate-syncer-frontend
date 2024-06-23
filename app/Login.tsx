@@ -29,7 +29,7 @@ import { UserService } from "./services/userService";
 import RestyleBox from "@/components/layout/RestyleBox";
 import RestyleText from "@/components/layout/RestyleText";
 import AppButton from "@/components/misc/AppButton";
-import { useHouse } from "./hooks/useHouse";
+
 import { HouseService } from "./services/houseService";
 import { useHouseStore } from "./store/useHouseStore";
 import { NotificationService } from "./services/notificationService";
@@ -50,9 +50,15 @@ const Login = () => {
 	const handleFormSubmit = handleSubmit(onSubmit);
 
 	const user = useAuthStore((state) => state.user);
+	const notificationToken = useAuthStore((state) => state.notificationToken);
+	const setNotificationToken = useAuthStore(
+		(state) => state.setNotificationToken
+	);
+
 	const setUser = useAuthStore((state) => state.setUser);
 	const setUserId = useAuthStore((state) => state.setUserId);
 	const setHouse = useHouseStore((state) => state.setHouse);
+	const firstLaunch = useAuthStore((state) => state.firstLaunch);
 
 	const queryClient = useQueryClient();
 
@@ -62,24 +68,40 @@ const Login = () => {
 		onSuccess: async (data) => {
 			setToken(data.token);
 			setUserId(data.id);
-			NotificationService.registerForPushNotificationsAsync(
-				data.id,
-				data.token
-			);
-			// const user = await UserService.getUserById(data.id);
-			// setUser(user);
+
+			if (!notificationToken) {
+				const newNotificationToken =
+					await NotificationService.registerForPushNotificationsAsync(
+						data.id,
+						data.token
+					);
+
+				if (newNotificationToken) {
+					setNotificationToken(newNotificationToken);
+				}
+			}
+
 			queryClient.prefetchQuery({
 				queryKey: ["user", data.id],
 				queryFn: async () => {
 					if (data.id) {
 						const user = await UserService.getUserById(data.id);
+						if (firstLaunch) {
+							router.push("introduction");
+						} else if (!user?.houseId) {
+							router.push("pages/NoHomeJoined");
+						} else {
+							router.push("(tabs)/Home");
+						}
 						setUser(user);
+						if (user.houseId) {
+							const house = await HouseService.getHouseById(user.houseId);
+							setHouse(house);
+						}
 						return user;
 					}
 				},
 			});
-
-			router.push("introduction");
 		},
 		onError: (err) => {
 			console.error("Error login");

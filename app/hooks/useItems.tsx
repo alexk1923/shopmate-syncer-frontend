@@ -1,10 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	useInfiniteQuery,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
 import { ItemService } from "../services/itemService";
 import { useAuthStore } from "../store/useUserStore";
 import { AddItemAsFoodType, AddItemType } from "@/constants/types/ItemTypes";
 import { UploadService } from "../services/imageService";
 
-export const useItems = () => {
+export const useItems = (userId: number | null) => {
 	const queryClient = useQueryClient();
 	const user = useAuthStore((state) => state.user);
 
@@ -15,7 +20,7 @@ export const useItems = () => {
 			if (!user || !user.houseId) {
 				throw new Error("User or houseId is not defined");
 			}
-			const itemList = await ItemService.getItemList(user.houseId);
+			const itemList = await ItemService.getItemsByHouse(user.houseId);
 			return itemList;
 		},
 	});
@@ -50,5 +55,18 @@ export const useItems = () => {
 		},
 	});
 
-	return { itemQuery, foodQuery, addItemMutation };
+	const infiniteScrollItems = useInfiniteQuery({
+		queryKey: ["items", "infinite", userId],
+		initialPageParam: 1,
+		getNextPageParam: (lastPage, allPages) => allPages.length + 1,
+		queryFn: async ({ pageParam = 1 }) => {
+			if (!userId) {
+				return [];
+			}
+			const items = await ItemService.getSimilarUsersItems(userId, pageParam);
+			return items;
+		},
+	});
+
+	return { itemQuery, foodQuery, addItemMutation, infiniteScrollItems };
 };

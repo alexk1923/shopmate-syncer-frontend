@@ -1,4 +1,13 @@
-import { View, Text, StyleSheet, ViewStyle, StyleProp } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	ViewStyle,
+	StyleProp,
+	ScrollView,
+	SafeAreaView,
+	StatusBar,
+} from "react-native";
 import React, { ReactNode } from "react";
 import RestyleBox from "./RestyleBox";
 import { theme } from "@/theme";
