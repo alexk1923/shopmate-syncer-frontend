@@ -14,7 +14,7 @@ import SelectionChip from "@/components/misc/SelectionChip";
 import RestyleBox from "@/components/layout/RestyleBox";
 import { useItems } from "@/app/hooks/useItems";
 import { Item } from "@/constants/types/ItemTypes";
-import GeneralItemCard from "@/components/cards/GeneralItemCard";
+import GeneralItemCard, { VIEW_MODE } from "@/components/cards/GeneralItemCard";
 import { useAuthStore } from "@/app/store/useUserStore";
 import { useWishlist } from "@/app/hooks/useWishlist";
 import { WishlistItem } from "@/constants/types/WishlistTypes";
@@ -36,12 +36,8 @@ enum MENU {
 const WishlistPage = () => {
 	const { currentTheme } = useDarkLightTheme();
 	const [selected, setSelected] = useState(MENU.DISCOVER);
-	const renderItem = (item: WishlistItem, wishlistView: boolean) => (
-		<GeneralItemCard
-			item={item}
-			onPress={() => {}}
-			wishlistView={wishlistView}
-		/>
+	const renderItem = (item: WishlistItem, viewMode: VIEW_MODE) => (
+		<GeneralItemCard item={item} viewMode={viewMode} />
 	);
 	const { user } = useAuthStore();
 	const { infiniteScrollItems } = useItems(user?.id ?? null);
@@ -97,13 +93,16 @@ const WishlistPage = () => {
 								data={infiniteScrollItems.data.pages.flat() as Item[]}
 								keyExtractor={(item: Item) => String(item.id)}
 								renderItem={({ item }: { item: Item }) =>
-									renderItem({
-										originalId: item.id,
-										id: item.id,
-										name: item.name,
-										description: "Added from recommendations",
-										image: item.image,
-									})
+									renderItem(
+										{
+											originalId: item.id,
+											id: item.id,
+											name: item.name,
+											description: "Added from recommendations",
+											image: item.image,
+										},
+										VIEW_MODE.DISCOVER
+									)
 								}
 								// onEndReached={() => infiniteScrollItems.fetchNextPage()}
 								ListFooterComponent={
@@ -136,7 +135,7 @@ const WishlistPage = () => {
 													description: item.description,
 													image: item.image,
 												},
-												true
+												VIEW_MODE.WISHLIST
 											)
 										}
 										// onEndReached={() => infiniteScrollItems.fetchNextPage()}

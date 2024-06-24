@@ -234,7 +234,7 @@ const GeneralItemCard = ({
 				)}
 			</RestyleBox>
 
-			{viewMode === VIEW_MODE.WISHLIST || VIEW_MODE.DISCOVER ? (
+			{viewMode === VIEW_MODE.WISHLIST || viewMode == VIEW_MODE.DISCOVER ? (
 				<AppFab
 					size={48}
 					onPress={handleSelectWish}
