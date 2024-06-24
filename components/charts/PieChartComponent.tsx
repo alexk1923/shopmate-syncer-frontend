@@ -11,8 +11,25 @@ import RestyleBox from "../layout/RestyleBox";
 import HorizontalCard from "../cards/HorizontalCard";
 import PieChartLegend from "./PieChartLegend";
 import { useDarkLightTheme } from "../ThemeContext";
+import { useItems } from "@/app/hooks/useItems";
+import { useAuthStore } from "@/app/store/useUserStore";
+import { Item } from "@/constants/types/ItemTypes";
+import FoodTag from "../misc/FoodTag";
+import RestyleText from "../layout/RestyleText";
+import { ICONS } from "@/constants/assets";
 
-const PieChartComponent = () => {
+export type PieData = {
+	text: string;
+	value: number;
+	color: string;
+	name: string;
+};
+
+type PieChartProps = {
+	data: PieData[];
+};
+
+const PieChartComponent = ({ data }: PieChartProps) => {
 	const [selectedItem, setSelectedItem] = useState<(typeof pieData)[0]>(
 		{} as (typeof pieData)[0]
 	);
@@ -57,25 +74,34 @@ const PieChartComponent = () => {
 		<HorizontalCard title='Last 30 days'>
 			<RestyleBox flexDirection='row' gap='m' justifyContent='center'>
 				<MemoizedPieChart
-					data={pieData}
+					data={data}
 					// donut
-					textColor={currentTheme.colors.oppositeText}
-					textSize={16}
+					textColor={"white"}
+					backgroundColor={currentTheme.colors.cardBackground}
+					innerCircleBorderWidth={2}
+					innerCircleBorderColor={currentTheme.colors.primary}
+					textSize={12}
 					focusOnPress
 					showValuesAsLabels
-					textBackgroundRadius={26}
 					fontWeight='bold'
 					strokeWidth={2}
 					strokeColor={currentTheme.colors.primary}
 					onPress={(item: (typeof pieData)[0], index: number) => {
 						item = item;
 					}}
+					labelsPosition='mid'
 					showText
-					radius={60}
+					radius={90}
+					innerRadius={25}
 					sectionAutoFocus
+					centerLabelComponent={() => {
+						return (
+							<Image source={ICONS.OTHER} style={{ width: 32, height: 32 }} />
+						);
+					}}
 				/>
 
-				<PieChartLegend pieData={pieData} selectedItem={selectedItem} />
+				<PieChartLegend pieData={data} selectedItem={selectedItem} />
 			</RestyleBox>
 		</HorizontalCard>
 	);

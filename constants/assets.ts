@@ -14,3 +14,15 @@ export const ANIMATIONS = {
 	NOT_FOUND: require("@/assets/animations/not_found.json"),
 	NO_HOUSE: require("@/assets/animations/no_house.json"),
 };
+
+export const ICONS = {
+	MEAT: require(`@/assets/images/foodIcons/meat.png`),
+	DAIRY: require(`@/assets/images/foodIcons/dairy.png`),
+	SNACKS: require(`@/assets/images/foodIcons/snacks.png`),
+	SWEETS: require(`@/assets/images/foodIcons/sweets.png`),
+	FRUITS_VEGETABLES: require(`@/assets/images/foodIcons/fruits_vegetables.png`),
+	GRAINS: require(`@/assets/images/foodIcons/grain.png`),
+	DRINKS: require(`@/assets/images/foodIcons/drinks.png`),
+	PROTEIN: require(`@/assets/images/foodIcons/protein.png`),
+	OTHER: require(`@/assets/images/foodIcons/groceries.png`),
+};

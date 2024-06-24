@@ -16,7 +16,7 @@ export {
 
 export const unstable_settings = {
 	// Ensure that reloading on `/modal` keeps a back button present.
-	initialRouteName: "ShoppingMode",
+	initialRouteName: "ShoppingPage",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -36,15 +36,14 @@ export default function ShoppingLayoutNav() {
 					headerStyle: {
 						backgroundColor: currentTheme.colors.cardBackground,
 					},
+					headerShown: false,
 				}}
 			>
 				<Stack.Screen
 					name='ShoppingPage'
 					options={{
 						title: "Shopping Page",
-						headerShown: false,
 						animation: "fade",
-						statusBarTranslucent: true,
 					}}
 				/>
 				<Stack.Screen

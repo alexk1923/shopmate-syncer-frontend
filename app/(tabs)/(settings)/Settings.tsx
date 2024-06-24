@@ -17,7 +17,7 @@ import { useDarkLightTheme } from "@/components/ThemeContext";
 import ToggleButton from "@/components/misc/ToggleButton";
 import { useHouseStore } from "@/app/store/useHouseStore";
 import SettingsItem, { SettingsType } from "@/components/common/SettingsItem";
-
+// import switchTheme from "react-native-theme-switch-animation";
 const Settings = () => {
 	const user = useAuthStore((state) => state.user);
 	const { currentTheme, darkMode, setDarkMode } = useDarkLightTheme();
@@ -52,7 +52,23 @@ const Settings = () => {
 			icon: "moon",
 			toggle: true,
 			value: darkMode,
-			onPress: () => setDarkMode(!darkMode),
+			onPress: () => {
+				setDarkMode(!darkMode); // your switch theme function
+
+				// switchTheme({
+				// 	switchThemeFunction: () => {
+				// 		setDarkMode(!darkMode); // your switch theme function
+				// 	},
+				// 	animationConfig: {
+				// 		type: "inverted-circular",
+				// 		duration: 800,
+				// 		startingPoint: {
+				// 			cxRatio: 0.8,
+				// 			cyRatio: 0.8,
+				// 		},
+				// 	},
+				// });
+			},
 		},
 	];
 

@@ -43,6 +43,7 @@ export default function TabLayout() {
 							},
 							headerTintColor: currentTheme.colors.primary,
 							tabBarShowLabel: false,
+							headerShown: false,
 							// Disable the static render of the header on web
 							// to prevent a hydration error in React Navigation v6.
 							// headerShown: useClientOnlyValue(false, true),
@@ -59,7 +60,7 @@ export default function TabLayout() {
 							name='Home'
 							options={{
 								title: "Home",
-								headerShown: false,
+
 								tabBarIcon: ({ color }) => (
 									<FontAwesome6 name='house' size={24} color={color} />
 								),
@@ -69,7 +70,7 @@ export default function TabLayout() {
 							name='(shopping)'
 							options={{
 								title: "Shopping",
-								headerShown: false,
+
 								tabBarIcon: ({ color }) => (
 									<FontAwesome6 name='cart-shopping' size={24} color={color} />
 								),
@@ -85,7 +86,7 @@ export default function TabLayout() {
 							name='Scan'
 							options={{
 								title: "Scan",
-								headerShown: false,
+
 								tabBarIcon: ({ color }) => (
 									<RestyleBox
 										style={{

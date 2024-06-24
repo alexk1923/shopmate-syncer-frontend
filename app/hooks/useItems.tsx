@@ -36,11 +36,6 @@ export const useItems = (userId: number | null) => {
 				"expiryDate"
 			);
 
-			console.log("====================================");
-			console.log("the food list for user with houseId:");
-			console.log(foodList);
-
-			console.log("====================================");
 			return foodList;
 		},
 	});

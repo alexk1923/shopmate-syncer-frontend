@@ -42,6 +42,7 @@ export type Item = {
 	boughtById: number;
 	food: Food | null;
 	store: Store;
+	createdAt: Date;
 };
 
 export type FoodItem = Omit<Item, "food" | "isFood"> & {

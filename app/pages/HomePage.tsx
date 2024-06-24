@@ -16,9 +16,6 @@ import { RowMap, SwipeListView } from "react-native-swipe-list-view";
 import { Product } from "@/constants/types/ProductTypes";
 import { useAuthStore } from "../store/useUserStore";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ItemService } from "../services/itemService";
-
 import { DateData } from "react-native-calendars";
 
 import {
@@ -29,7 +26,9 @@ import { useShoppingSchedule } from "../hooks/useShoppingSchedule";
 
 import { convertDateToLocaleISO } from "../utils/convertDateToLocaleISO";
 import ProductExpiryItem from "@/components/Products/ProductExpiryItem";
-import PieChartComponent from "@/components/charts/PieChartComponent";
+import PieChartComponent, {
+	PieData,
+} from "@/components/charts/PieChartComponent";
 import SwipeListMenu from "@/components/common/SwipeListMenu";
 import AppButton from "@/components/misc/AppButton";
 import AppModal from "@/components/modals/AppModal";
@@ -40,16 +39,17 @@ import RestyleText from "@/components/layout/RestyleText";
 import Wrapper from "@/components/layout/Wrapper";
 import Avatar from "@/components/misc/Avatar";
 import { useItems } from "../hooks/useItems";
-import { useHouse } from "../hooks/useHouse";
-import { HouseService } from "../services/houseService";
-import { useHouseStore } from "../store/useHouseStore";
-import { useUser } from "../hooks/useUser";
+
 import { differenceInDays, startOfToday } from "date-fns";
+import { Item } from "@/constants/types/ItemTypes";
+import { FOOD_TAG_INFO } from "@/constants/FoodTagsInfo";
+import { getGroupedItems, useDashboards } from "../utils/dashboard";
 Font.loadAsync(MaterialIcons.font);
 
 export default function HomePage(this: any) {
 	const { currentTheme } = useDarkLightTheme();
-	const currentUser = useAuthStore((state) => state.user);
+	const user = useAuthStore((state) => state.user);
+	const { getGroupedItems } = useDashboards();
 
 	const { shoppingScheduleQuery, shoppingScheduleMutation } =
 		useShoppingSchedule();
@@ -60,12 +60,14 @@ export default function HomePage(this: any) {
 	const [existingSchedule, setExistingSchedule] =
 		useState<ShoppingSchedule | null>(null);
 
-	if (currentUser === null) {
+	if (user === null) {
 		router.navigate("/login");
 		return <></>;
 	}
 
-	const { foodQuery } = useItems();
+	const { itemQuery } = useItems(user.id);
+	const [groupedItems, setGroupedItems] = useState<PieData[]>([]);
+	const { foodQuery } = useItems(user.id);
 
 	const [expiryItems, setExpiryItems] = useState<(Product & { key: number })[]>(
 		[]
@@ -125,7 +127,7 @@ export default function HomePage(this: any) {
 					console.log(
 						new Date(shoppingEvent.shoppingDate).toUTCString() +
 							"vs." +
-							new Date(shoppingSchedule?.shoppingDate).toUTCString()
+							new Date(shoppingSchedule?.shoppingDate!).toUTCString()
 					);
 
 					return (
@@ -206,6 +208,12 @@ export default function HomePage(this: any) {
 		return "-";
 	}, [shoppingScheduleQuery.data]);
 
+	useEffect(() => {
+		if (itemQuery.data) {
+			setGroupedItems(getGroupedItems(user.id, itemQuery.data));
+		}
+	}, [itemQuery.data]);
+
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<ScheduleModal
@@ -255,14 +263,14 @@ export default function HomePage(this: any) {
 				<RestyleBox style={styles.c1}>
 					<RestyleBox style={styles.userContainer} gap='s'>
 						<Avatar
-							uri={currentUser.profilePicture}
-							firstName={currentUser.firstName}
-							lastName={currentUser.lastName}
+							uri={user.profilePicture}
+							firstName={user.firstName}
+							lastName={user.lastName}
 						/>
 						<RestyleBox>
 							<RestyleText color='text'>Hello,</RestyleText>
 							<RestyleText variant='body' style={styles.userName} color='text'>
-								{currentUser?.firstName} {currentUser?.lastName} 👋
+								{user?.firstName} {user?.lastName} 👋
 							</RestyleText>
 						</RestyleBox>
 					</RestyleBox>
@@ -337,7 +345,7 @@ export default function HomePage(this: any) {
 						/>
 					</RestyleBox>
 
-					<PieChartComponent />
+					<PieChartComponent data={groupedItems} />
 				</RestyleBox>
 			</Wrapper>
 		</GestureHandlerRootView>

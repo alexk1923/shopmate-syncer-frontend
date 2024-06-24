@@ -16,9 +16,6 @@ export const ItemService = {
 		sortBy?: string
 	): Promise<Item[]> => {
 		try {
-			console.log("====================================");
-			console.log("The get items by house for houseId: " + houseId);
-			console.log("====================================");
 			const token = await getToken();
 			const url = sortBy
 				? `${API_URL}/items/house/${houseId}?sortBy=${sortBy}`
