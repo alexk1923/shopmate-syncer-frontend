@@ -3,7 +3,7 @@ import * as ImagePicker from "expo-image-picker";
 export const useImagePicker = () => {
 	const pickImage = async () => {
 		try {
-			console.log("imi dau pick image");
+			console.info("Picking image...");
 
 			const result = await ImagePicker.launchImageLibraryAsync({
 				mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -28,20 +28,27 @@ export const useImagePicker = () => {
 	};
 
 	const takePhoto = async () => {
-		const result = await ImagePicker.launchCameraAsync({
-			allowsEditing: true,
-			aspect: [1, 1],
-			presentationStyle:
-				ImagePicker.UIImagePickerPresentationStyle.CURRENT_CONTEXT,
-			quality: 0.5,
-			base64: true,
-			cameraType: ImagePicker.CameraType.front,
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-		});
+		console.info("Taking photo...");
+		try {
+			const result = await ImagePicker.launchCameraAsync({
+				allowsEditing: true,
+				aspect: [1, 1],
+				presentationStyle:
+					ImagePicker.UIImagePickerPresentationStyle.CURRENT_CONTEXT,
+				quality: 0.5,
+				base64: true,
+				cameraType: ImagePicker.CameraType.front,
+				mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			});
 
-		if (!result.canceled) {
-			const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`;
-			return base64Image;
+			if (!result.canceled) {
+				const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`;
+				return base64Image;
+			}
+		} catch (error) {
+			console.error("Error taking photo:");
+			console.log(error);
+			return null;
 		}
 	};
 

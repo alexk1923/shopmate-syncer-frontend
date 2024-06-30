@@ -14,9 +14,12 @@ const HorizontalCard = (props: HorizontalCardProps) => {
 
 	return (
 		<RestyleBox style={styles.c1} backgroundColor='cardBackground'>
-			<RestyleText color='primary' fontWeight='bold'>
-				{title}
-			</RestyleText>
+			{title.length > 0 && (
+				<RestyleText color='primary' fontWeight='bold'>
+					{title}
+				</RestyleText>
+			)}
+
 			{children}
 		</RestyleBox>
 	);

@@ -9,6 +9,7 @@ import {
 	FoodItem,
 	Item,
 } from "@/constants/types/ItemTypes";
+import { serviceFn } from "./generalService";
 
 export const ItemService = {
 	getItemsByHouse: async (
@@ -101,6 +102,9 @@ export const ItemService = {
 			return response.data;
 		} catch (error) {
 			if (axios.isAxiosError(error) && error.response) {
+				console.log("the add item is:");
+				console.error(error);
+
 				// Handle known error (e.g., API returned an error response)
 				console.log(error.response.data);
 
@@ -161,5 +165,9 @@ export const ItemService = {
 				throw new Error("An unexpected error occurred");
 			}
 		}
+	},
+
+	deleteItem: async (id: number) => {
+		return await serviceFn<void>(`${API_URL}/items/${id}`, "delete");
 	},
 };

@@ -61,60 +61,61 @@ const ImagePickerWidget = ({
 	const { width, height } = useWindowDimensions();
 
 	return (
-		<RestyleBox style={containerStyle} marginTop='m' height={height * 0.25}>
-			{uploadedImageUri ? (
-				<>
-					<Image
-						source={{ uri: uploadedImageUri }}
-						style={[
-							styles.widget,
-							{ borderColor: currentTheme.colors.primary },
-							imageStyle,
-						]}
-					/>
-					<TouchableOpacity
-						style={{
-							width: 50,
-							height: 50,
-							justifyContent: "center",
-							alignItems: "center",
-							top: "-20%",
-							left: "60%",
-							borderRadius: 30,
-						}}
-						onPress={() => setOpenActionModal(true)}
-					>
-						<RestyleBox
-							style={{
-								width: 50,
-								height: 50,
-								backgroundColor: "gray",
-								borderRadius: 90,
-								borderWidth: 1,
-								borderColor: "white",
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-						>
-							<FontAwesome6 name='camera' size={25} color='#444444' />
-						</RestyleBox>
-					</TouchableOpacity>
-				</>
-			) : (
-				<TouchableOpacity onPress={() => setOpenActionModal(true)}>
-					<RestyleBox style={styles.widget}>
-						<FontAwesome6 name='camera' size={60} color='#444444' />
-					</RestyleBox>
-				</TouchableOpacity>
-			)}
-
+		<>
 			{openActionModal && (
 				<ImageBottomModal
 					setImage={setImage}
 					setOpenActionModal={setOpenActionModal}
 				/>
 			)}
-		</RestyleBox>
+			<RestyleBox style={containerStyle} marginTop='m' height={height * 0.25}>
+				{uploadedImageUri ? (
+					<>
+						<Image
+							source={{ uri: uploadedImageUri }}
+							style={[
+								styles.widget,
+								{ borderColor: currentTheme.colors.primary },
+								imageStyle,
+							]}
+						/>
+						<TouchableOpacity
+							style={{
+								width: 50,
+								height: 50,
+								justifyContent: "center",
+								alignItems: "center",
+								top: "-20%",
+								left: "60%",
+								borderRadius: 30,
+							}}
+							onPress={() => setOpenActionModal(true)}
+						>
+							<RestyleBox
+								style={{
+									width: 50,
+									height: 50,
+									backgroundColor: "gray",
+									borderRadius: 90,
+									borderWidth: 1,
+									borderColor: "white",
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+							>
+								<FontAwesome6 name='camera' size={25} color='#444444' />
+							</RestyleBox>
+						</TouchableOpacity>
+					</>
+				) : (
+					<TouchableOpacity onPress={() => setOpenActionModal(true)}>
+						<RestyleBox style={styles.widget}>
+							<FontAwesome6 name='camera' size={60} color='#444444' />
+						</RestyleBox>
+					</TouchableOpacity>
+				)}
+			</RestyleBox>
+		</>
 	);
 };
 

@@ -56,7 +56,7 @@ const AppButton = ({
 			case "outline":
 				return "primary";
 			case "error":
-				return "mainBackground";
+				return "error";
 			default:
 				return "primary";
 		}
@@ -73,7 +73,7 @@ const AppButton = ({
 			case "outline":
 				return ["transparent", "transparent"];
 			case "error":
-				return ["red", currentTheme.colors.error];
+				return ["transparent", "transparent"];
 			default:
 				return [
 					currentTheme.colors.lightPrimary,

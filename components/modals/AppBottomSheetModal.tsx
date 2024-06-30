@@ -1,14 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { View, Text, StyleSheet, Button, BackHandler } from "react-native";
-import {
-	BottomSheetModal,
-	BottomSheetView,
-	BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
+import { View, StyleSheet, BackHandler } from "react-native";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { useDarkLightTheme } from "../ThemeContext";
-import { backgroundColor } from "@shopify/restyle";
+
 import AppButton from "../misc/AppButton";
-import { string } from "prop-types";
+import { useKeyboardVisible } from "@/app/hooks/useKeyboardVisible";
 
 const AppBottomSheetModal = ({
 	initialSnapPoint = "70%",
@@ -68,6 +64,9 @@ const AppBottomSheetModal = ({
 		handlePresentModalPress();
 	}, []);
 	// renders
+
+	const { isKeyboardVisible, setKeyboardVisible } = useKeyboardVisible();
+
 	return (
 		<View style={styles.container}>
 			<BottomSheetModal

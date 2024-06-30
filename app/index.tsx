@@ -27,6 +27,7 @@ const App = () => {
 		(state) => state.setNotificationSubscription
 	);
 	const appStateChangeRef = useRef(false);
+	const [initialising, setInitialising] = useState(true);
 
 	useEffect(() => {
 		const subscription = Notifications.addNotificationReceivedListener(
@@ -47,19 +48,18 @@ const App = () => {
 		const appResumeListener = AppState.addEventListener("change", (state) => {
 			console.log("state is" + state);
 
-			if (state === "active") {
-				if (!user) {
-					console.log("here");
-					return;
-				}
-				if (!user?.firstName || !user?.lastName) {
-					router.navigate("introduction/Introduction");
-				} else if (!user.houseId) {
-					router.navigate("pages/NoHomeJoined");
-				} else {
-					router.navigate("(tabs)/Home");
-				}
-			}
+			// if (state === "active") {
+			// 	if (!user) {
+			// 		return;
+			// 	}
+			// 	if (!user?.firstName || !user?.lastName) {
+			// 		router.navigate("introduction/Introduction");
+			// 	} else if (!user.houseId) {
+			// 		router.navigate("pages/NoHomeJoined");
+			// 	} else {
+			// 		router.navigate("(tabs)/Home");
+			// 	}
+			// }
 		});
 
 		return () => {
@@ -71,6 +71,7 @@ const App = () => {
 		console.log("Initialising auth");
 
 		initializeAuth();
+		setInitialising(false);
 	}, [appStateChangeRef.current]);
 
 	return (
@@ -85,22 +86,30 @@ const App = () => {
 					}
 				/>
 
-				<AppButton
-					title='LOGIN'
-					onPress={() => {
-						router.push("/Login");
-					}}
-					variant={"filled"}
-					fullWidth
-				></AppButton>
-				<AppButton
-					title='REGISTER'
-					variant={"outline"}
-					onPress={() => {
-						router.push("/Register");
-					}}
-					fullWidth
-				></AppButton>
+				{initialising ? (
+					<RestyleText variant='bodyBold' color='text'>
+						Initialising app...
+					</RestyleText>
+				) : (
+					<>
+						<AppButton
+							title='LOGIN'
+							onPress={() => {
+								router.push("/Login");
+							}}
+							variant={"filled"}
+							fullWidth
+						></AppButton>
+						<AppButton
+							title='REGISTER'
+							variant={"outline"}
+							onPress={() => {
+								router.push("/Register");
+							}}
+							fullWidth
+						></AppButton>
+					</>
+				)}
 
 				<RestyleText variant='buttonMedium' color='text' textAlign='center'>
 					Shopmate Syncer

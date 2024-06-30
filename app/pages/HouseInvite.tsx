@@ -20,14 +20,14 @@ const HouseInvite = () => {
 
 			<RestyleBox flexDirection='row'>
 				{house?.members.map((member) => (
-					<RestyleBox alignItems='center'>
+					<RestyleBox alignItems='center' key={member.id}>
 						<Avatar
 							uri={member.profilePicture}
 							firstName={member.firstName}
 							lastName={member.lastName}
+							onClick={() => {}}
 						/>
 						<RestyleText fontWeight='bold' color='text'>
-							{" "}
 							{member.username}
 						</RestyleText>
 					</RestyleBox>

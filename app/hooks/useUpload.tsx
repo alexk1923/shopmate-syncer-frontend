@@ -8,7 +8,7 @@ import { UploadService } from "../services/imageService";
 
 export const useUpload = () => {
 	const queryClient = useQueryClient();
-	const currentUser = useAuthStore().user;
+	const currentUser = useAuthStore((state) => state.user);
 
 	const uploadMutation = useMutation({
 		mutationKey: ["upload_image"],
@@ -48,9 +48,6 @@ export const useUpload = () => {
 		},
 		onSuccess: async (uploadDetails, variables) => {
 			if (currentUser) {
-				console.log("upload details is:");
-				console.log(uploadDetails?.secure_url);
-
 				let updateFields = {
 					userId: currentUser?.id,
 					firstName: variables.firstName,

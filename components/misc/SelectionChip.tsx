@@ -5,6 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useDarkLightTheme } from "../ThemeContext";
 import RestyleBox from "../layout/RestyleBox";
 import RestyleText from "../layout/RestyleText";
+import { backgroundColor } from "@shopify/restyle";
 
 type ChipProps = {
 	text: string;
@@ -20,7 +21,9 @@ const SelectionChip = ({ text, isSelected, onSelect }: ChipProps) => {
 				<RestyleBox
 					style={[
 						styles.chip,
-						isSelected && { backgroundColor: currentTheme.colors.primary },
+						isSelected
+							? { backgroundColor: currentTheme.colors.primary }
+							: { backgroundColor: currentTheme.colors.chip },
 					]}
 				>
 					<RestyleText color={isSelected ? "mainBackground" : "text"}>
@@ -36,7 +39,7 @@ const styles = StyleSheet.create({
 	chip: {
 		flexDirection: "row",
 		alignItems: "center",
-		backgroundColor: "#e0e0e0",
+
 		borderRadius: 15,
 		padding: 10,
 	},

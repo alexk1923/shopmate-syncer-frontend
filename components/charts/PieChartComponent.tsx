@@ -66,14 +66,12 @@ const PieChartComponent = ({ data }: PieChartProps) => {
 		},
 	];
 
-	const MemoizedPieChart = React.memo(PieChart);
-
 	const { currentTheme } = useDarkLightTheme();
 
 	return (
 		<HorizontalCard title='Last 30 days'>
 			<RestyleBox flexDirection='row' gap='m' justifyContent='center'>
-				<MemoizedPieChart
+				<PieChart
 					data={data}
 					// donut
 					textColor={"white"}

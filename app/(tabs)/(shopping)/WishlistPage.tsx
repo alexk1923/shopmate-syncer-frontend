@@ -1,11 +1,5 @@
-import {
-	FlatList,
-	ActivityIndicator,
-	StatusBar,
-	Image,
-	Text,
-} from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import { FlatList, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useDarkLightTheme } from "@/components/ThemeContext";
 import RestyleText from "@/components/layout/RestyleText";
 import Separator from "@/components/layout/Separator";
@@ -18,15 +12,10 @@ import GeneralItemCard, { VIEW_MODE } from "@/components/cards/GeneralItemCard";
 import { useAuthStore } from "@/app/store/useUserStore";
 import { useWishlist } from "@/app/hooks/useWishlist";
 import { WishlistItem } from "@/constants/types/WishlistTypes";
-import AppButton from "@/components/misc/AppButton";
+
 import AppFab from "@/components/misc/AppFab";
-import AppEditInput from "@/components/Form/AppEditInput";
-import { TextInput } from "react-native-gesture-handler";
-import AppModal from "@/components/modals/AppModal";
-import ImagePickerWidget from "@/components/widgets/ImagePickerWidget";
-import ImageBottomModal from "@/components/modals/ImageBottomModal";
-import { FontAwesome6 } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
+
+import QuickAddModal from "@/components/modals/QuickAddModal";
 
 enum MENU {
 	DISCOVER,
@@ -43,17 +32,8 @@ const WishlistPage = () => {
 	const { infiniteScrollItems } = useItems(user?.id ?? null);
 	const { wishlistQuery, addToWishlistMutation, removeFromWishlistMutation } =
 		useWishlist(user?.id!);
-	const [quickAdd, setQuickAdd] = useState<{
-		name: string;
-		description: string;
-		image: string | null;
-	}>({
-		name: "",
-		description: "",
-		image: null,
-	});
+
 	const [showQuickAddModal, setShowQuickModal] = useState(false);
-	const [showImageBottomSheet, setShowImageBottomSheet] = useState(false);
 
 	useEffect(() => {
 		if (infiniteScrollItems.data) {
@@ -174,85 +154,10 @@ const WishlistPage = () => {
 							/>
 						</RestyleBox>
 
-						<AppModal
-							modalVisible={showQuickAddModal}
-							onModalClose={() => setShowQuickModal(false)}
-							title={"Quick add"}
-							ImageBottomModal={
-								showImageBottomSheet && (
-									<ImageBottomModal
-										setOpenActionModal={setShowImageBottomSheet}
-										setImage={(image) =>
-											setQuickAdd((prev) => {
-												return { ...prev, image };
-											})
-										}
-									/>
-								)
-							}
-						>
-							<>
-								{quickAdd.image && (
-									<Image
-										source={{ uri: quickAdd.image }}
-										style={{
-											width: "50%",
-											aspectRatio: 1,
-											alignSelf: "center",
-										}}
-										borderRadius={90}
-									/>
-								)}
-								<AppEditInput
-									label={"Name"}
-									placeholder={"Wished Product"}
-									value={quickAdd.name}
-									onChangeText={(val) =>
-										setQuickAdd((prev) => {
-											return {
-												...prev,
-												name: val,
-											};
-										})
-									}
-								/>
-								<AppEditInput
-									label={"Description"}
-									placeholder={"Description..."}
-									value={quickAdd.description}
-									onChangeText={(val) =>
-										setQuickAdd((prev) => {
-											return {
-												...prev,
-												description: val,
-											};
-										})
-									}
-								/>
-								<RestyleBox flexDirection='row' alignItems='center' gap='s'>
-									<RestyleText variant='label'>Image</RestyleText>
-									<AppFab
-										size={32}
-										onPress={() => {
-											setShowImageBottomSheet(true);
-										}}
-										iconName={"image"}
-										iconColor={"white"}
-										backgroundColor={currentTheme.colors.primary}
-									/>
-								</RestyleBox>
-								<AppButton
-									title={"Add"}
-									onPress={() =>
-										addToWishlistMutation.mutate({
-											userId: user?.id!,
-											wishlistItem: { ...quickAdd, originalId: null },
-										})
-									}
-									variant={"filled"}
-								/>
-							</>
-						</AppModal>
+						<QuickAddModal
+							showQuickAddModal={showQuickAddModal}
+							setShowQuickAddModal={setShowQuickModal}
+						/>
 					</>
 				)}
 			</Wrapper>

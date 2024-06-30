@@ -33,18 +33,18 @@ export default function IntroductionLayoutNav() {
 				}}
 			>
 				<Stack.Screen
-					name='Introduction'
-					options={{
-						title: "Introduction",
-						headerShown: false,
-						animation: "fade",
-					}}
-				/>
-				<Stack.Screen
 					name='AccountSetup'
 					options={{
 						title: "Account Setup",
 						headerShown: true,
+						animation: "fade",
+					}}
+				/>
+				<Stack.Screen
+					name='Introduction'
+					options={{
+						title: "Introduction",
+						headerShown: false,
 						animation: "fade",
 					}}
 				/>

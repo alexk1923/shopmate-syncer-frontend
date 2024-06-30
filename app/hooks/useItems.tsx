@@ -25,8 +25,8 @@ export const useItems = (userId: number | null) => {
 		},
 	});
 
-	const foodQuery = useQuery({
-		queryKey: ["foods", user?.houseId],
+	const houseItems = useQuery({
+		queryKey: ["houseItems", user?.houseId],
 		queryFn: async () => {
 			if (!user || !user.houseId) {
 				throw new Error("User or houseId is not defined");
@@ -52,10 +52,16 @@ export const useItems = (userId: number | null) => {
 				...newItem,
 				image: uploadedPhoto?.secure_url ?? null,
 			});
+			console.log("the itemm is:");
+			console.log(item);
+
 			return item;
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["items"] });
+			queryClient.invalidateQueries({ queryKey: ["items", user?.houseId] });
+			queryClient.invalidateQueries({
+				queryKey: ["houseItems", user?.houseId],
+			});
 		},
 	});
 
@@ -79,18 +85,35 @@ export const useItems = (userId: number | null) => {
 				throw new Error("User or houseId is not defined");
 			}
 			const recommendationItems = await ItemService.getSimilarUsersItems(
-				user.houseId,
+				user.id,
 				1
 			);
+
 			return recommendationItems;
+		},
+	});
+
+	const deleteItemMutation = useMutation({
+		mutationFn: async ({ id }: { id: number }) => {
+			await ItemService.deleteItem(id);
+			return 0;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ["items", user?.houseId],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["houseItems", user?.houseId],
+			});
 		},
 	});
 
 	return {
 		itemQuery,
-		foodQuery,
+		houseItems,
 		addItemMutation,
 		infiniteScrollItems,
 		recommendationQuery,
+		deleteItemMutation,
 	};
 };

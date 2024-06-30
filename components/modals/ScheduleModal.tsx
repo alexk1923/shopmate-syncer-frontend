@@ -18,6 +18,7 @@ import RestyleText from "../layout/RestyleText";
 import AppButton from "../misc/AppButton";
 import AppFab from "../misc/AppFab";
 import AppModal from "./AppModal";
+import LoadingOverlay from "./LoadingOverlay";
 
 type ScheduleModalProps = {
 	open: boolean;
@@ -122,7 +123,7 @@ const ScheduleModal = ({
 				</RestyleBox>
 			</RestyleBox>
 
-			{isPending && <ActivityIndicator />}
+			{<LoadingOverlay isVisible={isPending} />}
 			{isError && errorMessage && (
 				<RestyleText color='error'>{errorMessage}</RestyleText>
 			)}

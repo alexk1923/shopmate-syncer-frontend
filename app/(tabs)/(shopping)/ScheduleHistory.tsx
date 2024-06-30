@@ -71,7 +71,7 @@ const ScheduleHistory = () => {
 	return (
 		<Wrapper>
 			<RestyleText variant='header' color='primary'>
-				Schedule history
+				Schedule
 			</RestyleText>
 			<Separator color={currentTheme.colors.primary} />
 

@@ -24,10 +24,10 @@ Font.loadAsync(MaterialIcons.font);
 Font.loadAsync(FontAwesome6.font);
 Font.loadAsync(MaterialCommunityIcons.font);
 
-export const unstable_settings = {
-	// Ensure any route can link back to `/`
-	initialRouteName: "Home",
-};
+// export const unstable_settings = {
+// 	// Ensure any route can link back to `/`
+// 	initialRouteName: "Home",
+// };
 export default function TabLayout() {
 	const { currentTheme } = useDarkLightTheme();
 
@@ -60,7 +60,6 @@ export default function TabLayout() {
 							name='Home'
 							options={{
 								title: "Home",
-
 								tabBarIcon: ({ color }) => (
 									<FontAwesome6 name='house' size={24} color={color} />
 								),
@@ -70,7 +69,6 @@ export default function TabLayout() {
 							name='(shopping)'
 							options={{
 								title: "Shopping",
-
 								tabBarIcon: ({ color }) => (
 									<FontAwesome6 name='cart-shopping' size={24} color={color} />
 								),
@@ -86,7 +84,6 @@ export default function TabLayout() {
 							name='Scan'
 							options={{
 								title: "Scan",
-
 								tabBarIcon: ({ color }) => (
 									<RestyleBox
 										style={{

@@ -20,6 +20,7 @@ const AccountSetup = () => {
 	const isFocused = useIsFocused();
 	const [image, setImage] = useState<string | null>(null);
 	const { useInfoSetupMutation } = useUpload();
+
 	function onSubmit(formData: AccountSetupInput) {
 		useInfoSetupMutation.mutate({
 			image: image,
@@ -27,6 +28,7 @@ const AccountSetup = () => {
 			lastName: formData.lastName,
 		});
 	}
+
 	const {
 		control,
 		handleSubmit,

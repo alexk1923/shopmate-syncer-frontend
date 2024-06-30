@@ -113,7 +113,7 @@ const Filter = () => {
 			</RestyleText>
 
 			{filterGroups.map((group) => (
-				<FilterGroup group={group} />
+				<FilterGroup key={group.id} group={group} />
 			))}
 			<AppButton
 				variant='outline'

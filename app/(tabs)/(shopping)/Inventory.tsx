@@ -31,36 +31,23 @@ import Wrapper from "@/components/layout/Wrapper";
 import AppFab from "@/components/misc/AppFab";
 import { theme } from "@/theme";
 import { differenceInDays, startOfToday } from "date-fns";
+import { useItems } from "@/app/hooks/useItems";
+import Toast from "react-native-root-toast";
+import AppToast from "@/components/misc/AppToast";
+import { useToast } from "react-native-toast-notifications";
 
 const Inventory = () => {
 	const user = useAuthStore((state) => state.user);
 	const filter = useFilterStore((state) => state.filter);
 	const setFilter = useFilterStore((state) => state.setFilter);
-
-	const itemQuery = useQuery({
-		queryKey: ["items", user?.houseId],
-		queryFn: async () => {
-			if (!user || !user.houseId) {
-				throw new Error("User or houseId is not defined");
-			}
-			const itemList = await ItemService.getItemsByHouse(user.houseId);
-			return itemList;
-		},
-	});
-
-	const foodQuery = useQuery({
-		queryKey: ["foods", user?.houseId],
-		queryFn: async () => {
-			if (!user || !user.houseId) {
-				throw new Error("User or houseId is not defined");
-			}
-			const foodList = await ItemService.getFoodList(user.houseId);
-			return foodList;
-		},
-	});
+	const toast = useToast();
+	const { itemQuery, deleteItemMutation } = useItems(user?.id!);
 
 	const filterByExpiryStatus = (item: Item) => {
 		if (item.isFood === false || !item.food) {
+			if (filter.expiredStatus === EXPIRY_STATUS.EXPIRED) {
+				return false;
+			}
 			return true;
 		}
 
@@ -118,12 +105,14 @@ const Inventory = () => {
 		rowKey: string | number
 	) => {
 		closeRow(rowMap, rowKey);
-
-		// const newData = [...expiryItems];
-		// const updatedData = newData.filter((item) => item.id !== rowKey);
-
-		// setExpiryItems(updatedData);
-		console.log("Item with id: " + rowKey + " will be deleted");
+		if (rowMap[rowKey].props.item) {
+			console.log("the rowkey is : " + rowKey);
+			console.log(
+				"Item with id: " + rowMap[rowKey].props.item.id + " will be deleted"
+			);
+			console.log(rowMap[rowKey].props.item);
+			deleteItemMutation.mutate({ id: rowMap[rowKey].props.item?.id! });
+		}
 	};
 
 	const renderHiddenItem = (data: { item: { key: any } }, rowMap: any) => {
@@ -137,21 +126,37 @@ const Inventory = () => {
 	};
 
 	useEffect(() => {
-		console.log(foodQuery.data);
-	}, [foodQuery.data]);
-
-	useEffect(() => {
 		console.log("Items are:");
 		console.log(itemQuery.data);
 	}, [itemQuery.data]);
 
 	const { currentTheme } = useDarkLightTheme();
 
+	useEffect(() => {
+		if (deleteItemMutation.status === "success") {
+			toast.show("Product removed from house inventory", {
+				type: "custom_toast",
+				animationDuration: 100,
+				data: {
+					title: "Success",
+				},
+			});
+		}
+	}, [deleteItemMutation.isSuccess]);
+
 	return (
 		<Wrapper>
-			<RestyleText variant='header' color='primary'>
-				Inventory
-			</RestyleText>
+			{/* <AppToast
+				variant='success'
+				text='Product removed from house inventory!'
+				visible={deleteItemMutation.isSuccess}
+			/> */}
+			{/* <AppToast
+				variant='error'
+				text='Failed to remove product!'
+				visible={deleteItemMutation.isError}
+			/> */}
+
 			<RestyleBox
 				flexDirection='row'
 				gap='s'
@@ -198,24 +203,35 @@ const Inventory = () => {
 			<SwipeListView
 				data={
 					filter.sortingOrder === SORTING_ORDER.ASCENDING
-						? itemQuery.data?.filter(filterByExpiryStatus).sort(sortByFn)
+						? itemQuery.data
+								?.filter(filterByExpiryStatus)
+								.filter((item) => (filter.isFood ? item.isFood : true))
+								.sort(sortByFn)
 						: itemQuery.data
 								?.filter(filterByExpiryStatus)
+								.filter((item) => (filter.isFood ? item.isFood : true))
 								.sort(sortByFn)
 								.reverse()
 				}
 				contentContainerStyle={{ gap: theme.spacing.s }}
 				renderItem={(product) => (
 					<ProductExpiryItem
+						// @ts-ignore
 						key={product.item.key}
 						// @ts-ignore
 						product={product.item}
 					/>
 				)}
+				keyExtractor={(item) => item.id}
 				renderHiddenItem={renderHiddenItem}
-				onRightAction={(row, rowMap) => {
+				onRightAction={(rowKey, rowMap) => {
+					console.log("the row is:");
+					console.log(rowKey);
+					console.log(rowMap);
+					console.log("======================");
+
 					// @ts-ignore
-					deleteRow(rowMap, row);
+					deleteRow(rowMap, rowKey);
 				}}
 				onRightActionStatusChange={() => {
 					// empty method to trigger activation

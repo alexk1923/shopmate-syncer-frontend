@@ -4,21 +4,11 @@ import { useDarkLightTheme } from "@/components/ThemeContext";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useRef } from "react";
-import {
-	Animated,
-	Easing,
-	FlatList,
-	Image,
-	Platform,
-	StyleSheet,
-	TouchableOpacity,
-	View,
-} from "react-native";
+import { Animated, Easing, FlatList, TouchableOpacity } from "react-native";
 import { useAuthStore } from "../store/useUserStore";
-import LottieView from "lottie-react-native";
 
-import { router, useNavigation } from "expo-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { router } from "expo-router";
+
 import RestyleText from "@/components/layout/RestyleText";
 import Wrapper from "@/components/layout/Wrapper";
 import AppButton from "@/components/misc/AppButton";
@@ -27,11 +17,20 @@ import SettingsItem, { SettingsType } from "@/components/common/SettingsItem";
 import LottieAnimation from "@/components/common/LottieAnimation";
 import { ANIMATIONS } from "@/constants/assets";
 import { useHouseStore } from "../store/useHouseStore";
+import { useUser } from "../hooks/useUser";
 
 const NoHouseScreen = () => {
 	const { currentTheme, darkMode, setDarkMode } = useDarkLightTheme();
 	const removeUser = useAuthStore((state) => state.removeUser);
 	const removeHouse = useHouseStore((state) => state.removeHouse);
+	const user = useAuthStore((state) => state.user);
+	console.log("the user is:");
+	console.log(user);
+	const { userQuery } = useUser(user?.id!);
+
+	if (userQuery.data && userQuery.data.houseId) {
+		router.replace("(tabs)/Home");
+	}
 
 	const settingsData: SettingsType[] = [
 		{
@@ -68,9 +67,6 @@ const NoHouseScreen = () => {
 			},
 		},
 	];
-
-	const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
-	const user = useAuthStore().user;
 
 	const animationProgress = useRef(new Animated.Value(0));
 
@@ -134,7 +130,7 @@ const NoHouseScreen = () => {
 						<AppButton
 							title={"Create"}
 							onPress={() => {
-								router.push("/pages/HouseCreate");
+								router.navigate("/pages/HouseCreate");
 							}}
 							variant={"filled"}
 						/>

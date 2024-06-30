@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 
 import RestyleBox from "../layout/RestyleBox";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { router } from "expo-router";
 
 // @ts-ignore
 const SwipeListMenu = (props) => {
@@ -17,15 +19,19 @@ const SwipeListMenu = (props) => {
 			]}
 		>
 			{!rightActionActivated && (
-				<RestyleBox
-					backgroundColor='primary'
-					width={50}
-					justifyContent='center'
-					alignItems='center'
-					height='100%'
+				<TouchableOpacity
+					onPress={() => router.navigate("(tabs)/(shopping)/Inventory")}
 				>
-					<FontAwesome6 name='info' size={24} color='white' />
-				</RestyleBox>
+					<RestyleBox
+						backgroundColor='primary'
+						width={50}
+						justifyContent='center'
+						alignItems='center'
+						height='100%'
+					>
+						<FontAwesome6 name='info' size={24} color='white' />
+					</RestyleBox>
+				</TouchableOpacity>
 			)}
 
 			<Pressable onPress={onDelete}>

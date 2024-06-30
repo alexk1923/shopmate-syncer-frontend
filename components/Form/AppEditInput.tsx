@@ -66,6 +66,7 @@ const AppEditInput = (props: InputProps) => {
 					onChangeText={onChangeText}
 					onFocus={() => setIsFocused(true)}
 					numberOfLines={5}
+					placeholderTextColor={currentTheme.colors.gray}
 				></TextInput>
 				<FontAwesome6
 					name={iconName}

@@ -48,11 +48,10 @@ export const UserService = {
 		firstName?: string | null;
 		lastName?: string | null;
 		birthday?: Date | null;
-		profilePicture?: string;
+		profilePicture?: string | null;
 	}): Promise<User> => {
 		try {
 			const token = await getToken();
-			console.log("my user id is:" + updateArgs.userId);
 
 			const response = await axios.patch<User>(
 				`${API_URL}/users/${updateArgs.userId}`,

@@ -11,18 +11,15 @@ import LoadingOverlay from "@/components/modals/LoadingOverlay";
 const Home = () => {
 	const navigation = useNavigation();
 	const user = useAuthStore((state) => state.user);
-
 	const { userQuery } = useUser(user?.id ?? null);
 
 	useEffect(() => {
-		console.log("userQuery made!");
-
 		if (userQuery.data) {
 			if (!userQuery.data.firstName || !userQuery.data.lastName) {
-				router.push("introduction/Introduction");
+				router.replace("introduction/AccountSetup");
 			}
 		}
-	}, [userQuery.data]);
+	}, []);
 
 	useEffect(() => {
 		const backAction = () => {

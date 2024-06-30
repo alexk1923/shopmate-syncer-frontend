@@ -41,7 +41,6 @@ import LoadingOverlay from "@/components/modals/LoadingOverlay";
 import Wrapper from "@/components/layout/Wrapper";
 import ImagePickerWidget from "@/components/widgets/ImagePickerWidget";
 import Avatar from "@/components/misc/Avatar";
-import { string } from "prop-types";
 
 const HouseCreate = () => {
 	const [houseName, setHouseName] = useState("");
@@ -168,56 +167,7 @@ const HouseCreate = () => {
 	}
 
 	return (
-		<Wrapper>
-			<LoadingOverlay isVisible={createHouseMutation.isPending} />
-			<ImagePickerWidget uploadedImageUri={image} setImage={setImage} />
-			<AppEditInput
-				label={"House name"}
-				placeholder={"e.g. My House"}
-				iconName={""}
-				iconColor={""}
-				iconSize={0}
-				value={houseName}
-				onChangeText={(val) => {
-					setHouseName(val);
-				}}
-			/>
-
-			<View style={styles.container}>
-				<RestyleBox
-					flexDirection='row'
-					gap='s'
-					alignItems='center'
-					flexWrap='wrap'
-				>
-					<RestyleText variant='label'>Add Users</RestyleText>
-
-					<AppFab
-						size={30}
-						onPress={() => setOpenSearch(true)}
-						iconName={"add"}
-						iconColor='white'
-						backgroundColor={currentTheme.colors.primary}
-					/>
-				</RestyleBox>
-				<RestyleBox flexDirection='row'>
-					{selectedUsers.map((selectedUser) => (
-						<Chip
-							text={selectedUser.username}
-							handleRemove={handleRemoveUser}
-							id={selectedUser.id}
-							key={selectedUser.id}
-							photo={selectedUser.profilePicture}
-						/>
-					))}
-				</RestyleBox>
-				<AppButton
-					title={"Create"}
-					onPress={handleCreateHouse}
-					variant={"filled"}
-				/>
-			</View>
-
+		<>
 			{openSearch && (
 				<GestureHandlerRootView
 					style={{
@@ -229,7 +179,9 @@ const HouseCreate = () => {
 						backgroundColor: "transparent",
 						height,
 						width,
+						flex: 1,
 						margin: 0,
+						zIndex: 1,
 					}}
 				>
 					<BottomSheetModalProvider>
@@ -303,7 +255,57 @@ const HouseCreate = () => {
 					</BottomSheetModalProvider>
 				</GestureHandlerRootView>
 			)}
-		</Wrapper>
+			<Wrapper>
+				<LoadingOverlay isVisible={createHouseMutation.isPending} />
+				<ImagePickerWidget uploadedImageUri={image} setImage={setImage} />
+				<AppEditInput
+					label={"House name"}
+					placeholder={"e.g. My House"}
+					iconName={""}
+					iconColor={""}
+					iconSize={0}
+					value={houseName}
+					onChangeText={(val) => {
+						setHouseName(val);
+					}}
+				/>
+
+				<View style={styles.container}>
+					<RestyleBox
+						flexDirection='row'
+						gap='s'
+						alignItems='center'
+						flexWrap='wrap'
+					>
+						<RestyleText variant='label'>Add Users</RestyleText>
+
+						<AppFab
+							size={30}
+							onPress={() => setOpenSearch(true)}
+							iconName={"add"}
+							iconColor='white'
+							backgroundColor={currentTheme.colors.primary}
+						/>
+					</RestyleBox>
+					<RestyleBox flexDirection='row'>
+						{selectedUsers.map((selectedUser) => (
+							<Chip
+								text={selectedUser.username}
+								handleRemove={handleRemoveUser}
+								id={selectedUser.id}
+								key={selectedUser.id}
+								photo={selectedUser.profilePicture}
+							/>
+						))}
+					</RestyleBox>
+					<AppButton
+						title={"Create"}
+						onPress={handleCreateHouse}
+						variant={"filled"}
+					/>
+				</View>
+			</Wrapper>
+		</>
 	);
 };
 

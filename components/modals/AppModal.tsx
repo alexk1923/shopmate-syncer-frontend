@@ -1,5 +1,13 @@
-import { View, Text, StyleSheet, Modal, Alert, Pressable } from "react-native";
-import React, { useState } from "react";
+import {
+	View,
+	Text,
+	StyleSheet,
+	Modal,
+	Alert,
+	Pressable,
+	Keyboard,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 
 import { StatusBar } from "expo-status-bar";
 
@@ -7,6 +15,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useDarkLightTheme } from "../ThemeContext";
 import RestyleBox from "../layout/RestyleBox";
 import RestyleText from "../layout/RestyleText";
+import { useKeyboardVisible } from "@/app/hooks/useKeyboardVisible";
 
 type AppModalProps = {
 	children: React.ReactNode;
@@ -20,6 +29,7 @@ const AppModal = (props: AppModalProps) => {
 	const { ImageBottomModal, children, modalVisible, onModalClose, title } =
 		props;
 	const { currentTheme } = useDarkLightTheme();
+
 	return (
 		<Modal
 			animationType='fade'

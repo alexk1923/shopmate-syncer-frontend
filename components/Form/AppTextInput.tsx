@@ -75,6 +75,7 @@ const AppTextInput = ({
 								}}
 								onFocus={() => setFocused(true)}
 								secureTextEntry={isPassword && !showPassword}
+								placeholderTextColor={currentTheme.colors.gray}
 							/>
 
 							{isPassword && (

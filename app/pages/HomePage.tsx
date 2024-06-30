@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet } from "react-native";
+import { Dimensions, Image, Modal, StyleSheet } from "react-native";
 import { theme } from "@/theme";
 
 import { router } from "expo-router";
@@ -42,14 +42,25 @@ import { useItems } from "../hooks/useItems";
 
 import { differenceInDays, startOfToday } from "date-fns";
 import { Item } from "@/constants/types/ItemTypes";
-import { FOOD_TAG_INFO } from "@/constants/FoodTagsInfo";
-import { getGroupedItems, useDashboards } from "../utils/dashboard";
+
+import { useDashboards } from "../utils/dashboard";
+import HorizontalCard from "@/components/cards/HorizontalCard";
+import NoProductsAdded from "@/components/misc/NoProductsAdded";
+import ImageViewerModal from "@/components/modals/ImageViewerModal";
+import { useToast } from "react-native-toast-notifications";
+import { set } from "lodash";
+import LoadingOverlay from "@/components/modals/LoadingOverlay";
 Font.loadAsync(MaterialIcons.font);
 
 export default function HomePage(this: any) {
 	const { currentTheme } = useDarkLightTheme();
 	const user = useAuthStore((state) => state.user);
 	const { getGroupedItems } = useDashboards();
+	const [isModalVisible, setModalVisible] = useState(false);
+	const toast = useToast();
+	const toggleModal = () => {
+		setModalVisible(!isModalVisible);
+	};
 
 	const { shoppingScheduleQuery, shoppingScheduleMutation } =
 		useShoppingSchedule();
@@ -65,13 +76,9 @@ export default function HomePage(this: any) {
 		return <></>;
 	}
 
-	const { itemQuery } = useItems(user.id);
+	const { itemQuery, deleteItemMutation } = useItems(user.id);
 	const [groupedItems, setGroupedItems] = useState<PieData[]>([]);
-	const { foodQuery } = useItems(user.id);
-
-	const [expiryItems, setExpiryItems] = useState<(Product & { key: number })[]>(
-		[]
-	);
+	const { houseItems } = useItems(user.id);
 
 	const [shoppingSchedule, setShoppingSchedule] = useState<
 		Omit<ShoppingDayType, "shoppingDate"> & { shoppingDate: Date | null }
@@ -80,10 +87,14 @@ export default function HomePage(this: any) {
 		shoppingDate: null,
 	});
 
+	const resetScheduleModal = () => {
+		setShoppingSchedule({ title: "", shoppingDate: null });
+		setIsScheduleShoppingOpen(false);
+	};
+
 	useEffect(() => {
 		if (shoppingScheduleMutation.isSuccess) {
-			setShoppingSchedule({ title: "", shoppingDate: null });
-			setIsScheduleShoppingOpen(false);
+			resetScheduleModal();
 		}
 	}, [shoppingScheduleMutation.isSuccess]);
 
@@ -102,12 +113,19 @@ export default function HomePage(this: any) {
 	) => {
 		closeRow(rowMap, rowKey);
 
-		console.warn("TODO: Implement deleting item from database");
+		console.log("rowkey = " + rowKey);
+		console.log("rowmap = " + rowMap);
 
-		const newData = [...expiryItems];
-		const updatedData = newData.filter((item) => item.id !== rowKey);
+		console.log(rowMap[rowKey].props.item);
 
-		setExpiryItems(updatedData);
+		if (rowMap[rowKey].props.item) {
+			deleteItemMutation.mutate({ id: rowMap[rowKey].props.item?.id! });
+		}
+
+		// const newData = [...expiryItems];
+		// const updatedData = newData.filter((item) => item.id !== rowKey);
+
+		// setExpiryItems(updatedData);
 	};
 
 	const renderHiddenItem = (data: { item: { key: any } }, rowMap: any) => {
@@ -176,6 +194,23 @@ export default function HomePage(this: any) {
 		console.log(shoppingSchedule.shoppingDate);
 
 		if (shoppingSchedule.shoppingDate) {
+			const diff = differenceInDays(
+				new Date(shoppingSchedule.shoppingDate),
+				startOfToday()
+			);
+
+			if (diff < 0) {
+				toast.show("Cannot schedule a shopping day in the past", {
+					type: "custom_toast",
+					animationDuration: 100,
+					data: {
+						title: "Error",
+					},
+				});
+				resetScheduleModal();
+				return;
+			}
+
 			shoppingScheduleMutation.mutate({
 				title: shoppingSchedule.title,
 				shoppingDate: shoppingSchedule.shoppingDate,
@@ -202,20 +237,38 @@ export default function HomePage(this: any) {
 				return "Today";
 			}
 
-			return remainingDays[0];
+			if (remainingDays[0] === 1) {
+				return `${remainingDays[0]} day`;
+			}
+
+			if (remainingDays[0] > 1) {
+				return `${remainingDays[0]} days`;
+			}
 		}
 
 		return "-";
 	}, [shoppingScheduleQuery.data]);
 
-	useEffect(() => {
-		if (itemQuery.data) {
-			setGroupedItems(getGroupedItems(user.id, itemQuery.data));
-		}
-	}, [itemQuery.data]);
+	// useEffect(() => {
+	// 	if (itemQuery.data) {
+	// 		setGroupedItems(getGroupedItems(user.id, itemQuery.data));
+	// 	}
+	// }, []);
+
+	if (itemQuery.isLoading || houseItems.isLoading) {
+		return (
+			<LoadingOverlay isVisible={itemQuery.isLoading || houseItems.isLoading} />
+		);
+	}
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
+			<ImageViewerModal
+				modalVisible={isModalVisible}
+				onModalClose={toggleModal}
+				image={user.profilePicture}
+			/>
+
 			<ScheduleModal
 				open={isScheduleShoppingOpen}
 				setOpen={setIsScheduleShoppingOpen}
@@ -266,6 +319,7 @@ export default function HomePage(this: any) {
 							uri={user.profilePicture}
 							firstName={user.firstName}
 							lastName={user.lastName}
+							onClick={() => toggleModal()}
 						/>
 						<RestyleBox>
 							<RestyleText color='text'>Hello,</RestyleText>
@@ -298,55 +352,63 @@ export default function HomePage(this: any) {
 					</RestyleBox>
 				</RestyleBox>
 
-				<RestyleBox gap='m' flex={1}>
-					<RestyleBox
-						style={styles.expiryContainer}
-						backgroundColor='cardBackground'
-					>
-						<RestyleText
-							color='primary'
-							fontWeight='bold'
-							paddingHorizontal='m'
+				{houseItems.data && houseItems.data.length > 0 ? (
+					<RestyleBox gap='m' flex={1}>
+						<RestyleBox
+							style={styles.expiryContainer}
+							backgroundColor='cardBackground'
+							flex={1}
 						>
-							Expiring soon ⌛
-						</RestyleText>
+							<RestyleText
+								color='primary'
+								fontWeight='bold'
+								paddingHorizontal='m'
+							>
+								Expiring soon ⌛
+							</RestyleText>
 
-						<SwipeListView
-							data={foodQuery.data
-								?.filter((f) => f.food)
-								.sort((a, b) =>
-									a.food && b.food
-										? differenceInDays(a.food.expiryDate, b.food.expiryDate)
-										: a.id
+							<SwipeListView
+								data={houseItems.data
+									?.filter((f) => f.food)
+									.sort((a, b) =>
+										a.food && b.food
+											? differenceInDays(a.food.expiryDate, b.food.expiryDate)
+											: a.id
+									)}
+								renderItem={(product) => (
+									<ProductExpiryItem
+										key={product.item.key}
+										// @ts-ignore
+										product={product.item}
+									/>
 								)}
-							renderItem={(product) => (
-								<ProductExpiryItem
-									key={product.item.key}
+								keyExtractor={(item) => item.id}
+								renderHiddenItem={renderHiddenItem}
+								onRightAction={(row, rowMap) => {
 									// @ts-ignore
-									product={product.item}
-								/>
-							)}
-							renderHiddenItem={renderHiddenItem}
-							onRightAction={(row, rowMap) => {
-								// @ts-ignore
-								deleteRow(rowMap, row);
-							}}
-							onRightActionStatusChange={() => {
-								// empty method to trigger activation
-							}}
-							// restDisplacementThreshold={1}
-							restSpeedThreshold={100}
-							rightOpenValue={-100}
-							disableRightSwipe
-							rightActivationValue={-150}
-							rightActionValue={-400} // until where will the row extend (translate)
-							scrollEnabled={true}
-							style={{ flex: 1, overflow: "hidden" }}
+									deleteRow(rowMap, row);
+								}}
+								onRightActionStatusChange={() => {
+									// empty method to trigger activation
+								}}
+								// restDisplacementThreshold={1}
+								restSpeedThreshold={100}
+								rightOpenValue={-100}
+								disableRightSwipe
+								rightActivationValue={-150}
+								rightActionValue={-400} // until where will the row extend (translate)
+								scrollEnabled={true}
+								style={{ flex: 1, overflow: "hidden" }}
+							/>
+						</RestyleBox>
+
+						<PieChartComponent
+							data={getGroupedItems(user.id, itemQuery.data ?? [])}
 						/>
 					</RestyleBox>
-
-					<PieChartComponent data={groupedItems} />
-				</RestyleBox>
+				) : (
+					<NoProductsAdded />
+				)}
 			</Wrapper>
 		</GestureHandlerRootView>
 	);

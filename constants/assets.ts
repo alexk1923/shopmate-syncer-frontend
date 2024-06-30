@@ -13,6 +13,7 @@ export const ANIMATIONS = {
 	HISTORY: require("@/assets/animations/history.json"),
 	NOT_FOUND: require("@/assets/animations/not_found.json"),
 	NO_HOUSE: require("@/assets/animations/no_house.json"),
+	LOADING_CART: require("@/assets/animations/loading_cart.json"),
 };
 
 export const ICONS = {

@@ -28,7 +28,7 @@ const ShoppingMode = () => {
 	const user = useAuthStore((state) => state.user);
 
 	const { currentTheme } = useDarkLightTheme();
-	const { recommendationQuery, foodQuery } = useItems(user?.id!);
+	const { recommendationQuery, houseItems } = useItems(user?.id!);
 	const { wishlistQuery } = useWishlist(user?.id!);
 	const [selectedMenu, setSelectedMenu] = useState(
 		RECOMMENDER_MENU.RECOMMENDATIONS
@@ -143,9 +143,9 @@ const ShoppingMode = () => {
 						{selectedMenu === RECOMMENDER_MENU.EXPIRY && (
 							<RestyleBox flex={1}>
 								<RestyleText variant='label'>Soon expiry items</RestyleText>
-								{foodQuery.data && (
+								{houseItems.data && (
 									<FlatList
-										data={foodQuery.data}
+										data={houseItems.data}
 										renderItem={({ item }) => (
 											<GeneralItemCard
 												item={{ ...item, description: "", originalId: null }}
@@ -183,13 +183,13 @@ const ShoppingMode = () => {
 					</>
 				) : (
 					<>
-						<RestyleText variant='body'>
+						<RestyleText variant='body' color='text'>
 							Activate this mode if you are in a store and want to efficiently
 							choose your products based on recommendation and auto-generated
 							lists. Your wishlist would be considered too !
 						</RestyleText>
 
-						<RestyleText>
+						<RestyleText color='text'>
 							Shopping mode is currently {shoppingMode ? "enabled" : "disabled"}
 						</RestyleText>
 

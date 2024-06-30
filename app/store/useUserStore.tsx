@@ -71,14 +71,10 @@ export const useAuthStore = create<AuthState>()(
 								get().user?.lastName === null ||
 								get().firstLaunch
 							) {
-								console.log("navigating to introduction");
-
-								router.navigate("introduction");
+								router.navigate("introduction/AccountSetup");
 							} else if (!get().user?.houseId) {
 								router.navigate("pages/NoHomeJoined");
 							} else {
-								console.log("navigating to Home");
-
 								router.navigate("(tabs)/Home");
 							}
 						} catch (error) {

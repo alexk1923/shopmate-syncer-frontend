@@ -1,24 +1,14 @@
-import {
-	View,
-	StyleSheet,
-	Image,
-	TextInput,
-	Pressable,
-	Keyboard,
-	ActivityIndicator,
-	Text,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet, Image, ActivityIndicator } from "react-native";
+import React from "react";
 
 import { useDarkLightTheme } from "@/components/ThemeContext";
 
 import { FontAwesome6 } from "@expo/vector-icons";
 import { theme } from "@/theme";
-import { useForm, Controller } from "react-hook-form";
-import { Link, router, useNavigation } from "expo-router";
+import { useForm } from "react-hook-form";
+import { Link, router } from "expo-router";
 
-import { useKeyboardVisible } from "./hooks/useKeyboardVisible";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login } from "./services/authService";
 import { LoginInput } from "@/constants/types/AuthTypes";
 
@@ -66,9 +56,11 @@ const Login = () => {
 		mutationFn: ({ username, password }: LoginInput) =>
 			login(username, password),
 		onSuccess: async (data) => {
+			// Set token and user id
 			setToken(data.token);
 			setUserId(data.id);
 
+			// Ask for notifications permission
 			if (!notificationToken) {
 				const newNotificationToken =
 					await NotificationService.registerForPushNotificationsAsync(
@@ -81,22 +73,30 @@ const Login = () => {
 				}
 			}
 
+			// Prefetch user before redirecting
 			queryClient.prefetchQuery({
 				queryKey: ["user", data.id],
 				queryFn: async () => {
 					if (data.id) {
+						// Set user
 						const user = await UserService.getUserById(data.id);
-						if (firstLaunch) {
-							router.push("introduction");
-						} else if (!user?.houseId) {
-							router.push("pages/NoHomeJoined");
-						} else {
-							router.push("(tabs)/Home");
-						}
 						setUser(user);
+
+						// Set house
 						if (user.houseId) {
 							const house = await HouseService.getHouseById(user.houseId);
 							setHouse(house);
+						}
+
+						// Redirect to specific screen
+						if (firstLaunch || !user.firstName || !user.lastName) {
+							console.log("redirecting to account setup");
+
+							router.push("introduction/AccountSetup");
+						} else {
+							console.log("redirecting to home...");
+
+							router.push("(tabs)/Home");
 						}
 						return user;
 					}
@@ -104,7 +104,7 @@ const Login = () => {
 			});
 		},
 		onError: (err) => {
-			console.error("Error login");
+			console.error("Login mutation has returned an error:");
 			console.error(err);
 			resetField("password");
 		},

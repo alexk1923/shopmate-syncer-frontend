@@ -28,11 +28,6 @@ export const useDashboards = () => {
 			}
 		});
 
-		console.log(tagGroup);
-
-		console.log("the keys:");
-		console.log(tagGroup.size);
-
 		for (const [key, value] of tagGroup) {
 			tagGroupArr.push({
 				name: FOOD_TAG_INFO[key].name,
@@ -41,8 +36,6 @@ export const useDashboards = () => {
 				color: FOOD_TAG_INFO[key].color,
 			});
 		}
-
-		console.log(tagGroupArr);
 
 		return tagGroupArr;
 	};
@@ -72,20 +65,13 @@ export const useDashboards = () => {
 	};
 
 	const getTotalProductsEvolution = (userId: number, items: Item[]) => {
-		console.log(items);
-
 		const year = startOfYear(startOfToday()).getFullYear();
 		const month = startOfMonth(startOfToday());
-		console.log("the month is");
-		console.log(month);
 
 		const dates = [];
 		for (let i = 1; i <= startOfToday().getDate(); i++) {
 			dates.push(new Date(year, month.getMonth(), i));
 		}
-
-		console.log("the dates are:");
-		console.log(dates);
 
 		const productsByDates: {
 			label: string;
@@ -102,7 +88,6 @@ export const useDashboards = () => {
 			let productsByDay = 0;
 			items.forEach((item) => {
 				if (item.food && item.boughtBy.id === userId) {
-					console.log(date + "vs. " + item.createdAt + "=");
 					const dif = differenceInDays(item.createdAt, date);
 					if (dif === 0) {
 						productsByDay++;
@@ -119,7 +104,6 @@ export const useDashboards = () => {
 			totalProducts += productsByDay;
 		});
 
-		console.log(productsByDates);
 		return productsByDates;
 	};
 

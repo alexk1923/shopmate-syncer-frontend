@@ -39,7 +39,7 @@ export const FOOD_TAG_INFO: FoodTagType = {
 		name: "Fruits & Veggetables",
 		color: "#2feb3f",
 		imgName: "Fruit tag",
-		uri: ICONS.SWEETS,
+		uri: ICONS.FRUITS_VEGETABLES,
 	},
 	GRAINS: {
 		name: "Grains",
