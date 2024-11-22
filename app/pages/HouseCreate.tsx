@@ -71,9 +71,9 @@ const HouseCreate = () => {
 		onSuccess: () => {
 			setSuccess(true);
 			queryClient.invalidateQueries({ queryKey: ["user", user?.id] });
-			setTimeout(() => {
-				router.back();
-			}, 4000);
+			// setTimeout(() => {
+			// 	router.back();
+			// }, 1000);
 		},
 	});
 

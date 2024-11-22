@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 
 import { useFilterStore } from "@/app/store/useFilterStore";
 
-import { EXPIRY_STATUS, SORTING_TYPE } from "@/constants/types/ItemTypes";
+import {
+	ADDED_BY_FILTER,
+	EXPIRY_STATUS,
+	SORTING_TYPE,
+} from "@/constants/types/ItemTypes";
 import DateTimePicker, {
 	DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -100,6 +104,28 @@ const Filter = () => {
 					isSelected: filter.sortBy === SORTING_TYPE.EXPIRY_DATE,
 					onSelect: () => {
 						setFilter({ ...filter, sortBy: SORTING_TYPE.EXPIRY_DATE });
+					},
+				},
+			],
+		},
+		{
+			id: 4,
+			groupName: "Added by",
+			chips: [
+				{
+					id: 1,
+					text: "Any member",
+					isSelected: filter.addedBy === ADDED_BY_FILTER.ALL,
+					onSelect: () => {
+						setFilter({ ...filter, addedBy: ADDED_BY_FILTER.ALL });
+					},
+				},
+				{
+					id: 2,
+					text: "Me",
+					isSelected: filter.addedBy === ADDED_BY_FILTER.ME,
+					onSelect: () => {
+						setFilter({ ...filter, addedBy: ADDED_BY_FILTER.ME });
 					},
 				},
 			],

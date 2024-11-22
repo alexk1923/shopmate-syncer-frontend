@@ -96,16 +96,3 @@ export default function ShoppingLayoutNav() {
 		</ThemeProvider>
 	);
 }
-
-const styles = StyleSheet.create({
-	profilePic: {
-		width: 50,
-		height: 50,
-		borderRadius: 25,
-		// right: 20,
-		position: "relative",
-		borderWidth: 2,
-		borderColor: "white",
-		overflow: "visible",
-	},
-});

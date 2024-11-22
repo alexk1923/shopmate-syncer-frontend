@@ -15,6 +15,7 @@ import { useAuthStore } from "../store/useUserStore";
 import { useUser } from "../hooks/useUser";
 import { useUpload } from "../hooks/useUpload";
 import { useIsFocused } from "@react-navigation/native";
+import LoadingOverlay from "@/components/modals/LoadingOverlay";
 
 const AccountSetup = () => {
 	const isFocused = useIsFocused();
@@ -91,7 +92,7 @@ const AccountSetup = () => {
 					);
 				})}
 			</RestyleBox>
-			{useInfoSetupMutation.isPending && <ActivityIndicator />}
+			<LoadingOverlay isVisible={useInfoSetupMutation.isPending} />
 			{useInfoSetupMutation.isError && (
 				<RestyleText color='error'>
 					{useInfoSetupMutation.error.message}

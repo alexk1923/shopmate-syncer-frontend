@@ -15,11 +15,13 @@ interface AuthState {
 	notificationToken: string | null;
 	notificationSubscription: Subscription | null;
 	firstLaunch: boolean;
+	preferedThemeDark: boolean;
+	setPreferredThemeDark: (dark: boolean) => void;
 	setUserId: (userId: number) => void;
 	setUser: (user: User) => void;
 	setToken: (token: string) => void;
 	setNotificationSubscription: (subscription: Subscription) => void;
-	setNotificationToken: (notificationToken: string) => void;
+	setNotificationToken: (notificationToken: string | null) => void;
 	setFirstLaunch: () => void;
 	removeUser: () => void;
 	initializeAuth: () => void;
@@ -35,6 +37,8 @@ export const useAuthStore = create<AuthState>()(
 				notificationSubscription: null,
 				firstLaunch: true,
 				notificationToken: null,
+				preferedThemeDark: false,
+				setPreferredThemeDark: (dark) => set({ preferedThemeDark: dark }),
 				setUserId: (userId: number) => set({ userId: userId }),
 				setUser: (fetchedUser: User) => set({ user: fetchedUser }),
 				removeUser: () => {

@@ -15,6 +15,7 @@ export type LoginResponse = {
 	id: number;
 	username: string;
 	email: string;
+	notificationToken: string | null;
 };
 
 export type ApiErrorz = {

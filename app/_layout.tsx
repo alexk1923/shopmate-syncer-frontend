@@ -81,6 +81,7 @@ function RootLayoutNav() {
 										paddingVertical: 10,
 										backgroundColor: "#fff",
 										marginVertical: 4,
+										marginBottom: 48,
 										borderRadius: 8,
 										borderLeftColor:
 											toast.data.title === "Success" ? "#00C851" : "red",

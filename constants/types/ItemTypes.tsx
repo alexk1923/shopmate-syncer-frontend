@@ -22,11 +22,17 @@ export type FilterType = {
 	expiredStatus: EXPIRY_STATUS;
 	sortBy: SORTING_TYPE;
 	sortingOrder: SORTING_ORDER;
+	addedBy: ADDED_BY_FILTER;
 };
 
 export enum SORTING_ORDER {
 	ASCENDING,
 	DESCENDING,
+}
+
+export enum ADDED_BY_FILTER {
+	ALL,
+	ME,
 }
 
 export type Item = {

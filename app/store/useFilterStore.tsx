@@ -10,6 +10,7 @@ import {
 	FilterType,
 	SORTING_ORDER,
 	SORTING_TYPE,
+	ADDED_BY_FILTER,
 } from "@/constants/types/ItemTypes";
 
 // import type {} from "@redux-devtools/extension"; // required for devtools typing
@@ -28,6 +29,7 @@ export const useFilterStore = create<FilterParams>()(
 			expiredStatus: EXPIRY_STATUS.ALL,
 			sortBy: SORTING_TYPE.EXPIRY_DATE,
 			sortingOrder: SORTING_ORDER.ASCENDING,
+			addedBy: ADDED_BY_FILTER.ALL,
 		},
 		setFilter: (newFilterParams: FilterType) => {
 			set({ filter: newFilterParams });

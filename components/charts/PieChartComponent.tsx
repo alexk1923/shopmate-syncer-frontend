@@ -69,7 +69,7 @@ const PieChartComponent = ({ data }: PieChartProps) => {
 	const { currentTheme } = useDarkLightTheme();
 
 	return (
-		<HorizontalCard title='Last 30 days'>
+		<HorizontalCard title='Products categories'>
 			<RestyleBox flexDirection='row' gap='m' justifyContent='center'>
 				<PieChart
 					data={data}

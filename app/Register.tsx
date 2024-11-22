@@ -27,6 +27,7 @@ import SuccessScreen from "@/components/common/SuccessScreen";
 import RestyleBox from "@/components/layout/RestyleBox";
 import RestyleText from "@/components/layout/RestyleText";
 import AppButton from "@/components/misc/AppButton";
+import LoadingOverlay from "@/components/modals/LoadingOverlay";
 
 const Register = () => {
 	const { darkMode } = useDarkLightTheme();
@@ -43,7 +44,7 @@ const Register = () => {
 			setSuccessRegistration(true);
 			setTimeout(() => {
 				router.navigate("/Login");
-			}, 8000);
+			}, 3000);
 		},
 		onError: (err) => {
 			console.log("Error register");
@@ -162,11 +163,7 @@ const Register = () => {
 			<RestyleBox style={styles.c2}>
 				<Image
 					style={styles.logo}
-					source={
-						darkMode
-							? require("@/assets/images/logo-white.png")
-							: require("@/assets/images/shopmate-logo-primary.png")
-					}
+					source={require("@/assets/images/logo-white.png")}
 				/>
 			</RestyleBox>
 			<RestyleBox
@@ -192,7 +189,7 @@ const Register = () => {
 						rules={input.rules}
 					/>
 				))}
-				{registerMutation.isPending && <ActivityIndicator />}
+				{<LoadingOverlay isVisible={registerMutation.isPending} />}
 				{registerMutation.isError && (
 					<RestyleText color='error' fontWeight='bold'>
 						{registerMutation.error.message}
@@ -209,7 +206,7 @@ const Register = () => {
 				<RestyleText textAlign='center' color='text'>
 					Already have an account?{" "}
 					<Link href='/Login'>
-						<RestyleText color='secondary' marginLeft='m'>
+						<RestyleText color='primary' marginLeft='m'>
 							Sign in
 						</RestyleText>
 					</Link>

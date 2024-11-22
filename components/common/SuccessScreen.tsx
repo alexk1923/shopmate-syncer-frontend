@@ -11,7 +11,7 @@ const SuccessScreen = ({ text }: { text: string }) => {
 	useEffect(() => {
 		Animated.timing(fadeAnim, {
 			toValue: 1,
-			duration: 2000, // 2 seconds
+			duration: 1000,
 			useNativeDriver: true,
 		}).start();
 	}, [fadeAnim]);

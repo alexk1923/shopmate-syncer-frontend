@@ -18,12 +18,16 @@ import LottieAnimation from "@/components/common/LottieAnimation";
 import { ANIMATIONS } from "@/constants/assets";
 import { useHouseStore } from "../store/useHouseStore";
 import { useUser } from "../hooks/useUser";
+import { removeNotificationSubscription } from "expo-notifications";
 
 const NoHouseScreen = () => {
 	const { currentTheme, darkMode, setDarkMode } = useDarkLightTheme();
 	const removeUser = useAuthStore((state) => state.removeUser);
 	const removeHouse = useHouseStore((state) => state.removeHouse);
 	const user = useAuthStore((state) => state.user);
+	const notificationSubscription = useAuthStore(
+		(state) => state.notificationSubscription
+	);
 	console.log("the user is:");
 	console.log(user);
 	const { userQuery } = useUser(user?.id!);
@@ -63,6 +67,9 @@ const NoHouseScreen = () => {
 			onPress: () => {
 				removeUser();
 				removeHouse();
+				if (notificationSubscription) {
+					removeNotificationSubscription(notificationSubscription);
+				}
 				router.replace("/");
 			},
 		},

@@ -14,6 +14,7 @@ import { router } from "expo-router";
 import { useFilterStore } from "@/app/store/useFilterStore";
 
 import {
+	ADDED_BY_FILTER,
 	EXPIRY_STATUS,
 	Item,
 	SORTING_ORDER,
@@ -66,6 +67,20 @@ const Inventory = () => {
 					startOfToday()
 				);
 				return expiryDate2 < 0;
+			default:
+				return true;
+		}
+	};
+
+	const filterByBuyer = (item: Item) => {
+		console.log("item added by: " + item.boughtBy.id);
+
+		switch (filter.addedBy) {
+			case ADDED_BY_FILTER.ALL:
+				return true;
+			case ADDED_BY_FILTER.ME:
+				return item.boughtBy.id === user?.id;
+
 			default:
 				return true;
 		}
@@ -205,10 +220,12 @@ const Inventory = () => {
 					filter.sortingOrder === SORTING_ORDER.ASCENDING
 						? itemQuery.data
 								?.filter(filterByExpiryStatus)
+								.filter(filterByBuyer)
 								.filter((item) => (filter.isFood ? item.isFood : true))
 								.sort(sortByFn)
 						: itemQuery.data
 								?.filter(filterByExpiryStatus)
+								.filter(filterByBuyer)
 								.filter((item) => (filter.isFood ? item.isFood : true))
 								.sort(sortByFn)
 								.reverse()

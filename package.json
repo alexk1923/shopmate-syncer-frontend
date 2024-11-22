@@ -61,6 +61,7 @@
     "react-native-image-crop-picker": "^0.41.1",
     "react-native-otp-entry": "^1.7.0",
     "react-native-pager-view": "6.3.0",
+    "react-native-popover-view": "^5.1.8",
     "react-native-qrcode-svg": "^6.3.1",
     "react-native-reanimated": "~3.10.1",
     "react-native-reanimated-carousel": "^3.5.1",

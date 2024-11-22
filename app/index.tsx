@@ -20,14 +20,23 @@ Notifications.setNotificationHandler({
 });
 
 const App = () => {
-	const { darkMode } = useDarkLightTheme();
+	const { darkMode, setDarkMode } = useDarkLightTheme();
+
 	const initializeAuth = useAuthStore((state) => state.initializeAuth);
+	const preferedThemeDark = useAuthStore((state) => state.preferedThemeDark);
+
 	const user = useAuthStore((state) => state.user);
 	const setNotificationSubscription = useAuthStore(
 		(state) => state.setNotificationSubscription
 	);
 	const appStateChangeRef = useRef(false);
 	const [initialising, setInitialising] = useState(true);
+
+	useEffect(() => {
+		if (preferedThemeDark) {
+			setDarkMode(true);
+		}
+	}, []);
 
 	useEffect(() => {
 		const subscription = Notifications.addNotificationReceivedListener(

@@ -36,6 +36,7 @@ const AppModal = (props: AppModalProps) => {
 			transparent
 			onRequestClose={onModalClose}
 			visible={modalVisible}
+			statusBarTranslucent
 		>
 			{ImageBottomModal}
 			<View style={styles.flexContainer}>

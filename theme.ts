@@ -12,11 +12,12 @@ const palette = {
 		text: "#333333",
 		oppositeText: "#f0f0f0",
 		error: "#bd0303",
+		chip: "#e0e0e0",
 	},
 	dark: {
 		background: "#111111",
 		cardBackground: "#141b25",
-		primary: "#0098eb",
+		primary: "#008dda",
 		secondary: "#08044f",
 		accent: "#0600c2",
 		text: "#f0f0f0",
@@ -51,7 +52,7 @@ export const theme = createTheme({
 		lightAccent: palette.light.accent,
 		darkAccent: palette.light.accent,
 		error: palette.light.error,
-
+		chip: palette.light.chip,
 		transparent: palette.transparent,
 		gray: palette.gray,
 	},
@@ -147,6 +148,7 @@ export const darkTheme: Theme = {
 		darkAccent: palette.dark.accent,
 		error: palette.dark.error,
 
+		chip: palette.dark.cardBackground,
 		gray: palette.gray,
 	},
 };

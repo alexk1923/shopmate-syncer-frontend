@@ -38,25 +38,25 @@ const ImagePickerWidget = ({
 	const { currentTheme } = useDarkLightTheme();
 	const [openActionModal, setOpenActionModal] = useState(false);
 
-	const { takePhoto, pickImage } = useImagePicker();
+	// const { takePhoto, pickImage } = useImagePicker();
 
-	const handleUploadPhoto = async () => {
-		const newImage = await pickImage();
+	// const handleUploadPhoto = async () => {
+	// 	const newImage = await pickImage();
 
-		if (newImage) {
-			setImage(newImage);
-			setOpenActionModal(false);
-		}
-	};
+	// 	if (newImage) {
+	// 		setImage(newImage);
+	// 		setOpenActionModal(false);
+	// 	}
+	// };
 
-	const handleTakePhoto = async () => {
-		const newImage = await takePhoto();
+	// const handleTakePhoto = async () => {
+	// 	const newImage = await takePhoto();
 
-		if (newImage) {
-			setImage(newImage);
-			setOpenActionModal(false);
-		}
-	};
+	// 	if (newImage) {
+	// 		setImage(newImage);
+	// 		setOpenActionModal(false);
+	// 	}
+	// };
 
 	const { width, height } = useWindowDimensions();
 
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		justifyContent: "center",
 		alignItems: "center",
-		position: "relative",
+		// position: "relative",
 	},
 });
 

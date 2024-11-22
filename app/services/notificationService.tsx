@@ -3,6 +3,8 @@ import { Platform } from "react-native";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { addNotificationsToken } from "./authService";
+import { API_URL } from "../api/config";
+import { serviceFn } from "./generalService";
 
 export const NotificationService = {
 	registerForPushNotificationsAsync: async function (
@@ -71,5 +73,15 @@ export const NotificationService = {
 				console.error(err);
 			}
 		}
+	},
+
+	removeNotificationToken: async (userId: number) => {
+		return await serviceFn<void>(
+			`${API_URL}/notificationToken/${userId}`,
+			"patch",
+			{
+				notificationToken: null,
+			}
+		);
 	},
 };

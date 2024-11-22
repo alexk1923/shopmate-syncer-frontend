@@ -1,4 +1,9 @@
-import { StyleSheet, Image, ActivityIndicator } from "react-native";
+import {
+	StyleSheet,
+	Image,
+	ActivityIndicator,
+	KeyboardAvoidingView,
+} from "react-native";
 import React from "react";
 
 import { useDarkLightTheme } from "@/components/ThemeContext";
@@ -9,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { Link, router } from "expo-router";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { login } from "./services/authService";
+import { addNotificationsToken, login } from "./services/authService";
 import { LoginInput } from "@/constants/types/AuthTypes";
 
 import { useAuthStore } from "./store/useUserStore";
@@ -23,6 +28,7 @@ import AppButton from "@/components/misc/AppButton";
 import { HouseService } from "./services/houseService";
 import { useHouseStore } from "./store/useHouseStore";
 import { NotificationService } from "./services/notificationService";
+import { useKeyboardVisible } from "./hooks/useKeyboardVisible";
 type FormData = {
 	username: string;
 	password: string;
@@ -60,8 +66,7 @@ const Login = () => {
 			setToken(data.token);
 			setUserId(data.id);
 
-			// Ask for notifications permission
-			if (!notificationToken) {
+			if (firstLaunch || !data.notificationToken) {
 				const newNotificationToken =
 					await NotificationService.registerForPushNotificationsAsync(
 						data.id,
@@ -72,6 +77,25 @@ const Login = () => {
 					setNotificationToken(newNotificationToken);
 				}
 			}
+			// Ask for notifications permission
+			// if (!notificationToken) {
+			// 	const newNotificationToken =
+			// 		await NotificationService.registerForPushNotificationsAsync(
+			// 			data.id,
+			// 			data.token
+			// 		);
+
+			// 	if (newNotificationToken) {
+			// 		setNotificationToken(newNotificationToken);
+			// 	}
+			// } else {
+			// 	try {
+			// 		await addNotificationsToken(data.id, data.token, notificationToken);
+			// 		return notificationToken;
+			// 	} catch (err) {
+			// 		console.error(err);
+			// 	}
+			// }
 
 			// Prefetch user before redirecting
 			queryClient.prefetchQuery({
@@ -139,6 +163,8 @@ const Login = () => {
 		},
 	];
 
+	const { isKeyboardVisible } = useKeyboardVisible();
+
 	return (
 		<RestyleBox backgroundColor='primary' style={styles.c1}>
 			<RestyleBox style={styles.c2}>
@@ -183,7 +209,7 @@ const Login = () => {
 					</RestyleText>
 				)}
 				<RestyleBox style={styles.checkboxContainer}>
-					<RestyleText color='primary'>Forgot password</RestyleText>
+					{/* <RestyleText color='primary'>Forgot password</RestyleText> */}
 				</RestyleBox>
 				<AppButton
 					variant='outline'

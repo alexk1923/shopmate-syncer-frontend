@@ -4,11 +4,11 @@
 		"slug": "shopmate-syncer",
 		"version": "1.0.0",
 		"orientation": "portrait",
-		"icon": "./assets/images/icon.png",
+		"icon": "./assets/images/shopmate-logo-primary.png",
 		"scheme": "myapp",
 		"userInterfaceStyle": "automatic",
 		"splash": {
-			"image": "./assets/images/splash.png",
+			"image": "./assets/images/shopmate-logo-primary.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
@@ -19,7 +19,7 @@
 		},
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./assets/images/adaptive-icon.png",
+				"foregroundImage": "./assets/images/shopmate-logo-primary.png",
 				"backgroundColor": "#ffffff"
 			},
 			"softwareKeyboardLayoutMode": "pan",

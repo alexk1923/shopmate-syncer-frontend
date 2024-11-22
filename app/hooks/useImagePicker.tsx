@@ -37,7 +37,7 @@ export const useImagePicker = () => {
 					ImagePicker.UIImagePickerPresentationStyle.CURRENT_CONTEXT,
 				quality: 0.5,
 				base64: true,
-				cameraType: ImagePicker.CameraType.front,
+				cameraType: "back",
 				mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			});
 

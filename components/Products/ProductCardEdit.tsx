@@ -44,6 +44,8 @@ import Toast from "react-native-root-toast";
 import LoadingOverlay from "../modals/LoadingOverlay";
 import { visible } from "@shopify/restyle";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useToast } from "react-native-toast-notifications";
+import Wrapper from "../layout/Wrapper";
 
 type ItemEditType = {
 	name: string;
@@ -121,6 +123,8 @@ const ProductCardEdit = (props: {
 			address: editProduct.store.address ?? "",
 		},
 	});
+
+	const toast = useToast();
 
 	const handleAddNewItem = () => {
 		let errors = false;
@@ -224,33 +228,21 @@ const ProductCardEdit = (props: {
 
 	useEffect(() => {
 		if (addItemMutation.isSuccess) {
+			toast.show("Product added to house inventory", {
+				type: "custom_toast",
+				animationDuration: 100,
+				data: {
+					title: "Success",
+				},
+			});
 			onSubmit();
 		}
 	}, [addItemMutation.status]);
 
 	return (
-		<>
+		<Wrapper>
 			<LoadingOverlay isVisible={addItemMutation.isPending} />
-			<Toast
-				duration={Toast.durations.LONG}
-				visible={addItemMutation.isSuccess}
-				position={Toast.positions.BOTTOM - 100}
-				backgroundColor='lightgreen'
-				textColor='darkgreen'
-				shadow
-				animation
-				hideOnPress
-			>
-				<RestyleBox flexDirection='row' alignItems='center' gap='s'>
-					<FontAwesome6 name='circle-check' size={24} color='black' />
-					<RestyleText variant='bodyBold'>
-						Success:{" "}
-						<RestyleText variant='body'>
-							Product added to inventory!
-						</RestyleText>
-					</RestyleText>
-				</RestyleBox>
-			</Toast>
+
 			<RestyleBox
 				backgroundColor='cardBackground'
 				flex={1}
@@ -702,7 +694,7 @@ const ProductCardEdit = (props: {
 					</GestureHandlerRootView>
 				)}
 			</RestyleBox>
-		</>
+		</Wrapper>
 	);
 };
 

@@ -17,12 +17,21 @@ import { useDarkLightTheme } from "@/components/ThemeContext";
 import ToggleButton from "@/components/misc/ToggleButton";
 import { useHouseStore } from "@/app/store/useHouseStore";
 import SettingsItem, { SettingsType } from "@/components/common/SettingsItem";
+import { removeNotificationSubscription } from "expo-notifications";
+import { NotificationService } from "@/app/services/notificationService";
 // import switchTheme from "react-native-theme-switch-animation";
 const Settings = () => {
 	const user = useAuthStore((state) => state.user);
 	const { currentTheme, darkMode, setDarkMode } = useDarkLightTheme();
 	const removeUser = useAuthStore((state) => state.removeUser);
 	const removeHouse = useHouseStore((state) => state.removeHouse);
+	const setPreferredThemeDark = useAuthStore(
+		(state) => state.setPreferredThemeDark
+	);
+	const subscription = useAuthStore((state) => state.notificationSubscription);
+	const setNotificationToken = useAuthStore(
+		(state) => state.setNotificationToken
+	);
 
 	const settingsData: SettingsType[] = [
 		{
@@ -54,20 +63,7 @@ const Settings = () => {
 			value: darkMode,
 			onPress: () => {
 				setDarkMode(!darkMode); // your switch theme function
-
-				// switchTheme({
-				// 	switchThemeFunction: () => {
-				// 		setDarkMode(!darkMode); // your switch theme function
-				// 	},
-				// 	animationConfig: {
-				// 		type: "inverted-circular",
-				// 		duration: 800,
-				// 		startingPoint: {
-				// 			cxRatio: 0.8,
-				// 			cyRatio: 0.8,
-				// 		},
-				// 	},
-				// });
+				setPreferredThemeDark(!darkMode);
 			},
 		},
 	];
@@ -85,14 +81,10 @@ const Settings = () => {
 				/>
 
 				<RestyleBox justifyContent='flex-start'>
-					<RestyleBox flexDirection='row'>
-						<RestyleText color='text' variant='subheader'>
-							{user?.firstName}
-						</RestyleText>
-						<RestyleText color='text' variant='subheader'>
-							{user?.lastName}
-						</RestyleText>
-					</RestyleBox>
+					<RestyleText color='text' variant='subheader'>
+						{user?.firstName} {user?.lastName}
+					</RestyleText>
+
 					<RestyleText variant='label'>@{user?.username}</RestyleText>
 				</RestyleBox>
 			</RestyleBox>
@@ -120,8 +112,16 @@ const Settings = () => {
 			<AppButton
 				title={"Logout"}
 				onPress={() => {
+					if (user?.id) {
+						NotificationService.removeNotificationToken(user?.id);
+					}
 					removeUser();
 					removeHouse();
+					setNotificationToken(null);
+
+					if (subscription) {
+						removeNotificationSubscription(subscription);
+					}
 					router.replace("/");
 				}}
 				variant={"filled"}

@@ -1,16 +1,12 @@
-import RestyleText from "@/components/layout/RestyleText";
 import { FOOD_TAG_INFO } from "@/constants/FoodTagsInfo";
 import { Item } from "@/constants/types/ItemTypes";
 import {
 	differenceInDays,
-	getDaysInMonth,
-	startOfDay,
 	startOfMonth,
 	startOfToday,
 	startOfYear,
 } from "date-fns";
 import React from "react";
-import { View } from "react-native";
 
 export const useDashboards = () => {
 	const getGroupedItems = (userId: number, items: Item[]) => {
@@ -31,7 +27,7 @@ export const useDashboards = () => {
 		for (const [key, value] of tagGroup) {
 			tagGroupArr.push({
 				name: FOOD_TAG_INFO[key].name,
-				text: `${(value / tagGroup.size) * 100}%`,
+				text: `${Math.floor(((value * 100) / items.length) * 100) / 100} %`,
 				value,
 				color: FOOD_TAG_INFO[key].color,
 			});

@@ -328,11 +328,11 @@ export default function HomePage(this: any) {
 							</RestyleText>
 						</RestyleBox>
 					</RestyleBox>
-					<MaterialIcons
+					{/* <MaterialIcons
 						name='notifications'
 						size={32}
 						color={currentTheme.colors.primary}
-					/>
+					/> */}
 				</RestyleBox>
 
 				<RestyleBox gap='m' style={{ display: "flex" }}>
